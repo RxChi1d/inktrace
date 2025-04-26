@@ -3,10 +3,9 @@ title: "Immich 部署、設定與反向代理"
 date: 2025-04-25T00:00:00+08:00
 draft: false
 description: "Immich 部署、設定與反向代理"
+categories: ["docker 容器部署"]
 tags: ["docker", "immich"]
 lightgallery: true
-math:
-  enable: true
 ---
 ## 前言
 
