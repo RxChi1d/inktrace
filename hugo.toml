@@ -1,4 +1,4 @@
-baseURL = "https://RxChi1d.github.io/inktrace/"
+baseURL = "https://rxchi1d.github.io/inktrace/"
 publishDir = "docs"
 
 # website title
@@ -99,8 +99,8 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   # 网站描述, 用于 RSS, SEO, Open Graph 和 Twitter Cards
   description = """
 筆墨未乾，語意尚在流動。
-碎片錯落，錯誤转化為突破，靈感自幽微中浮現。
-技術是我與世界對話的語言，書寫是我與自己對话的方式。
+碎片錯落，錯誤轉化為突破，靈感自幽微中浮現。
+技術是我與世界對話的語言，書寫是我與自己對話的方式。
 
 這裡，是筆墨碎語，也是思考與記憶的緩存地。
 """
@@ -835,7 +835,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       description = """
 筆墨未乾，語意尚在流動。
 碎片錯落，錯誤转化為突破，靈感自幽微中浮現。
-技術是我與世界對話的語言，書寫是我與自己對话的方式。
+技術是我與世界對话的語言，書寫是我與自己對话的方式。
 
 這裡，是筆墨碎語，也是思考與記憶的緩存地。
 # images: ["/immich.png"]
