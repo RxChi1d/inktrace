@@ -659,7 +659,7 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
     enable = true
     # Google Analytics
     [params.analytics.google]
-      id = "G-WEDT47J02J"
+      id = "G-V1MW7Q8DZF"
       # whether to respect the browser's "do not track" setting
       # 是否遵循浏览器的 "Do Not Track" 設定
       respectDoNotTrack = true
