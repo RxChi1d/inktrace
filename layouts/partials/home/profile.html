@@ -1,0 +1,38 @@
+{{- $profile := .Site.Params.home.profile -}}
+<div class="home-profile">
+    <div class="profile-container">
+        <div class="profile-left">
+            {{- $avatar := $profile.avatarURL -}}
+            {{- with $profile.gravatarEmail -}}
+                {{- $avatar = md5 . | printf "https://www.gravatar.com/avatar/%v?s=240&d=mp" -}}
+            {{- end -}}
+            {{- if $avatar -}}
+                <div class="home-avatar">
+                    {{- dict "Src" $avatar | partial "plugin/img.html" -}}
+                </div>
+            {{- end -}}
+            <div class="author-name">RxChi1d</div>
+            <div class="social-links">
+                {{- with .Site.Params.Social.GitHub -}}
+                    <a href="https://github.com/{{ . }}" target="_blank" rel="noopener noreffer me" title="GitHub">
+                        <i class="fab fa-github fa-fw"></i>
+                    </a>
+                {{- end -}}
+                {{- with .Site.Params.Social.Email -}}
+                    <a href="mailto:{{ . }}" rel="me" title="Email">
+                        <i class="far fa-envelope fa-fw"></i>
+                    </a>
+                {{- end -}}
+            </div>
+        </div>
+        <div class="profile-right">
+            <h1 class="home-title">筆墨碎語</h1>
+            <div class="home-subtitle">
+                筆墨未乾，語意尚在流動。<br>
+                碎片錯落，錯誤轉化為突破，靈感自幽微中浮現。<br>
+                技術是我與世界對話的語言，書寫是我與自己對話的方式。<br><br>
+                這裡，是筆墨碎語，也是思考與記憶的緩存地。
+            </div>
+        </div>
+    </div>
+</div>
