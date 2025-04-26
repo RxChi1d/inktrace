@@ -656,12 +656,13 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
   # Analytics config
   # 网站分析配置
   [params.analytics]
+    enable = true
     # Google Analytics
     [params.analytics.google]
-      id = ""
-      # whether to respect the browser’s “do not track” setting
-      # 是否遵循浏览器的 “Do Not Track” 设置
-      respectDoNotTrack = false
+      id = "G-WEDT47J02J"
+      # whether to respect the browser's "do not track" setting
+      # 是否遵循浏览器的 "Do Not Track" 設定
+      respectDoNotTrack = true
     # Fathom Analytics
     [params.analytics.fathom]
       id = ""
@@ -835,10 +836,9 @@ ignoreErrors = ["error-remote-getjson", "error-missing-instagram-accesstoken"]
       description = """
 筆墨未乾，語意尚在流動。
 碎片錯落，錯誤转化為突破，靈感自幽微中浮現。
-技術是我與世界對话的語言，書寫是我與自己對话的方式。
+技術是我與世界對话的語言，書寫是我與自己對话的方對。
 
-這裡，是筆墨碎語，也是思考與記憶的緩存地。
-# images: ["/immich.png"]
+對裡，是筆墨碎語，也是思考與記憶的緩存地。
 """
       [languages.zh-TW.params.search]
         enable = true
