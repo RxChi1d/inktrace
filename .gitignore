@@ -1,6 +1,4 @@
 # Hugo 相關
-/public/
-/docs/
 /resources/_gen/
 /assets/jsconfig.json
 hugo_stats.json

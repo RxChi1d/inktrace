@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Immich 部署、設定與反向代理 - 筆墨碎語｜RxChi1d</title><meta name="Description" content="Immich 部署、設定與反向代理"><meta property="og:url" content="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/">
+  <meta property="og:site_name" content="筆墨碎語｜RxChi1d">
+  <meta property="og:title" content="Immich 部署、設定與反向代理">
+  <meta property="og:description" content="Immich 部署、設定與反向代理">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-04-25T00:00:00+08:00">
+    <meta property="article:modified_time" content="2025-04-25T00:00:00+08:00">
+    <meta property="article:tag" content="Docker">
+    <meta property="article:tag" content="Immich">
+    <meta property="og:image" content="https://rxchi1d.github.io/images/Apple-Devices-Preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://rxchi1d.github.io/images/Apple-Devices-Preview.png">
+  <meta name="twitter:title" content="Immich 部署、設定與反向代理">
+  <meta name="twitter:description" content="Immich 部署、設定與反向代理">
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" /><link rel="next" href="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" /><link rel="stylesheet" href="/inktrace/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Immich 部署、設定與反向代理",
+        "inLanguage": "zh-TW",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/rxchi1d.github.io\/inktrace\/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86\/"
+        },"image": ["https:\/\/rxchi1d.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Docker, Immich","wordcount":  1994 ,
+        "url": "https:\/\/rxchi1d.github.io\/inktrace\/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86\/","datePublished": "2025-04-25T00:00:00+08:00","dateModified": "2025-04-25T00:00:00+08:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "RxChi1d","logo": "https:\/\/rxchi1d.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "RxChi1d"
+            },"description": "Immich 部署、設定與反向代理"
+    }
+    </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HCEJER9SE0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HCEJER9SE0');
+</script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script>(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/inktrace/" title="筆墨碎語｜RxChi1d">筆墨碎語｜RxChi1d</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/inktrace/posts/"> 所有文章 </a><a class="menu-item" href="/inktrace/tags/"> 標籤 </a><a class="menu-item" href="/inktrace/categories/"> 分類 </a><a class="menu-item" href="https://github.com/RxChi1d" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜尋..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切換主題">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/inktrace/" title="筆墨碎語｜RxChi1d">筆墨碎語｜RxChi1d</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜尋..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/inktrace/posts/" title="">所有文章</a><a class="menu-item" href="/inktrace/tags/" title="">標籤</a><a class="menu-item" href="/inktrace/categories/" title="">分類</a><a class="menu-item" href="https://github.com/RxChi1d" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切換主題">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目錄</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Immich 部署、設定與反向代理</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/RxChi1d" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>RxChi1d</a></span>&nbsp;<span class="post-category">收錄於 <a href="/inktrace/categories/docker-%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Docker 容器部署</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-04-25">2025-04-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;約 1994 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;預計閱讀 4 分鐘&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目錄</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#部署-immich">部署 Immich</a></li>
+    <li><a href="#優化反向地理編碼資料中文化臺灣地名顯示優化">優化反向地理編碼資料（中文化＋臺灣地名顯示優化）</a></li>
+    <li><a href="#影片轉碼硬體加速">影片轉碼硬體加速</a></li>
+    <li><a href="#機器學習硬體加速">機器學習硬體加速</a></li>
+    <li><a href="#更換機器學習模型">更換機器學習模型</a>
+      <ul>
+        <li><a href="#clip">CLIP</a></li>
+        <li><a href="#人臉辨識模型">人臉辨識模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#nginx-proxy-manager-反向代理">Nginx Proxy Manager 反向代理</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="前言">前言</h2>
+<p>這個筆記中，我參考 <a href="https://immich.app/docs/install/unraid" target="_blank" rel="noopener noreffer ">Immich 官方文件</a> 中 docker compose 的做法，使用 Portainer 來部署 Immich (包含 immich-server, immich-machining-learning, redis 和 postgres)。因此在開始之前，請確認已經安裝 Docker, Docker Compose ，並部署 Portainer 容器。</p>
+<h2 id="部署-immich">部署 Immich</h2>
+<ol>
+<li>
+<p>在 Portainer 中增新一個新的 stack，名稱為 <code>immich</code>。</p>
+</li>
+<li>
+<p>stack 的內容為：</p>
+<div class="code-block code-line-numbers" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">services</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">immich-server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l">immich_server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">${UPLOAD_LOCATION}:/usr/src/app/upload</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">/etc/localtime:/etc/localtime:ro</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">stack.env</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;2283:2283&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">redis</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">database</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">disable</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">immich-machine-learning</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l">immich_machine_learning</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">model-cache:/cache</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">stack.env</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">disable</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">redis</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l">immich_redis</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">docker.io/redis:6.2-alpine@sha256:905c4ee67b8e0aa955331960d2aa745781e6bd89afc44a8584bfd13bc890f0ae</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="l">redis-cli ping || exit 1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l">immich_postgres</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l">${DB_PASSWORD}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l">${DB_USERNAME}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l">${DB_DATABASE_NAME}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">POSTGRES_INITDB_ARGS</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;--data-checksums&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">${DB_DATA_LOCATION}:/var/lib/postgresql/data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p">&gt;-</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        pg_isready --dbname=&#34;$${POSTGRES_DB}&#34; --username=&#34;$${POSTGRES_USER}&#34; || exit 1;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        Chksum=&#34;$$(psql --dbname=&#34;$${POSTGRES_DB}&#34; --username=&#34;$${POSTGRES_USER}&#34; --tuples-only --no-align
+</span></span></span><span class="line"><span class="cl"><span class="sd">        --command=&#39;SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database&#39;)&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;checksum failure count is $$Chksum&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        [ &#34;$$Chksum&#34; = &#39;0&#39; ] || exit 1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l">5m</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">start_interval</span><span class="p">:</span><span class="w"> </span><span class="l">30s</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l">5m</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="p">&gt;-</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">      postgres
+</span></span></span><span class="line"><span class="cl"><span class="sd">      -c shared_preload_libraries=vectors.so
+</span></span></span><span class="line"><span class="cl"><span class="sd">      -c &#39;search_path=&#34;$$user&#34;, public, vectors&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sd">      -c logging_collector=on
+</span></span></span><span class="line"><span class="cl"><span class="sd">      -c max_wal_size=2GB
+</span></span></span><span class="line"><span class="cl"><span class="sd">      -c shared_buffers=512MB
+</span></span></span><span class="line"><span class="cl"><span class="sd">      -c wal_compression=on</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l">always</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="l">model-cache:</span></span></span></code></pre></div></div>
+</li>
+<li>
+<p><strong>編輯 Environment variables：</strong></p>
+<ol>
+<li>
+<p>點擊 <code>Environment variables</code> 並切換至 <code>Advanced mode</code>。隨後，貼上下面的內容：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>UPLOAD_LOCATION=/IMMICH_DATA_LOCATION
+DB_DATA_LOCATION=/IMMICH_DB_LOCATION
+IMMICH_VERSION=release
+DB_PASSWORD=postgres
+DB_USERNAME=postgres
+DB_DATABASE_NAME=immich</code></pre></div>
+</li>
+<li>
+<p>根據個人偏好，設定以下參數：</p>
+<ol>
+<li><strong>UPLOAD_LOCATION:</strong> 相片庫與資料的存放位置 (如 <code>/mnt/smb/immich</code>)。我個人是設定在通過 SMB 掛載 NAS 的位置。</li>
+<li><strong>DB_DATA_LOCATION:</strong> postgres database 的位置 (如 <code>/appdata/immich/postgres</code>)。這個我是直接放在本機硬碟中。</li>
+<li><strong>TZ:</strong> 時區 (<code>Asia/Taipei</code>)。</li>
+</ol>
+ <!-- > NOTE: 其餘參數不需要修改。 -->
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>注意<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><pre><code>    其餘參數不需要修改。
+</code></pre>
+</div>
+        </div>
+    </div>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>啟動 stack，即可完成 Immich 的基本部署。</strong></p>
+<blockquote>
+<p>進階的調整，可以參考後續章節。</p></blockquote>
+</li>
+</ol>
+<h2 id="優化反向地理編碼資料中文化臺灣地名顯示優化">優化反向地理編碼資料（中文化＋臺灣地名顯示優化）</h2>
+<p>參考我的臺灣繁體中文化專案 <a href="https://github.com/RxChi1d/immich-geodata-zh-tw" target="_blank" rel="noopener noreffer ">RxChi1d/immich-geodata-zh-tw</a> 設定 Immich 的 docker compose file。</p>
+<p>在這個專案中，將地名翻譯為臺灣大眾習慣之繁體中文名稱之外，也優化了臺灣的行政區表示，使其可以準確地顯示出縣市以及鄉鎮市區。除此之外，也使用 <a href="https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx" target="_blank" rel="noopener noreffer ">中華民國國土測繪中心</a> 的開放資料取代 <a href="https://www.geodata.com/en/" target="_blank" rel="noopener noreffer ">geodata</a> 的開放資料，藉此更精準的反解臺灣的地名。</p>
+<ol>
+<li>
+<p><strong>停止 stack。</strong></p>
+</li>
+<li>
+<p><strong>在 stack 設定中添加 <code>entrypoint</code>：</strong></p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">services</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">immich_server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l">immich_server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="c">## 其他配置省略</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&#34;tini&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;--&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;/bin/bash&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;-c&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;bash &lt;(curl -sSL https://raw.githubusercontent.com/RxChi1d/immich-geodata-zh-tw/refs/heads/main/update_data.sh) --install &amp;&amp; exec /bin/bash start.sh&#34;</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="c">## 其他配置省略</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="l">```</span></span></span></code></pre></div></div>
+</li>
+<li>
+<p><strong>啟動 stack。</strong></p>
+<p>通過添加 <code>entrypoint</code> 設定，未來每次重啟 stack，在 immich_server 容器啟動時，會自動下載並安裝最新版本的臺灣中文化地理資料。</p>
+</li>
+</ol>
+<blockquote>
+<p>💡 <strong>Note:</strong><br>
+如果是簡體中文或中國的用戶可以參考 <a href="https://github.com/ZingLix/immich-geodata-cn" target="_blank" rel="noopener noreffer ">ZingLix/immich-geodata-cn</a> ，該專案除了簡體中文翻譯之外，亦有針對中國地區之地名進行優化。</p></blockquote>
+<h2 id="影片轉碼硬體加速">影片轉碼硬體加速</h2>
+<blockquote>
+<p>💡 <strong>NOTE:</strong><br>
+安裝之前需要先安裝顯示卡的驅動程式與容器驅動。
+<strong>以 NVIDIA 顯示卡為例:</strong> 需安裝 NVIDIA Driver 以及 <a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html" target="_blank" rel="noopener noreffer ">NVIDIA Container Toolkit</a>。</p></blockquote>
+<ol>
+<li>
+<p><strong>停止stack。</strong></p>
+</li>
+<li>
+<p><strong>下載設定檔:</strong></p>
+<p>從官網下載 <a href="https://github.com/immich-app/immich/releases/latest/download/hwaccel.transcoding.yml" target="_blank" rel="noopener noreffer ">hwaccel.transcoding.yml</a> ，並將其放置到指定位置 (如 <code>/appdata/immich/hwaccel.transcoding.yml</code>)。</p>
+</li>
+<li>
+<p><strong>編輯 stack:</strong></p>
+<p>添加 <code>extends</code>，並根據自己的硬體修改 service 的值。（Intel iGPU: quicksync, NVIDIA GPU: nvenc）。</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">immich-server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l">immich_server</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">extends</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l">/mnt/user/appdata/immich/hwaccel.transcoding.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">nvenc</span><span class="w"> </span><span class="c">## set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c">## 其他配置省略</span></span></span></code></pre></div></div>
+<blockquote>
+<p>💡 如果是 NVDIA 的顯示卡還需要加上：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">immich-server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c">## 其他配置省略</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runtime</span><span class="p">:</span><span class="w"> </span><span class="l">nvidia</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span>- <span class="l">NVIDIA_VISIBLE_DEVICES=all</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    	  
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c">## 其他配置省略</span></span></span></code></pre></div></div></blockquote>
+</li>
+<li>
+<p><strong>啟動 stack。</strong></p>
+</li>
+<li>
+<p>設定硬體加速的設備：</p>
+<p><code>設定</code> → <code>影片轉碼</code> → <code>硬體加速</code> → <code>對應的選項</code>。</p>
+</li>
+</ol>
+<h2 id="機器學習硬體加速">機器學習硬體加速</h2>
+<blockquote>
+<p>本篇使用 NVIDIA 的顯示卡實作。
+如果是使用其他的硬體，或需要更詳細的參考文件，可以參考官方的 <a href="https://immich.app/docs/features/ml-hardware-acceleration" target="_blank" rel="noopener noreffer ">Hardware-Accelerated Machine Learning</a>。</p></blockquote>
+<ol>
+<li>
+<p><strong>停止 stack。</strong></p>
+</li>
+<li>
+<p><strong>下載設定檔:</strong></p>
+<p>從官網下載 <a href="https://github.com/immich-app/immich/releases/latest/download/hwaccel.ml.yml" target="_blank" rel="noopener noreffer ">hwaccel.ml.yml</a> ，並將其放置到指定位置 (如 <code>/mnt/user/appdata/immich/hwaccel.ml.yml</code>)。</p>
+</li>
+<li>
+<p><strong>編輯 stack:</strong></p>
+<ol>
+<li>
+<p><strong><code>image</code>:</strong></p>
+<p>映像名稱字尾根據硬體加上後綴 <code>-cuda</code>。</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c">## For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c">## Example tag: ${IMMICH_VERSION:-release}-cuda</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda</span></span></span></code></pre></div></div>
+</li>
+<li>
+<p><strong><code>extends</code>:</strong></p>
+<p>加入 <code>extends</code>，並根據硬體更改 service 的值。（NVDIA GPU: cuda, Intel GPU: openvino）。</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">immich-machine-learning</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c">## 其他配置省略</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">extends</span><span class="p">:</span><span class="w"> </span><span class="c">## uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l">/mnt/user/appdata/immich/hwaccel.ml.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">cuda</span><span class="w"> </span><span class="c">## set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c">## 其他配置省略</span></span></span></code></pre></div></div>
+</li>
+</ol>
+<blockquote>
+<p><strong>NOTE:</strong><br>
+immich-machine-learning 容器「不需要」加上 <code>runtime=nvidia</code> 和 <code>NVIDIA_VISIBLE_DEVICES=all</code> 變數。</p></blockquote>
+</li>
+<li>
+<p><strong>啟動 stack。</strong></p>
+<blockquote>
+<p><strong>NOTE:</strong><br>
+機器學習硬體加速設定後，「不需要」在 WebUI 中做額外的設定。</p></blockquote>
+</li>
+</ol>
+<h2 id="更換機器學習模型">更換機器學習模型</h2>
+<p>詳細內容可以參考 Immich 官方文件的 <a href="https://immich.app/docs/features/searching" target="_blank" rel="noopener noreffer ">Searching</a>。</p>
+<h3 id="clip">CLIP</h3>
+<ol>
+<li>
+<p><strong>選擇模型:</strong></p>
+<p>由於預設的 <code>ViT-B-32__openai</code> 模型對於中文的適配性不足，因此需要選擇支援多語言的 CLIP 模型。</p>
+<p>在 <a href="https://immich.app/docs/features/searching" target="_blank" rel="noopener noreffer ">官方文件</a> 中，有提供各語言中，不同模型的準確度比較表格，其中也有詳細報告顯存需求以及推理時間，用戶可以根據需求選擇。（所有模型可以參考 Immich Hugging Face 的 <a href="https://huggingface.co/collections/immich-app/clip-654eaefb077425890874cd07" target="_blank" rel="noopener noreffer ">CLIP</a> 和<a href="https://huggingface.co/collections/immich-app/multilingual-clip-654eb08c2382f591eeb8c2a7" target="_blank" rel="noopener noreffer ">Multilingual CLIP</a>)</p>
+<p>這邊我們可以參考「簡體中文」的表格來進行選擇。如果顯存足夠的話，可以直接選表現最好的模型 <code>nllb-clip-large-siglip__v1</code>：</p>
+<p><figure><a class="lightgallery" href="https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png" title="模型中文性能比較表" data-thumbnail="https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png" data-sub-html="<h2>模型中文性能比較表</h2><p>模型中文性能比較表</p>">
+        <img
+            class="lazyload"
+            src="/inktrace/svg/loading.min.svg"
+            data-src="https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png"
+            data-srcset="https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png, https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png 1.5x, https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png 2x"
+            data-sizes="auto"
+            alt="https://cdn.rxchi1d.me/inktrace/immich_20250426_model-chinese-performance-comparison-table.png" />
+    </a><figcaption class="image-caption">模型中文性能比較表</figcaption>
+    </figure></p>
+</li>
+<li>
+<p><strong>設定模型:</strong></p>
+<p>在設定頁面中，<code>機器學習設定</code> → <code>智慧搜尋</code> → <code>CLIP 模型</code>，填入所需模型的名稱即可。</p>
+<blockquote>
+<p>💡 <strong>NOTE:</strong><br>
+無需自行下載模型，immich-machine-learning 容器會在 Immich 需要調用模型時自動下載對應的模型。
+剛設定完後，可以在手動執行一次 <code>智慧搜尋</code> 作業，並在 immich-machine-learning 容器的 log 中查看是否有自動下載模型，並載入。</p></blockquote>
+</li>
+</ol>
+<h3 id="人臉辨識模型">人臉辨識模型</h3>
+<p>詳細模型清單可以參考 Immich Hugging Face 的 <a href="https://huggingface.co/collections/immich-app/facial-recognition-654eb881c0e106160e2e9c95" target="_blank" rel="noopener noreffer ">Facial Recognition</a>。</p>
+<p>目前根據網路上的消息稱 <code>antelopev2</code> 的效果最佳。</p>
+<p>由於官方沒有提供顯存開銷，這邊我提供我自己測試的結果供大家參考：</p>
+<blockquote>
+<ul>
+<li>測試顯卡為 NVIDIA Tesla P4</li>
+<li>由於並非特別將環境設定至顯卡空佔用，因此需要將表格的值扣除初始顯存開銷 (約 0.416 GiB) 才比較接近模型本身的顯存佔用。</li>
+<li>「儲存開銷欄位」表示模型的檔案大小。</li>
+</ul></blockquote>
+<ul>
+<li>Facial Recognition (按大小降序排序)
+<table>
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>顯存開銷 (<strong>GiB</strong>) (要減0.416)</th>
+          <th>儲存開銷 (M)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>antelopev2</td>
+          <td>1.955</td>
+          <td>265</td>
+      </tr>
+      <tr>
+          <td>buffalo_l</td>
+          <td>1.680</td>
+          <td>183</td>
+      </tr>
+      <tr>
+          <td>buffalo_m</td>
+          <td>1.428</td>
+          <td>170</td>
+      </tr>
+      <tr>
+          <td>buffalo_s</td>
+          <td>0.996</td>
+          <td>16</td>
+      </tr>
+  </tbody>
+</table>
+</li>
+</ul>
+<h2 id="nginx-proxy-manager-反向代理">Nginx Proxy Manager 反向代理</h2>
+<p>未完待續&hellip;</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新於 2025-04-25</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/index.md" target="_blank">閱讀原始文檔</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 X" data-sharer="x" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-title="Immich 部署、設定與反向代理" data-hashtags="Docker,Immich"><i class="fab fa-x-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Threads" data-sharer="threads" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-title="Immich 部署、設定與反向代理"><i class="fab fa-threads fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-hashtag="Docker"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-title="Immich 部署、設定與反向代理"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-title="Immich 部署、設定與反向代理"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@14.9.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-title="Immich 部署、設定與反向代理"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Diaspora" data-sharer="diaspora" data-url="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" data-title="Immich 部署、設定與反向代理" data-description="Immich 部署、設定與反向代理"><i class="fab fa-diaspora fa-fw" aria-hidden="true"></i></a><a href="https://t.me/share/url?url=https%3a%2f%2frxchi1d.github.io%2finktrace%2fimmich-%25E9%2583%25A8%25E7%25BD%25B2%25E8%25A8%25AD%25E5%25AE%259A%25E8%2588%2587%25E5%258F%258D%25E5%2590%2591%25E4%25BB%25A3%25E7%2590%2586%2f&amp;text=Immich%20%e9%83%a8%e7%bd%b2%e3%80%81%e8%a8%ad%e5%ae%9a%e8%88%87%e5%8f%8d%e5%90%91%e4%bb%a3%e7%90%86" target="_blank" title="分享到 Telegram"><i class="fab fa-telegram fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/inktrace/tags/docker/">Docker</a>,&nbsp;<a href="/inktrace/tags/immich/">Immich</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/inktrace/">主頁</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/inktrace/nginx-proxy-manager-monitor-npm-monitor/" class="next" rel="next" title="Nginx Proxy Manager Monitor (NPM Monitor)">Nginx Proxy Manager Monitor (NPM Monitor)<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.146.7">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.3.1-DEV"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/RxChi1d" target="_blank">RxChi1d</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到頂部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        <div id="fixed-buttons-hidden"><a href="#" id="view-comments" class="fixed-button" title="查看評論">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script src="/inktrace/lib/lunr/lunr.stemmer.support.min.js"></script><script src="/inktrace/lib/lunr/lunr.zh.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script><script>window.config={"comment":{},"lightgallery":true,"search":{"highlightTag":"em","lunrIndexURL":"/inktrace/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/inktrace/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"沒有找到結果","snippetLength":50,"type":"lunr"}};</script><script src="/inktrace/js/theme.min.js"></script></body>
+</html>

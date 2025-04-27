@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker 容器部署 on 筆墨碎語｜RxChi1d</title>
+    <link>https://rxchi1d.github.io/inktrace/categories/docker-%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2/</link>
+    <description>Recent content in Docker 容器部署 on 筆墨碎語｜RxChi1d</description>
+    <generator>Hugo</generator>
+    <language>zh-TW</language>
+    <managingEditor>rchildlin@gmail.com (RxChi1d)</managingEditor>
+    <webMaster>rchildlin@gmail.com (RxChi1d)</webMaster>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://rxchi1d.github.io/inktrace/categories/docker-%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nginx Proxy Manager Monitor (NPM Monitor)</title>
+      <link>https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate><author>rchildlin@gmail.com (RxChi1d)</author>
+      <guid>https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;💡 &lt;strong&gt;工作原理&lt;/strong&gt;&lt;br&gt;&#xA;使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;1-部署-grafana&#34;&gt;1. 部署 grafana&lt;/h2&gt;&#xA;&lt;p&gt;如果尚未有 grafana 的 container，請參考 &lt;a href=&#34;https://hackmd.io/@RxChi1d/HJFdtYDJxl&#34; target=&#34;_blank&#34; rel=&#34;noopener noreffer &#34;&gt;grafana&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Immich 部署、設定與反向代理</title>
+      <link>https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</link>
+      <pubDate>Fri, 25 Apr 2025 00:00:00 +0800</pubDate><author>rchildlin@gmail.com (RxChi1d)</author>
+      <guid>https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</guid>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;&#xA;&lt;p&gt;這個筆記中，我參考 &lt;a href=&#34;https://immich.app/docs/install/unraid&#34; target=&#34;_blank&#34; rel=&#34;noopener noreffer &#34;&gt;Immich 官方文件&lt;/a&gt; 中 docker compose 的做法，使用 Portainer 來部署 Immich (包含 immich-server, immich-machining-learning, redis 和 postgres)。因此在開始之前，請確認已經安裝 Docker, Docker Compose ，並部署 Portainer 容器。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

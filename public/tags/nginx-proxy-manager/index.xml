@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nginx Proxy Manager on 筆墨碎語｜RxChi1d</title>
+    <link>https://rxchi1d.github.io/inktrace/tags/nginx-proxy-manager/</link>
+    <description>Recent content in Nginx Proxy Manager on 筆墨碎語｜RxChi1d</description>
+    <generator>Hugo</generator>
+    <language>zh-TW</language>
+    <managingEditor>rchildlin@gmail.com (RxChi1d)</managingEditor>
+    <webMaster>rchildlin@gmail.com (RxChi1d)</webMaster>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://rxchi1d.github.io/inktrace/tags/nginx-proxy-manager/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nginx Proxy Manager Monitor (NPM Monitor)</title>
+      <link>https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate><author>rchildlin@gmail.com (RxChi1d)</author>
+      <guid>https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;💡 &lt;strong&gt;工作原理&lt;/strong&gt;&lt;br&gt;&#xA;使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;1-部署-grafana&#34;&gt;1. 部署 grafana&lt;/h2&gt;&#xA;&lt;p&gt;如果尚未有 grafana 的 container，請參考 &lt;a href=&#34;https://hackmd.io/@RxChi1d/HJFdtYDJxl&#34; target=&#34;_blank&#34; rel=&#34;noopener noreffer &#34;&gt;grafana&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

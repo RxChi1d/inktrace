@@ -1,0 +1,29 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>所有文章 - 筆墨碎語｜RxChi1d</title>
+        <link>https://rxchi1d.github.io/inktrace/posts/</link>
+        <description>所有文章 | 筆墨碎語｜RxChi1d</description>
+        <generator>Hugo -- gohugo.io</generator><language>zh-TW</language><managingEditor>rchildlin@gmail.com (RxChi1d)</managingEditor>
+            <webMaster>rchildlin@gmail.com (RxChi1d)</webMaster><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sat, 26 Apr 2025 00:00:00 &#43;0000</lastBuildDate><atom:link href="https://rxchi1d.github.io/inktrace/posts/" rel="self" type="application/rss+xml" /><item>
+    <title>Nginx Proxy Manager Monitor (NPM Monitor)</title>
+    <link>https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/</link>
+    <pubDate>Sat, 26 Apr 2025 00:00:00 &#43;0000</pubDate>
+    <author>RxChi1d</author>
+    <guid>https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/</guid>
+    <description><![CDATA[<blockquote>
+<p>💡 <strong>工作原理</strong><br>
+使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。</p></blockquote>
+<h2 id="1-部署-grafana">1. 部署 grafana</h2>
+<p>如果尚未有 grafana 的 container，請參考 <a href="https://hackmd.io/@RxChi1d/HJFdtYDJxl" target="_blank" rel="noopener noreffer ">grafana</a>。</p>]]></description>
+</item>
+<item>
+    <title>Immich 部署、設定與反向代理</title>
+    <link>https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</link>
+    <pubDate>Fri, 25 Apr 2025 00:00:00 &#43;0800</pubDate>
+    <author>RxChi1d</author>
+    <guid>https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</guid>
+    <description><![CDATA[<h2 id="前言">前言</h2>
+<p>這個筆記中，我參考 <a href="https://immich.app/docs/install/unraid" target="_blank" rel="noopener noreffer ">Immich 官方文件</a> 中 docker compose 的做法，使用 Portainer 來部署 Immich (包含 immich-server, immich-machining-learning, redis 和 postgres)。因此在開始之前，請確認已經安裝 Docker, Docker Compose ，並部署 Portainer 容器。</p>]]></description>
+</item>
+</channel>
+</rss>

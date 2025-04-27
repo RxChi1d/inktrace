@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on 筆墨碎語｜RxChi1d</title>
+    <link>https://rxchi1d.github.io/inktrace/categories/</link>
+    <description>Recent content in Categories on 筆墨碎語｜RxChi1d</description>
+    <generator>Hugo</generator>
+    <language>zh-TW</language>
+    <managingEditor>rchildlin@gmail.com (RxChi1d)</managingEditor>
+    <webMaster>rchildlin@gmail.com (RxChi1d)</webMaster>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <atom:link href="https://rxchi1d.github.io/inktrace/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker 容器部署</title>
+      <link>https://rxchi1d.github.io/inktrace/categories/docker-%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Sat, 26 Apr 2025 00:00:00 +0000</pubDate><author>rchildlin@gmail.com (RxChi1d)</author>
+      <guid>https://rxchi1d.github.io/inktrace/categories/docker-%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

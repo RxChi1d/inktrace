@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>Nginx Proxy Manager Monitor (NPM Monitor) - 筆墨碎語｜RxChi1d</title><meta name="Description" content="筆墨未乾，語意尚在流動。
+碎片錯落，錯誤转化為突破，靈感自幽微中浮現。
+技術是我與世界對话的語言，書寫是我與自己對话的方對。
+
+對裡，是筆墨碎語，也是思考與記憶的緩存地。
+"><meta property="og:url" content="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/">
+  <meta property="og:site_name" content="筆墨碎語｜RxChi1d">
+  <meta property="og:title" content="Nginx Proxy Manager Monitor (NPM Monitor)">
+  <meta property="og:description" content="💡 工作原理
+使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。
+1. 部署 grafana 如果尚未有 grafana 的 container，請參考 grafana。">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-04-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-04-26T00:00:00+00:00">
+    <meta property="article:tag" content="Docker">
+    <meta property="article:tag" content="Nginx Proxy Manager">
+    <meta property="article:tag" content="Monitor">
+    <meta property="og:image" content="https://rxchi1d.github.io/images/Apple-Devices-Preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://rxchi1d.github.io/images/Apple-Devices-Preview.png">
+  <meta name="twitter:title" content="Nginx Proxy Manager Monitor (NPM Monitor)">
+  <meta name="twitter:description" content="💡 工作原理
+使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。
+1. 部署 grafana 如果尚未有 grafana 的 container，請參考 grafana。">
+<meta name="application-name" content="LoveIt">
+<meta name="apple-mobile-web-app-title" content="LoveIt">
+<meta name="referrer" content="no-referrer" /><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" /><link rel="prev" href="https://rxchi1d.github.io/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" /><link rel="stylesheet" href="/inktrace/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Nginx Proxy Manager Monitor (NPM Monitor)",
+        "inLanguage": "zh-TW",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https:\/\/rxchi1d.github.io\/inktrace\/nginx-proxy-manager-monitor-npm-monitor\/"
+        },"image": ["https:\/\/rxchi1d.github.io\/images\/Apple-Devices-Preview.png"],"genre": "posts","keywords": "Docker, Nginx Proxy Manager, Monitor","wordcount":  1105 ,
+        "url": "https:\/\/rxchi1d.github.io\/inktrace\/nginx-proxy-manager-monitor-npm-monitor\/","datePublished": "2025-04-26T00:00:00+00:00","dateModified": "2025-04-26T00:00:00+00:00","license": "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.","publisher": {
+            "@type": "Organization",
+            "name": "RxChi1d","logo": "https:\/\/rxchi1d.github.io\/images\/avatar.png"},"author": {
+                "@type": "Person",
+                "name": "RxChi1d"
+            },"description": ""
+    }
+    </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HCEJER9SE0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HCEJER9SE0');
+</script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script>(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/inktrace/" title="筆墨碎語｜RxChi1d">筆墨碎語｜RxChi1d</a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/inktrace/posts/"> 所有文章 </a><a class="menu-item" href="/inktrace/tags/"> 標籤 </a><a class="menu-item" href="/inktrace/categories/"> 分類 </a><a class="menu-item" href="https://github.com/RxChi1d" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i>  </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="搜尋..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="切換主題">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/inktrace/" title="筆墨碎語｜RxChi1d">筆墨碎語｜RxChi1d</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="搜尋..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        取消
+                    </a>
+                </div><a class="menu-item" href="/inktrace/posts/" title="">所有文章</a><a class="menu-item" href="/inktrace/tags/" title="">標籤</a><a class="menu-item" href="/inktrace/categories/" title="">分類</a><a class="menu-item" href="https://github.com/RxChi1d" title="GitHub" rel="noopener noreffer" target="_blank"><i class='fab fa-github fa-fw' aria-hidden='true'></i></a><a href="javascript:void(0);" class="menu-item theme-switch" title="切換主題">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">目錄</h2>
+            <div class="toc-content always-active" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Nginx Proxy Manager Monitor (NPM Monitor)</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="https://github.com/RxChi1d" title="Author" target="_blank" rel="noopener noreffer author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>RxChi1d</a></span>&nbsp;<span class="post-category">收錄於 <a href="/inktrace/categories/docker-%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Docker 容器部署</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="2025-04-26">2025-04-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;約 1105 字&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;預計閱讀 3 分鐘&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>目錄</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-部署-grafana">1. 部署 grafana</a></li>
+    <li><a href="#2-新增-docker-network">2. 新增 docker network</a></li>
+    <li><a href="#3-調整-nginx-proxy-manager-的-nginx-設置">3. 調整 Nginx Proxy Manager 的 Nginx 設置</a>
+      <ul>
+        <li><a href="#啟用-geoip2">啟用 geoip2</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-部署-loki-和-promtail">4. 部署 loki 和 promtail</a>
+      <ul>
+        <li><a href="#41-loki-配置">4.1. loki 配置</a></li>
+        <li><a href="#42-promtail-配置">4.2. promtail 配置</a></li>
+        <li><a href="#43-配置-docker-compose-file">4.3. 配置 Docker Compose File</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-設置-grafana">5. 設置 Grafana</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><blockquote>
+<p>💡 <strong>工作原理</strong><br>
+使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。</p></blockquote>
+<h2 id="1-部署-grafana">1. 部署 grafana</h2>
+<p>如果尚未有 grafana 的 container，請參考 <a href="https://hackmd.io/@RxChi1d/HJFdtYDJxl" target="_blank" rel="noopener noreffer ">grafana</a>。</p>
+<h2 id="2-新增-docker-network">2. 新增 docker network</h2>
+<p>為了方便 grafana, loki 以及 promtail 的 container 之間通訊，因此提前先創建一個 bridge mode 的 docker network。如果有其他方法或需求，可以直接跳至<a href="#3-%e8%aa%bf%e6%95%b4-nginx-proxy-manager-%e7%9a%84-nginx-%e8%a8%ad%e7%bd%ae" rel="">步驟三</a>。</p>
+<ul>
+<li>可以使用 portainer 增新網路配置。</li>
+<li>或是通過命令：</li>
+</ul>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-bash">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker network create grafana</span></span></code></pre></div></div>
+<blockquote>
+<p>💡 <strong>提醒</strong>
+Grafana 的容器設置一併做相應的調整喔～ (加上 network 設定)</p></blockquote>
+<h2 id="3-調整-nginx-proxy-manager-的-nginx-設置">3. 調整 Nginx Proxy Manager 的 Nginx 設置</h2>
+<p>Nginx 需要調整的部分有兩個，分別是「啟用 geoip2」和「配置 json log formator」。</p>
+<h3 id="啟用-geoip2">啟用 geoip2</h3>
+<ol>
+<li>
+<p>在 nginx 資料夾中增新以下檔案與資料。</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>/appdata/npm/data/nginx
+├── custom
+│   |── events.conf 
+│   |── http_top.conf
+│   └── server_proxy.conf
+└──  geoip2
+    |── GeoLite2-ASN.mmdb
+    |── GeoLite2-City.mmdb
+    └── GeoLite2-Country.mmdb</code></pre></div>
+<p>其中 <code>GeoLite2-ASN.mmdb</code>, <code>GeoLite2-City.mmdb</code> 和 <code>GeoLite2-Country.mmdb</code> 需要下載。相關檔案可以參考 <a href="https://github.com/P3TERX/GeoLite.mmdb" target="_blank" rel="noopener noreffer ">P3TERX/GeoLite.mmdb</a>。</p>
+<ul>
+<li>
+<p><code>events.conf</code></p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>worker_connections 20000;
+multi_accept on;</code></pre></div>
+</li>
+<li>
+<p><code>http_top.conf</code></p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>geoip2 /data/nginx/geoip2/GeoLite2-Country.mmdb {
+    auto_reload 5m;
+    $geoip2_metadata_country_build metadata build_epoch;
+    $geoip2_data_country_code default=TW source=$remote_addr country iso_code;
+    $geoip2_data_country_name default=Taiwan country names en;
+}
+
+geoip2 /data/nginx/geoip2/GeoLite2-City.mmdb {
+    $geoip2_data_city_name default=Unknown city city names en;
+}
+
+geoip2 /data/nginx/geoip2/GeoLite2-ASN.mmdb {
+    $geoip2_data_asn_code default=000 autonomous_system_number;
+}
+
+log_format json_analytics escape=json &#39;{&#39;
+       &#39;&#34;time_local&#34;: &#34;$time_local&#34;, &#39;
+       &#39;&#34;remote_addr&#34;: &#34;$remote_addr&#34;, &#39;
+       &#39;&#34;request_uri&#34;: &#34;$request_uri&#34;, &#39;
+       &#39;&#34;status&#34;: &#34;$status&#34;, &#39;
+       &#39;&#34;server_name&#34;: &#34;$server_name&#34;, &#39;
+       &#39;&#34;request_time&#34;: &#34;$request_time&#34;, &#39;
+       &#39;&#34;request_method&#34;: &#34;$request_method&#34;, &#39;
+       &#39;&#34;bytes_sent&#34;: &#34;$bytes_sent&#34;, &#39;
+       &#39;&#34;http_host&#34;: &#34;$http_host&#34;, &#39;
+       &#39;&#34;http_x_forwarded_for&#34;: &#34;$http_x_forwarded_for&#34;, &#39;
+       &#39;&#34;http_cookie&#34;: &#34;$http_cookie&#34;, &#39;
+       &#39;&#34;server_protocol&#34;: &#34;$server_protocol&#34;, &#39;
+       &#39;&#34;upstream_addr&#34;: &#34;$upstream_addr&#34;, &#39;
+       &#39;&#34;upstream_response_time&#34;: &#34;$upstream_response_time&#34;, &#39;
+       &#39;&#34;ssl_protocol&#34;: &#34;$ssl_protocol&#34;, &#39;
+       &#39;&#34;ssl_cipher&#34;: &#34;$ssl_cipher&#34;, &#39;
+       &#39;&#34;http_user_agent&#34;: &#34;$http_user_agent&#34;, &#39;
+       &#39;&#34;remote_user&#34;: &#34;$remote_user&#34;, &#39;
+       &#39;&#34;geoip2_data_country_code&#34;: &#34;$geoip2_data_country_code&#34;, &#39;
+       &#39;&#34;geoip2_data_country_name&#34;: &#34;$geoip2_data_country_name&#34;, &#39;
+       &#39;&#34;geoip2_data_city_name&#34;: &#34;$geoip2_data_city_name&#34;, &#39;
+       &#39;&#34;geoip2_data_asn_code&#34;: &#34;$geoip2_data_asn_code&#34;&#39;
+   &#39;}&#39;;</code></pre></div>
+</li>
+<li>
+<p><code>server_proxy.conf</code></p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>access_log /data/logs/json_access.log json_analytics;
+error_log /data/logs/json_error.log warn;</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>增新以下資料夾與檔案</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>/appdata/npm/nginx-configs
+└── nginx-configs
+    ├── modules
+    |   └── geoip2.conf
+    └── proxy.conf </code></pre></div>
+<p>檔案內容分別如下：</p>
+<ul>
+<li>
+<p><code>geoip2.conf</code></p>
+<p>用於載入 geoip2 模組</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>load_module /usr/lib/nginx/modules/ngx_http_geoip2_module.so;
+load_module /usr/lib/nginx/modules/ngx_stream_geoip2_module.so;</code></pre></div>
+</li>
+<li>
+<p><code>proxy.conf</code></p>
+<p>用於加入標頭</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code># geoip2
+proxy_set_header geoip2-COUNTRY-CODE $geoip2_data_country_code;
+proxy_set_header geoip2-COUNTRY-NAME $geoip2_data_country_name;
+proxy_set_header geoip2-CITY-NAME    $geoip2_data_city_name;
+proxy_set_header geoip2-ASN-CODE     $geoip2_data_asn_code;
+proxy_set_header geoip2-IP-Address   $remote_addr;
+
+# default
+add_header       X-Served-By $host;
+proxy_set_header Host $host;
+proxy_set_header X-Forwarded-Scheme $scheme;
+proxy_set_header X-Forwarded-Proto  $scheme;
+proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+proxy_set_header X-Real-IP          $remote_addr;
+proxy_pass       $forward_scheme://$server:$port$request_uri;</code></pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>在 nginx proxy manager 的 Docker Compose File 增新 geoip2 配置的 volume 映射：</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">/appdata/npm/nginx-configs/proxy.conf:/etc/nginx/conf.d/include/proxy.conf</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">/appdata/npm/nginx-configs/modules/geoip2.conf:/etc/nginx/modules/geoip2.conf</span></span></span></code></pre></div></div>
+<p>隨後重啟 nginx proxy manager。</p>
+</li>
+</ol>
+<h2 id="4-部署-loki-和-promtail">4. 部署 loki 和 promtail</h2>
+<h3 id="41-loki-配置">4.1. loki 配置</h3>
+<ol>
+<li>
+<p>創建 loki 的資料夾與檔案</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>/appdata
+└── loki
+    └── config-loki
+        └── local-config.yaml</code></pre></div>
+<ul>
+<li>
+<p><code>local-config.yaml</code></p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">auth_enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">http_listen_port</span><span class="p">:</span><span class="w"> </span><span class="m">3100</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">common</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">path_prefix</span><span class="p">:</span><span class="w"> </span><span class="l">/loki</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">storage</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">filesystem</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">chunks_directory</span><span class="p">:</span><span class="w"> </span><span class="l">/loki/chunks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">rules_directory</span><span class="p">:</span><span class="w"> </span><span class="l">/loki/rules</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">replication_factor</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ring</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kvstore</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l">inmemory</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">schema_config</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">configs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="ld">2020-10-24</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l">boltdb-shipper</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">object_store</span><span class="p">:</span><span class="w"> </span><span class="l">filesystem</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l">v11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">index</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l">index_</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">period</span><span class="p">:</span><span class="w"> </span><span class="l">24h</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">ruler</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">alertmanager_url</span><span class="p">:</span><span class="w"> </span><span class="l">http://localhost:9093</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">query_scheduler</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">max_outstanding_requests_per_tenant</span><span class="p">:</span><span class="w"> </span><span class="m">2048</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">limits_config</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">allow_structured_metadata</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre></div></div>
+</li>
+</ul>
+</li>
+<li>
+<p>修改 loki 資料夾的權限</p>
+<p>由於 loki 使用 10001 用戶操作資料，因此需要調整 loki 資料夾與其下檔案的擁有者。</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-bash">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo chown -R 10001:10001 /appdata/loki</span></span></code></pre></div></div>
+</li>
+</ol>
+<h3 id="42-promtail-配置">4.2. promtail 配置</h3>
+<ol>
+<li>
+<p>創建 promtail 的資料夾與檔案</p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><pre tabindex="0"><code>/appdata
+└── promtail
+    └── config-promtail
+        └── config.yml</code></pre></div>
+<ul>
+<li>
+<p><code>config.yml</code></p>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">http_listen_port</span><span class="p">:</span><span class="w"> </span><span class="m">9080</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">grpc_listen_port</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">positions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l">/tmp/positions.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">clients</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l">http://loki:3100/loki/api/v1/push</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">scrape_configs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l">npm_logs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">static_configs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">targets</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">localhost</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">job</span><span class="p">:</span><span class="w"> </span><span class="l">npm_logs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">__path__</span><span class="p">:</span><span class="w"> </span><span class="l">/var/log/npm-logs/json_*.log</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pipeline_stages</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">json</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">expressions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">time_local</span><span class="p">:</span><span class="w"> </span><span class="l">time_local</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">remote_addr</span><span class="p">:</span><span class="w"> </span><span class="l">remote_addr</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">request_uri</span><span class="p">:</span><span class="w"> </span><span class="l">request_uri</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l">status</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">server_name</span><span class="p">:</span><span class="w"> </span><span class="l">server_name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">request_time</span><span class="p">:</span><span class="w"> </span><span class="l">request_time</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">request_method</span><span class="p">:</span><span class="w"> </span><span class="l">request_method</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">bytes_sent</span><span class="p">:</span><span class="w"> </span><span class="l">bytes_sent</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">http_host</span><span class="p">:</span><span class="w"> </span><span class="l">http_host</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">http_x_forwarded_for</span><span class="p">:</span><span class="w"> </span><span class="l">http_x_forwarded_for</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">http_cookie</span><span class="p">:</span><span class="w"> </span><span class="l">http_cookie</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">server_protocol</span><span class="p">:</span><span class="w"> </span><span class="l">server_protocol</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">upstream_addr</span><span class="p">:</span><span class="w"> </span><span class="l">upstream_addr</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">upstream_response_time</span><span class="p">:</span><span class="w"> </span><span class="l">upstream_response_time</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">ssl_protocol</span><span class="p">:</span><span class="w"> </span><span class="l">ssl_protocol</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">ssl_cipher</span><span class="p">:</span><span class="w"> </span><span class="l">ssl_cipher</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">http_user_agent</span><span class="p">:</span><span class="w"> </span><span class="l">http_user_agent</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">remote_user</span><span class="p">:</span><span class="w"> </span><span class="l">remote_user</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">geoip2_data_country_code</span><span class="p">:</span><span class="w"> </span><span class="l">geoip2_data_country_code</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">geoip2_data_country_name</span><span class="p">:</span><span class="w"> </span><span class="l">geoip2_data_country_name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">geoip2_data_city_name</span><span class="p">:</span><span class="w"> </span><span class="l">geoip2_data_city_name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">status</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">server_name</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">request_method</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">geoip2_data_country_code</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="l">geoip2_data_country_name:</span></span></span></code></pre></div></div>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="43-配置-docker-compose-file">4.3. 配置 Docker Compose File</h3>
+<div class="code-block code-line-numbers open" style="counter-reset: code-block 0">
+    <div class="code-header language-yaml">
+        <span class="code-title"><i class="arrow fas fa-angle-right fa-fw" aria-hidden="true"></i></span>
+        <span class="ellipses"><i class="fas fa-ellipsis-h fa-fw" aria-hidden="true"></i></span>
+        <span class="copy" title="複製到剪貼板"><i class="far fa-copy fa-fw" aria-hidden="true"></i></span>
+    </div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">services</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">loki</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">grafana/loki:latest</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;unless-stopped&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s2">&#34;3100:3100&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span>-<span class="l">config.file=/etc/loki/local-config.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">/home/rxchi1d/appdata/loki:/loki</span><span class="w"> </span><span class="c"># Loki persistent data folder</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">/home/rxchi1d/appdata/loki/config-loki:/etc/loki</span><span class="w"> </span><span class="c"># Loki config folder</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">networks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">grafana</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">promtail</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">grafana/promtail:latest</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;unless-stopped&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">/home/rxchi1d/appdata/npm/data/logs/:/var/log/npm-logs:ro</span><span class="w"> </span><span class="c"># path to your NPM logs, add else if you need</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">/home/rxchi1d/appdata/promtail/config-promtail/config.yml:/etc/promtail/config.yml</span><span class="w"> </span><span class="c"># Promtail config folder</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span>-<span class="l">config.file=/etc/promtail/config.yml</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">networks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">grafana</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">networks</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">grafana</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre></div></div>
+<h2 id="5-設置-grafana">5. 設置 Grafana</h2>
+<ol>
+<li>
+<p>進入 Grafana (http://grafana-host:3000)</p>
+</li>
+<li>
+<p>增新 data source</p>
+<ol>
+<li>
+<p><code>Connections</code> - <code>Data sources</code> 選擇 <code>Add new data source</code></p>
+</li>
+<li>
+<p>選擇 <code>Loki</code></p>
+</li>
+<li>
+<p><strong>Name 為 <code>loki</code> ，Connection 的 url 填入</strong> <a href="http://loki:3100/" target="_blank" rel="noopener noreffer "><code>http://loki:3100</code></a> 。隨後點擊 <code>Save &amp; test</code>。</p>
+<p><img
+        class="lazyload"
+        src="/inktrace/svg/loading.min.svg"
+        data-src="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_01-image.png"
+        data-srcset="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_01-image.png, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_01-image.png 1.5x, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_01-image.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_01-image.png"
+        title="CleanShot_2025-02-25_at_15.22.24" /></p>
+</li>
+</ol>
+</li>
+<li>
+<p>增新 Dashboard</p>
+<ol>
+<li>
+<p>進入 <code>Dashboards</code> ，點擊 <code>New</code> - <code>Import</code></p>
+<p><img
+        class="lazyload"
+        src="/inktrace/svg/loading.min.svg"
+        data-src="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_02-image.png"
+        data-srcset="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_02-image.png, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_02-image.png 1.5x, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_02-image.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_02-image.png"
+        title="CleanShot_2025-02-22_at_19.56.022x" /></p>
+</li>
+<li>
+<p>上傳 NPM-Monitor 的 json</p>
+<p><a href="https://file.notion.so/f/f/79590764-d58d-4837-9768-5dc7c51dd064/dea0bf5d-b0ad-41e1-9c7c-4d478309f6f5/NPM_Monitor.json?table=block&amp;id=1a5b9f7f-a522-8005-9376-db1babc13b54&amp;spaceId=79590764-d58d-4837-9768-5dc7c51dd064&amp;expirationTimestamp=1745539200000&amp;signature=8s3Z5hj4wCmSyM3VTecBm1HJZzgx3slzg55DJr3Prvs&amp;downloadName=NPM&#43;Monitor.json" target="_blank" rel="noopener noreffer ">NPM Monitor.json</a></p>
+</li>
+<li>
+<p>選擇對應的 loki Data Source</p>
+<p><img
+        class="lazyload"
+        src="/inktrace/svg/loading.min.svg"
+        data-src="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_03-image.png"
+        data-srcset="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_03-image.png, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_03-image.png 1.5x, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_03-image.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_03-image.png"
+        title="CleanShot_2025-02-25_at_15.26.18" /></p>
+</li>
+</ol>
+</li>
+<li>
+<p>按需求調整 labelFilter 與 regexFilter</p>
+<p><img
+        class="lazyload"
+        src="/inktrace/svg/loading.min.svg"
+        data-src="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_04-image.png"
+        data-srcset="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_04-image.png, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_04-image.png 1.5x, https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_04-image.png 2x"
+        data-sizes="auto"
+        alt="https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_04-image.png"
+        title="CleanShot_2025-02-25_at_15.24.33" /></p>
+<p>預設 regexFilter 用以排除來源為 <code>192.168.50.0/24</code> 之資料。</p>
+<p>兩個使用的優先級為 labelFilter &gt; regexFilter。</p>
+<blockquote>
+<p>💡 <strong>設計兩種 Filter 的原因</strong>
+labelFilter 的過濾效率比較高，也易於使用，但為了避免將變化較大的資料轉換成 label 造成 loki 負擔。因此對於值變化較大的參數，比如 remote_addr，可以使用 regexFilter 過濾。</p></blockquote>
+</li>
+</ol>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>更新於 2025-04-26</span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"><span>
+                            <a class="link-to-markdown" href="/inktrace/nginx-proxy-manager-monitor-npm-monitor/index.md" target="_blank">閱讀原始文檔</a>
+                        </span></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="分享到 X" data-sharer="x" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-title="Nginx Proxy Manager Monitor (NPM Monitor)" data-hashtags="Docker,Nginx Proxy Manager,Monitor"><i class="fab fa-x-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Threads" data-sharer="threads" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-title="Nginx Proxy Manager Monitor (NPM Monitor)"><i class="fab fa-threads fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-hashtag="Docker"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Hacker News" data-sharer="hackernews" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-title="Nginx Proxy Manager Monitor (NPM Monitor)"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Line" data-sharer="line" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-title="Nginx Proxy Manager Monitor (NPM Monitor)"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@14.9.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-title="Nginx Proxy Manager Monitor (NPM Monitor)"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="分享到 Diaspora" data-sharer="diaspora" data-url="https://rxchi1d.github.io/inktrace/nginx-proxy-manager-monitor-npm-monitor/" data-title="Nginx Proxy Manager Monitor (NPM Monitor)" data-description=""><i class="fab fa-diaspora fa-fw" aria-hidden="true"></i></a><a href="https://t.me/share/url?url=https%3a%2f%2frxchi1d.github.io%2finktrace%2fnginx-proxy-manager-monitor-npm-monitor%2f&amp;text=Nginx%20Proxy%20Manager%20Monitor%20%28NPM%20Monitor%29" target="_blank" title="分享到 Telegram"><i class="fab fa-telegram fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/inktrace/tags/docker/">Docker</a>,&nbsp;<a href="/inktrace/tags/nginx-proxy-manager/">Nginx Proxy Manager</a>,&nbsp;<a href="/inktrace/tags/monitor/">Monitor</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/inktrace/">主頁</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/inktrace/immich-%E9%83%A8%E7%BD%B2%E8%A8%AD%E5%AE%9A%E8%88%87%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/" class="prev" rel="prev" title="Immich 部署、設定與反向代理"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Immich 部署、設定與反向代理</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">Powered by <a href="https://gohugo.io/" target="_blank" rel="noopener noreffer" title="Hugo 0.146.7">Hugo</a> | Theme - <a href="https://github.com/dillonzq/LoveIt" target="_blank" rel="noopener noreffer" title="LoveIt 0.3.1-DEV"><i class="far fa-kiss-wink-heart fa-fw" aria-hidden="true"></i> LoveIt</a>
+                </div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><i class="far fa-copyright fa-fw" aria-hidden="true"></i><span itemprop="copyrightYear">2025</span><span class="author" itemprop="copyrightHolder">&nbsp;<a href="https://github.com/RxChi1d" target="_blank">RxChi1d</a></span>&nbsp;|&nbsp;<span class="license"><a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="回到頂部">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        <div id="fixed-buttons-hidden"><a href="#" id="view-comments" class="fixed-button" title="查看評論">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script src="/inktrace/lib/lunr/lunr.stemmer.support.min.js"></script><script src="/inktrace/lib/lunr/lunr.zh.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.2/sharer.min.js"></script><script>window.config={"comment":{},"lightgallery":true,"search":{"highlightTag":"em","lunrIndexURL":"/inktrace/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/inktrace/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"沒有找到結果","snippetLength":50,"type":"lunr"}};</script><script src="/inktrace/js/theme.min.js"></script></body>
+</html>
