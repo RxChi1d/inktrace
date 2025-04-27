@@ -45,18 +45,38 @@ jobs:
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
 
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Cache Restore
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ runner.temp }}/hugo_cache
+          key: hugo-${{ github.run_id }}
+          restore-keys:
+            hugo-
       - name: Build with Hugo
         run: |
           hugo \
             --gc \
             --minify \
-            --baseURL "https://rxchi1d.github.io/inktrace/"
+            --baseURL "${{ steps.pages.outputs.base_url }}/"
 
+      - name: Cache Save
+        id: cache-save
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ runner.temp }}/hugo_cache
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       - name: Upload Pages artifact
         id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs   # 请确认你的静态文件都在 ./docs 目录下 :contentReference[oaicite:0]{index=0}
+          path: ./public   # 请确认你的静态文件都在 ./public 目录下
 
   deploy:
     needs: build
