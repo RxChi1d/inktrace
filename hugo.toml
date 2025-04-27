@@ -1,5 +1,5 @@
 baseURL = "https://rxchi1d.github.io/inktrace/"
-publishDir = "docs"
+publishDir = "public"
 
 # website title
 # 网站标题
