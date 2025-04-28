@@ -327,7 +327,7 @@ networks:
 2. 增新 data source
     1. `Connections` - `Data sources` 選擇 `Add new data source`
     2. 選擇 `Loki`
-    3. **Name 為 `loki` ，Connection 的 url 填入** [`http://loki:3100`](http://loki:3100/) 。隨後點擊 `Save & test`。
+    3. **Name 為 `loki` ，Connection 的 url 填入** `http://loki:3100` 。隨後點擊 `Save & test`。
         
         ![CleanShot_2025-02-25_at_15.22.24](https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_01-image.png)
         
