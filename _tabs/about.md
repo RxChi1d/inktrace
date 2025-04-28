@@ -1,8 +1,13 @@
 ---
-# the default layout is 'page'
-icon: fas fa-info-circle
+layout: page
+title: About
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+# 筆墨碎語｜RxChi1d
+
+筆墨未乾，語意尚在流動。
+碎片錯落，錯誤轉化為突破，靈感自幽微中浮現。
+技術是我與世界對話的語言，書寫是我與自己對話的方式。
+
+這裡，是筆墨碎語，也是思考與記憶的緩存地。
