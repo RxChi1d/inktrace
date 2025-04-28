@@ -1,6 +1,6 @@
 ---
 title: "Nginx Proxy Manager Monitor (NPM Monitor)"
-date: 2025-04-28 00:00:00 +0800
+date: 2025-04-26 00:00:00 +0800
 tags: ["Docker", "Nginx Proxy Manager", "Monitor"]
 categories: ["docker 容器部署"]
 ---
@@ -48,7 +48,11 @@ Nginx 需要調整的部分有兩個，分別是「啟用 geoip2」和「配置 
     
     ```
     
-    其中 `GeoLite2-ASN.mmdb`, `GeoLite2-City.mmdb` 和 `GeoLite2-Country.mmdb` 需要下載。相關檔案可以參考 [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb)。
+    其中 `GeoLite2-ASN.mmdb`, `GeoLite2-City.mmdb` 和 `GeoLite2-Country.mmdb` 需要下載 (或參考 [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb)。  ):  
+    
+    - [GeoLite2-ASN.mmdb](https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_GeoLite2-ASN.mmdb)
+    - [GeoLite2-City.mmdb](https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_GeoLite2-City.mmdb)
+    - [GeoLite2-Country.mmdb](https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_GeoLite2-Country.mmdb)
     
     
     - `events.conf`
@@ -339,8 +343,8 @@ networks:
         
     2. 上傳 NPM-Monitor 的 json
         
-        [NPM Monitor.json](https://file.notion.so/f/f/79590764-d58d-4837-9768-5dc7c51dd064/dea0bf5d-b0ad-41e1-9c7c-4d478309f6f5/NPM_Monitor.json?table=block&id=1a5b9f7f-a522-8005-9376-db1babc13b54&spaceId=79590764-d58d-4837-9768-5dc7c51dd064&expirationTimestamp=1745539200000&signature=8s3Z5hj4wCmSyM3VTecBm1HJZzgx3slzg55DJr3Prvs&downloadName=NPM+Monitor.json)
-        
+        [NPM Monitor.json](https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_NPM-Monitor.json)
+
     3. 選擇對應的 loki Data Source
         
         ![CleanShot_2025-02-25_at_15.26.18](https://cdn.rxchi1d.me/inktrace/nginx-proxy-manager-monitor_20250426_03-image.png)
