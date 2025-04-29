@@ -3,6 +3,7 @@ title: "Nginx Proxy Manager Monitor (NPM Monitor)"
 date: 2025-04-26 00:00:00 +0800
 tags: ["Docker", "Nginx Proxy Manager", "Monitor"]
 categories: ["docker 容器部署"]
+description: "這篇文章介紹如何使用 Promtail、Loki 和 Grafana 建立 Nginx Proxy Manager 的監控系統，透過解析 Nginx 日誌並將數據視覺化，以便追蹤流量、狀態等資訊。內容包含部署 Grafana、Loki、Promtail，配置 Nginx Proxy Manager 的 geoip2 和 json log，以及在 Grafana 中設定資料來源和匯入 Dashboard。"
 ---
 
 > 💡 **工作原理**  
