@@ -14,7 +14,7 @@ description: 在 Debian/Ubuntu 上安裝最新版 7-Zip 教學。可以解決 `p
     
     在 [官網下載頁面](https://www.7-zip.org/download.html) 中查找最新版本的安裝包，並複製下載連結。
     
-    ![官網下載頁面](https://cdn.rxchi1d.me/inktrace/2024-06-19-install-7zip-image.png)
+    ![官網下載頁面](https://cdn.rxchi1d.me/inktrace-files/Linux_Related/2024-06-19-Install_7-Zip_on_Debian_Ubuntu/image-01.png)
     _官網下載頁面_
     
     ```bash
