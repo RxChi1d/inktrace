@@ -5,17 +5,17 @@
 # Refer to the theme docs for more details about each of these parameters.
 # https://blowfish.page/docs/configuration/#theme-parameters
 
-autoSwitchAppearance = true 
-colorScheme = "blowfish" 
+autoSwitchAppearance = true
+colorScheme = "blowfish"
 defaultAppearance = "light" # valid options: light or dark
-disableImageOptimization = false 
-disableTextInHeader = false 
-enableCodeCopy = true 
-enableSearch = true 
-replyByEmail = false 
+disableImageOptimization = false
+disableTextInHeader = false
+enableCodeCopy = true
+enableSearch = true
+replyByEmail = false
 # backgroundImageWidth = 1200
 
-# defaultBackgroundImage = "IMAGE.jpg" # used as default for background images 
+# defaultBackgroundImage = "IMAGE.jpg" # used as default for background images
 # defaultFeaturedImage = "IMAGE.jpg" # used as default for featured images in all articles
 
 # highlightCurrentMenuArea = true
@@ -45,14 +45,14 @@ showThemeAttribution = true
 [homepage]
 layout = "profile" # valid options: page, profile, hero, card, background, custom
 #homepageImage = "IMAGE.jpg" # used in: hero, and card
-cardView = false 
-cardViewScreenWidth = false 
+cardView = false
+cardViewScreenWidth = false
 layoutBackgroundBlur = false # only used when layout equals background
-mainSections = ["posts"] 
-showMoreLink = true 
-showMoreLinkDest = "/posts/" 
-showRecent = true 
-showRecentItems = 10 
+mainSections = ["posts"]
+showMoreLink = true
+showMoreLinkDest = "/posts/"
+showRecent = true
+showRecentItems = 10
 
 [article]
 showAuthor = false
@@ -66,9 +66,9 @@ showHero = false
 # heroStyle = "basic" # valid options: basic, big, background, thumbAndBackground
 layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
 layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
-showBreadcrumbs = false 
-showDraftLabel = true 
-showEdit = false 
+showBreadcrumbs = false
+showDraftLabel = true
+showEdit = false
 # editURL = "https://github.com/username/repo/"
 editAppendPath = true
 invertPagination = false
@@ -88,19 +88,19 @@ showZenMode = false
 [list]
 showHero = false
 # heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
-cardView = false 
-cardViewScreenWidth = false 
-constrainItemsWidth = false 
-groupByYear = true 
+cardView = false
+cardViewScreenWidth = false
+constrainItemsWidth = false
+groupByYear = true
 layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
 layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
-orderByWeight = false 
-showBreadcrumbs = false 
-showCards = true 
-showLikes = false 
-showSummary = true 
-showTableOfContents = false 
-showViews = false 
+orderByWeight = false
+showBreadcrumbs = false
+showCards = true
+showLikes = false
+showSummary = true
+showTableOfContents = false
+showViews = false
 
 [sitemap]
 excludedKinds = ["taxonomy", "term"]
@@ -167,3 +167,9 @@ showViews = false
 # [rssnext]
 # feedId = ""
 # userId = ""
+
+# Custom CSS files
+# Add your custom CSS files here. They will be loaded after the theme's CSS.
+# Example:
+# customCSS = ["css/custom.css", "css/another-custom-file.css"]
+customCSS = ["css/custom.css"]
