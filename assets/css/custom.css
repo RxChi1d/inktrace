@@ -1,0 +1,29 @@
+/* Custom styles for profile layout */
+@media (min-width: 768px) { /* Corresponds to Tailwind's 'md' breakpoint */
+  .custom-profile-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start; /* Vertically align the tops of the two columns */
+  }
+
+  .custom-profile-left { /* Author section, on the left */
+    flex-basis: 33.333333%;
+    padding-left: 1rem;  /* Removed to reduce gap, gap will be handled by .custom-profile-right's padding-left */
+  }
+
+  .custom-profile-right { /* Blog info section, on the right */
+    flex-basis: 66.666667%;
+    padding-right: 1rem;   /* Adjusted space between author and blog info to 1rem */
+  }
+}
+
+/*
+  Mobile styles (narrow screens) are handled by Tailwind classes:
+  - article.custom-profile-layout: w-full flex flex-col items-center text-center
+    (Stacks .custom-profile-left and .custom-profile-right, centers them)
+  - div.custom-profile-left: flex flex-col items-center text-center (content centered)
+                             md:items-end md:text-right (content right-aligned on wide screens)
+  - div.custom-profile-right: flex flex-col items-center text-center (content centered)
+                              md:items-start md:text-left (content left-aligned on wide screens)
+  The mt-8 on .custom-profile-right provides space when stacked below .custom-profile-left.
+*/

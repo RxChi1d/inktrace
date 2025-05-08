@@ -1,0 +1,52 @@
+{{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
+<article class="custom-profile-layout {{ if not .Site.Params.homepage.showRecent }}
+    h-full
+  {{ end }} w-full flex flex-col items-center text-center mt-20 mb-12">
+  {{/* Author Profile Section */}}
+  <div class="custom-profile-left flex flex-col items-center text-center md:items-end md:text-right">
+    <header class="relative px-1 py-1 flex flex-col items-center md:items-end mb-3">
+    {{ with .Site.Params.Author.image }}
+      {{ $authorImage := "" }}
+      {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+        {{ $authorImage = resources.GetRemote . }}
+      {{ else }}
+        {{ $authorImage = resources.Get . }}
+      {{ end }}
+      {{ if $authorImage }}
+        {{ if not $disableImageOptimization }}
+          {{ $authorImage = $authorImage.Fill (print "288x288 q" ( $.Site.Params.Author.imagequality | default "96" )) }}
+        {{ end }}
+        <img class="mb-2 rounded-full h-36 w-36" width="144" height="144" alt="{{ $.Site.Params.Author.name | default " Author" }}"
+          src="{{ $authorImage.RelPermalink }}" />
+      {{ end }}
+    {{ end }}
+    <h1 class="text-4xl font-extrabold md:text-right"> <!-- text-center is default from parent, add md:text-right -->
+      {{ .Site.Params.Author.name | default .Site.Title }}
+    </h1>
+    {{ with .Site.Params.Author.headline }}
+    <h2 class="text-xl text-neutral-500 dark:text-neutral-400 md:text-right"> <!-- text-center is default, add md:text-right -->
+      {{ . | markdownify }}
+    </h2>
+    {{ end }}
+    <div class="mt-1 text-2xl"> <!-- Social links, usually centered or aligned with text -->
+      {{ partialCached "author-links.html" . }}
+    </div>
+  </header>
+  <section class="prose dark:prose-invert w-full md:text-right">{{ .Content }}</section> <!-- Content of author also to the right -->
+  </div>
+
+  {{/* Blog Title and Description Section */}}
+  <div class="custom-profile-right flex flex-col items-center text-center md:items-start md:text-left mt-8 md:mt-0">
+    <h1 class="text-4xl font-extrabold md:text-left"> <!-- text-center is default, add md:text-left -->
+      {{ strings.TrimSuffix "｜RxChi1d" .Site.Title }}
+    </h1>
+    {{ with .Site.Params.description }}
+    <p class="text-xl text-neutral-500 dark:text-neutral-400 mt-4 md:text-left"> <!-- text-center is default, add md:text-left -->
+      {{ . | markdownify }}
+    </p>
+    {{ end }}
+  </div>
+</article>
+<section>
+  {{ partial "recent-articles/main.html" . }}
+</section>
