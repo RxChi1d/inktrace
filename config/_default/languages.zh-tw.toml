@@ -1,0 +1,26 @@
+disabled = false
+languageCode = "zh-tw"
+languageName = "繁體中文"
+title = "筆墨碎語｜RxChi1d"
+weight = 1
+
+[params]
+dateFormat = "2006-01-02"
+description = '''
+  筆墨未乾，語意尚在流動。\
+  碎片錯落，錯誤轉化為突破，靈感自幽微中浮現。\
+  技術是我與世界對話的語言，書寫是我與自己對話的方式。\
+  \
+  這裡，是筆墨碎語，也是思考與記憶的緩存地。'''
+displayName = "繁體中文"
+isoCode = "zh-tw"
+rtl = false
+
+[params.author]
+email = "rchildlin@gmail.com"
+image = "https://cdn.rxchi1d.me/inktrace-files/profile/avatar.jpg"
+links = [
+  {github = "https://github.com/rxchi1d"},
+  {email = "mailto:rchildlin@gmail.com"},
+]
+name = "RxChi1d"

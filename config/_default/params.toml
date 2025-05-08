@@ -5,20 +5,14 @@
 # Refer to the theme docs for more details about each of these parameters.
 # https://blowfish.page/docs/configuration/#theme-parameters
 
-colorScheme = "blowfish"
+autoSwitchAppearance = true 
+colorScheme = "blowfish" 
 defaultAppearance = "light" # valid options: light or dark
-autoSwitchAppearance = true
-
-enableSearch = true
-enableCodeCopy = false
-
-replyByEmail = false
-
-# mainSections = ["section1", "section2"]
-# robots = ""
-
-disableImageOptimization = false
-disableTextInHeader = false
+disableImageOptimization = false 
+disableTextInHeader = false 
+enableCodeCopy = true 
+enableSearch = true 
+replyByEmail = false 
 # backgroundImageWidth = 1200
 
 # defaultBackgroundImage = "IMAGE.jpg" # used as default for background images 
@@ -26,142 +20,150 @@ disableTextInHeader = false
 
 # highlightCurrentMenuArea = true
 # smartTOC = true
-# smartTOCHideUnfocusedChildren = true
+# smartTOCHideUnfocusedChildren = false
 
-giteaDefaultServer = "https://git.fsfe.org"
+buymeacoffee = {}
+fathomAnalytics = {}
+firebase = {}
 forgejoDefaultServer = "https://v8.next.forgejo.org"
+giteaDefaultServer = "https://git.fsfe.org"
+rssnext = {}
+selineAnalytics = {}
+umamiAnalytics = {}
+verification = {}
 
 [header]
-  layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
+layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
 
 [footer]
-  showMenu = true
-  showCopyright = true
-  showThemeAttribution = true
-  showAppearanceSwitcher = true
-  showScrollToTop = true
+showAppearanceSwitcher = true
+showCopyright = true
+showMenu = true
+showScrollToTop = true
+showThemeAttribution = true
 
 [homepage]
-  layout = "profile" # valid options: page, profile, hero, card, background, custom
-  #homepageImage = "IMAGE.jpg" # used in: hero, and card
-  showRecent = false
-  showRecentItems = 5
-  showMoreLink = false
-  showMoreLinkDest = "/posts/"
-  cardView = false
-  cardViewScreenWidth = false
-  layoutBackgroundBlur = false # only used when layout equals background
+layout = "profile" # valid options: page, profile, hero, card, background, custom
+#homepageImage = "IMAGE.jpg" # used in: hero, and card
+cardView = false 
+cardViewScreenWidth = false 
+layoutBackgroundBlur = false # only used when layout equals background
+mainSections = ["posts"] 
+showMoreLink = true 
+showMoreLinkDest = "/posts/" 
+showRecent = true 
+showRecentItems = 10 
 
 [article]
-  showDate = true
-  showViews = false
-  showLikes = false
-  showDateOnlyInArticle = false
-  showDateUpdated = false
-  showAuthor = true
-  # showAuthorBottom = false
-  showHero = false
-  # heroStyle = "basic" # valid options: basic, big, background, thumbAndBackground
-  layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
-  layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
-  showBreadcrumbs = false
-  showDraftLabel = true
-  showEdit = false
-  # editURL = "https://github.com/username/repo/"
-  editAppendPath = true
-  seriesOpened = false
-  showHeadingAnchors = true
-  showPagination = true
-  invertPagination = false
-  showReadingTime = true
-  showTableOfContents = false
-  # showRelatedContent = false
-  # relatedContentLimit = 3
-  showTaxonomies = false
-  showAuthorsBadges = false
-  showWordCount = true
-  # sharingLinks = [ "linkedin", "twitter", "bluesky", "mastodon", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]
-  showZenMode = false
+showAuthor = false
+showDate = true
+showDateOnlyInArticle = false
+showDateUpdated = true
+showLikes = false
+showViews = false
+# showAuthorBottom = false
+showHero = false
+# heroStyle = "basic" # valid options: basic, big, background, thumbAndBackground
+layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
+layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
+showBreadcrumbs = false 
+showDraftLabel = true 
+showEdit = false 
+# editURL = "https://github.com/username/repo/"
+editAppendPath = true
+invertPagination = false
+relatedContentLimit = 3
+seriesOpened = false
+showAuthorsBadges = false
+showHeadingAnchors = true
+showPagination = true
+showReadingTime = true
+showRelatedContent = true
+showTableOfContents = true
+showTaxonomies = true
+showWordCount = true
+# sharingLinks = [ "linkedin", "twitter", "bluesky", "mastodon", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]
+showZenMode = false
 
 [list]
-  showHero = false
-  # heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
-  layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
-  layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
-  showBreadcrumbs = false
-  showSummary = false
-  showViews = false
-  showLikes = false
-  showTableOfContents = false
-  showCards = false
-  orderByWeight = false
-  groupByYear = true
-  cardView = false
-  cardViewScreenWidth = false
-  constrainItemsWidth = false
+showHero = false
+# heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
+cardView = false 
+cardViewScreenWidth = false 
+constrainItemsWidth = false 
+groupByYear = true 
+layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
+layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
+orderByWeight = false 
+showBreadcrumbs = false 
+showCards = true 
+showLikes = false 
+showSummary = true 
+showTableOfContents = false 
+showViews = false 
 
 [sitemap]
-  excludedKinds = ["taxonomy", "term"]
+excludedKinds = ["taxonomy", "term"]
 
 [taxonomy]
-  showTermCount = true
-  showHero = false
-  # heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
-  showBreadcrumbs = false
-  showViews = false
-  showLikes = false
-  showTableOfContents = false
-  cardView = false
+showHero = false
+showTermCount = true
+# heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
+cardView = false
+showBreadcrumbs = false
+showLikes = false
+showTableOfContents = false
+showViews = false
 
 [term]
-  showHero = false
-  # heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
-  showBreadcrumbs = false
-  showViews = false
-  showLikes = false
-  showTableOfContents = true
-  groupByYear = false
-  cardView = false
-  cardViewScreenWidth = false
+showHero = false
+# heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
+cardView = false
+cardViewScreenWidth = false
+groupByYear = false
+showBreadcrumbs = false
+showLikes = false
+showTableOfContents = true
+showViews = false
 
-[firebase]
-  # apiKey = "XXXXXX"
-  # authDomain = "XXXXXX"
-  # projectId = "XXXXXX"
-  # storageBucket = "XXXXXX"
-  # messagingSenderId = "XXXXXX"
-  # appId = "XXXXXX"
-  # measurementId = "XXXXXX"
+# [firebase]
+# apiKey = "XXXXXX"
+# authDomain = "XXXXXX"
+# projectId = "XXXXXX"
+# storageBucket = "XXXXXX"
+# messagingSenderId = "XXXXXX"
+# appId = "XXXXXX"
+# measurementId = "XXXXXX"
 
-[fathomAnalytics]
-  # site = "ABC12345"
-  # domain = "llama.yoursite.com"
+# [fathomAnalytics]
+# site = "ABC12345"
+# domain = "llama.yoursite.com"
 
-[umamiAnalytics]
-  # websiteid = "ABC12345"
-  # domain = "llama.yoursite.com"
-  # dataDomains = "yoursite.com,yoursite2.com"
-  # scriptName = ""
-  # enableTrackEvent = true
+# [umamiAnalytics]
+# websiteid = "ABC12345"
+# domain = "llama.yoursite.com"
+# dataDomains = "yoursite.com,yoursite2.com"
+# scriptName = ""
+# enableTrackEvent = true
 
-[selineAnalytics]
-  # token = "XXXXXX"
-  # enableTrackEvent = true
+# [selineAnalytics]
+# token = "XXXXXX"
+# enableTrackEvent = true
 
-[buymeacoffee]
-  # identifier = ""
-  # globalWidget = true
-  # globalWidgetMessage = "Hello"
-  # globalWidgetColor = "#FFDD00"
-  # globalWidgetPosition = "Right"
+# [buymeacoffee]
+# identifier = ""
+# globalWidget = true
+# globalWidgetMessage = "Hello"
+# globalWidgetColor = "#FFDD00"
+# globalWidgetPosition = "Right"
 
-[verification]
-  # google = ""
-  # bing = ""
-  # pinterest = ""
-  # yandex = ""
-  # fediverse = ""
+# [verification]
+# google = ""
+# bing = ""
+# pinterest = ""
+# yandex = ""
+# fediverse = ""
 
-[rssnext]
-  # feedId = ""
-  # userId = ""
+# [rssnext]
+# feedId = ""
+# userId = ""
