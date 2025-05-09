@@ -1,0 +1,38 @@
+{{/* Get the alert type, defaulting to "note" if not specified or recognized by Hugo.
+     Hugo v0.132.0+ provides .AlertType for recognized alert blockquotes.
+     We use lower case for class consistency. */}}
+{{ $alertType := .AlertType | lower }}
+
+{{/* Determine the title. Use i18n if available, otherwise title-case the alert type. */}}
+{{ $alertTitle := or (i18n .AlertType) (.AlertType | title) }}
+
+{{ $iconPath := "" }}
+{{ if eq $alertType "note" "info" }}
+  {{ $iconPath = "assets/icons/circle-info.svg" }}
+{{ else if eq $alertType "tip" }}
+  {{ $iconPath = "assets/icons/lightbulb.svg" }}
+{{ else if eq $alertType "important" }}
+  {{ $iconPath = "assets/icons/bell.svg" }} {{/* Or another icon representing importance */}}
+{{ else if eq $alertType "warning" }}
+  {{ $iconPath = "assets/icons/bell.svg" }} {{/* Or fire.svg if more severe, matching notice-warning's intent */}}
+{{ else if eq $alertType "caution" "danger" "error" }}
+  {{ $iconPath = "assets/icons/fire.svg" }}
+{{ else if eq $alertType "success" "check" }}
+  {{ $iconPath = "assets/icons/check.svg" }}
+{{ else }}
+  {{ $iconPath = "assets/icons/circle-info.svg" }} {{/* Default icon */}}
+{{ end }}
+
+<blockquote class="custom-alert custom-alert-{{ $alertType }} prose">
+  <div class="custom-alert-heading">
+    <span class="custom-alert-icon">
+      {{ if and $iconPath (fileExists $iconPath) }}
+        {{ readFile $iconPath | safeHTML }}
+      {{ end }}
+    </span>
+    <span class="custom-alert-title-text">{{ $alertTitle }}</span>
+  </div>
+  <div class="custom-alert-content">
+    {{ .Text | safeHTML }}
+  </div>
+</blockquote>
