@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# 取得目前時間，格式為 YYYY-MM-DDTHH:MM:SS+08:00
+current_time=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
+# 將 +0000 轉換為 +00:00 格式，以符合 ISO 8601
+current_time=$(echo "$current_time" | sed 's/\([0-9][0-9]\)$/:\1/')
+
+# 取得所有被修改 (不包含新增) 且已暫存的 content/ 目錄下的 .md 檔案
+staged_md_files=$(git diff --cached --name-only --diff-filter=M "content/**/*.md" "content/*.md")
+
+if [ -z "$staged_md_files" ]; then
+  exit 0
+fi
+
+echo "Updating lastmod for staged Markdown files..."
+
+for file in $staged_md_files; do
+  # 檢查檔案是否存在
+  if [ ! -f "$file" ]; then
+    echo "File $file not found. Skipping."
+    continue
+  fi
+
+  # 檢查檔案是否包含 lastmod
+  if grep -q '^lastmod:' "$file"; then
+    # 如果 lastmod 存在，則更新它
+    awk -v time="$current_time" '
+    BEGIN { FS = ":"; OFS = ":" }
+    /^lastmod:/ { $2 = " " time; print $0; next }
+    { print $0 }
+    ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    echo "Updated lastmod in $file to $current_time"
+  elif grep -q '^date:' "$file"; then
+    # 如果 lastmod 不存在，但 date 存在，則在 date 之後插入 lastmod
+    awk -v time="$current_time" '
+    { print }
+    /^date:/ { print "lastmod: " time }
+    ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+    echo "Added lastmod in $file with value $current_time"
+  else
+    # 如果 lastmod 和 date 都不存在，則跳過並提示
+    echo "No lastmod or date field found in $file. Skipping."
+    continue # 跳過 git add
+  fi
+
+  # 重新將檔案加入暫存區
+  git add "$file"
+done
+
+exit 0
