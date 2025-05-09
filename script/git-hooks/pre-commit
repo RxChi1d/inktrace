@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # 取得目前時間，格式為 YYYY-MM-DDTHH:MM:SS+08:00
-current_time=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
-# 將 +0000 轉換為 +00:00 格式，以符合 ISO 8601
+current_time=$(TZ="Asia/Taipei" date +"%Y-%m-%dT%H:%M:%S%z")
+# 將 +0800 轉換為 +08:00 格式，以符合 ISO 8601
 current_time=$(echo "$current_time" | sed 's/\([0-9][0-9]\)$/:\1/')
 
 # 取得所有被修改 (不包含新增) 且已暫存的 content/ 目錄下的 .md 檔案
