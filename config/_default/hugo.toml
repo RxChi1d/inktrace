@@ -66,3 +66,6 @@ enable = true
 [markup.goldmark.extensions.passthrough.delimiters]
 block = [['\[', '\]'], ['$$', '$$']]
 inline = [['$', '$'], ['\(', '\)']]
+
+[markup.goldmark.parser.attribute]
+block = true

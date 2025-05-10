@@ -32,6 +32,12 @@ selineAnalytics = {}
 umamiAnalytics = {}
 verification = {}
 
+# Custom CSS files
+# Add your custom CSS files here. They will be loaded after the theme's CSS.
+# Example:
+# customCSS = ["css/custom.css", "css/another-custom-file.css"]
+customCSS = ["css/blockquote-alerts.css"]
+
 [header]
 layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
 
@@ -168,8 +174,4 @@ showViews = false
 # feedId = ""
 # userId = ""
 
-# Custom CSS files
-# Add your custom CSS files here. They will be loaded after the theme's CSS.
-# Example:
-# customCSS = ["css/custom.css", "css/another-custom-file.css"]
-customCSS = ["css/custom.css"]
+

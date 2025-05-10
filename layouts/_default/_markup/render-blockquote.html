@@ -29,7 +29,7 @@
   {{- else if eq $alertType "important" -}}
     {{- $iconPath = "assets/icons/bell.svg" -}}
   {{- else if eq $alertType "warning" -}}
-    {{- $iconPath = "assets/icons/bell.svg" -}}
+    {{- $iconPath = "assets/icons/triangle-exclamation.svg" -}}
   {{- else if in (slice "caution" "danger" "error") $alertType -}}
     {{- $iconPath = "assets/icons/fire.svg" -}}
   {{- else if in (slice "success" "check") $alertType -}}
