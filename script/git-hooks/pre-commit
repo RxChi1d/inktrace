@@ -4,47 +4,92 @@
 current_time=$(TZ="Asia/Taipei" date +"%Y-%m-%dT%H:%M:%S%z")
 # 將 +0800 轉換為 +08:00 格式，以符合 ISO 8601
 current_time=$(echo "$current_time" | sed 's/\([0-9][0-9]\)$/:\1/')
+# 取得當前日期 YYYY-MM-DD
+current_date_only=$(TZ="Asia/Taipei" date +"%Y-%m-%d")
 
-# 取得所有被修改 (不包含新增) 且已暫存的 content/ 目錄下的 .md 檔案
-staged_md_files=$(git diff --cached --name-only --diff-filter=M "content/**/*.md" "content/*.md")
+# 取得所有被修改 (M) 或新增 (A) 且已暫存的 content/ 目錄下的 .md 檔案
+# 我們將直接在迴圈中處理 git diff 的輸出，而不是先存到變數
 
-if [ -z "$staged_md_files" ]; then
+staged_output=$(git diff --cached --name-only --diff-filter=AM "content/**/*.md" "content/*.md")
+
+if [ -z "$staged_output" ]; then
+  echo "No staged Markdown files found to process."
   exit 0
 fi
 
-echo "Updating lastmod for staged Markdown files..."
+echo "Processing staged Markdown files for lastmod update..."
 
-for file in $staged_md_files; do
+echo "$staged_output" | while IFS= read -r raw_escaped_file_path; do
+  if [ -z "$raw_escaped_file_path" ]; then
+    continue # 跳過空行
+  fi
+
+  # 移除 raw_escaped_file_path 可能包含的前後雙引號
+  # 例如，如果 raw_escaped_file_path 是 "\"foo\""，則 processed_escaped_file_path 變成 "foo"
+  processed_escaped_file_path=$(echo "$raw_escaped_file_path" | sed 's/^"\(.*\)"$/\1/')
+
+  # 將可能經過八進制轉義的路徑轉換回實際字元路徑
+  file_path=$(printf '%b' "$processed_escaped_file_path")
+
+  echo "Attempting to process file: '$file_path' (decoded from: '$raw_escaped_file_path' -> processed to: '$processed_escaped_file_path')"
+
   # 檢查檔案是否存在
-  if [ ! -f "$file" ]; then
-    echo "File $file not found. Skipping."
+  if [ ! -f "$file_path" ]; then
+    echo "ERROR: File '$file_path' not found. Skipping."
+    # 額外調試：列出目錄內容
+    dir_name=$(dirname "$file_path")
+    if [ -d "$dir_name" ]; then
+      echo "Contents of directory '$dir_name':"
+      ls -la "$dir_name"
+    else
+      echo "Directory '$dir_name' does not exist."
+    fi
     continue
   fi
 
   # 檢查檔案是否包含 lastmod
-  if grep -q '^lastmod:' "$file"; then
+  if grep -q '^lastmod:' "$file_path"; then
     # 如果 lastmod 存在，則更新它
-    awk -v time="$current_time" '
-    BEGIN { FS = ":"; OFS = ":" }
-    /^lastmod:/ { $2 = " " time; print $0; next }
-    { print $0 }
-    ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
-    echo "Updated lastmod in $file to $current_time"
-  elif grep -q '^date:' "$file"; then
-    # 如果 lastmod 不存在，但 date 存在，則在 date 之後插入 lastmod
-    awk -v time="$current_time" '
+    # 直接替換整行以避免 FS/OFS 和時間字符串中冒號的衝突
+    awk -v new_lastmod_value="$current_time" '
+    /^lastmod:/ { print "lastmod: " new_lastmod_value; next }
     { print }
-    /^date:/ { print "lastmod: " time }
-    ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
-    echo "Added lastmod in $file with value $current_time"
+    ' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
+    echo "Updated lastmod in $file_path to $current_time"
+  elif grep -q '^date:' "$file_path"; then
+    # 如果 lastmod 不存在，但 date 存在
+    # 提取 date 欄位的日期部分 (YYYY-MM-DD)，處理可選的引號和時間部分
+    file_date_value=$(grep '^date:' "$file_path" | sed -E 's/^date: *"?([0-9]{4}-[0-9]{2}-[0-9]{2}).*/\1/')
+
+    if [ -n "$file_date_value" ]; then
+      # 比較日期 (YYYY-MM-DD)
+      if [ "$file_date_value" != "$current_date_only" ]; then
+        # 如果 date 的日期與當前日期不同，則在 date 之後插入 lastmod
+        awk -v time="$current_time" '
+        { print }
+        /^date:/ { print "lastmod: " time }
+        ' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
+        echo "Added lastmod in $file_path (date $file_date_value != current date $current_date_only) with value $current_time"
+      else
+        # 如果 date 的日期與當前日期相同，則不添加 lastmod
+        echo "Skipping lastmod addition for $file_path: date ($file_date_value) is current."
+        continue # 跳過下面的 git add，因為檔案未被修改
+      fi
+    else
+      echo "Could not extract date from $file_path. Skipping lastmod addition based on date."
+      continue # 跳過下面的 git add，因為檔案未被修改
+    fi
   else
     # 如果 lastmod 和 date 都不存在，則跳過並提示
-    echo "No lastmod or date field found in $file. Skipping."
+    echo "No lastmod or date field found in $file_path. Skipping."
     continue # 跳過 git add
   fi
 
   # 重新將檔案加入暫存區
-  git add "$file"
+  git add "$file_path"
 done
 
+# 如果 staged_output 不為空，則表示至少處理了一個檔案（或嘗試處理）。
+# 如果 staged_output 為空，腳本會在之前的 if 判斷中退出。
+echo "Finished processing files."
 exit 0
