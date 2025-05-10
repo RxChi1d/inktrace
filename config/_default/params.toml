@@ -38,6 +38,8 @@ verification = {}
 # customCSS = ["css/custom.css", "css/another-custom-file.css"]
 customCSS = ["css/blockquote-alerts.css"]
 
+math = false
+
 [header]
 layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
 
