@@ -18,7 +18,7 @@ replyByEmail = false
 # defaultBackgroundImage = "IMAGE.jpg" # used as default for background images
 # defaultFeaturedImage = "IMAGE.jpg" # used as default for featured images in all articles
 
-# highlightCurrentMenuArea = true
+highlightCurrentMenuArea = true
 # smartTOC = true
 # smartTOCHideUnfocusedChildren = false
 
