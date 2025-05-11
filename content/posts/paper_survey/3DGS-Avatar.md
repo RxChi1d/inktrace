@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - 3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussian Splatting"
 date: 2025-01-20T11:35:00+08:00
-lastmod: 2025-05-11T22:06:43+08:00
+lastmod: 2025-05-11T23:07:40+08:00
 tags: ["3DGS", "Human Reconstruction"]
 categories: ["論文筆記"]
 params: 
@@ -12,7 +12,7 @@ params:
 
 <!--more-->
 
-> [!info]+ 論文資訊
+> [!INFO]+ 論文資訊
 > - **Link:** https://arxiv.org/abs/2312.09228
 > - **Conference:** CVPR 2024
 
