@@ -15,7 +15,7 @@ enableSearch = true
 replyByEmail = false
 # backgroundImageWidth = 1200
 
-# defaultBackgroundImage = "IMAGE.jpg" # used as default for background images
+defaultBackgroundImage = "img/background.svg" # used as default for background images
 # defaultFeaturedImage = "IMAGE.jpg" # used as default for featured images in all articles
 
 highlightCurrentMenuArea = true
@@ -36,7 +36,7 @@ verification = {}
 # Add your custom CSS files here. They will be loaded after the theme's CSS.
 # Example:
 # customCSS = ["css/custom.css", "css/another-custom-file.css"]
-customCSS = ["css/profile.css", "css/blockquote-alerts.css"]
+customCSS = ["css/homepage-custom.css", "css/blockquote-alerts.css"]
 
 math = false
 
@@ -51,8 +51,8 @@ showScrollToTop = true
 showThemeAttribution = true
 
 [homepage]
-layout = "profile" # valid options: page, profile, hero, card, background, custom
-#homepageImage = "IMAGE.jpg" # used in: hero, and card
+layout = "custom" # valid options: page, profile, hero, card, background, custom
+homepageImage = "img/background.svg" # used in: hero, and card
 cardView = false
 cardViewScreenWidth = false
 layoutBackgroundBlur = false # only used when layout equals background
@@ -70,8 +70,8 @@ showDateUpdated = true
 showLikes = false
 showViews = false
 # showAuthorBottom = false
-showHero = false
-# heroStyle = "basic" # valid options: basic, big, background, thumbAndBackground
+showHero = true
+heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
 layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
 layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
 showBreadcrumbs = false
@@ -94,13 +94,13 @@ showWordCount = true
 showZenMode = false
 
 [list]
-showHero = false
-# heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
+showHero = true
+heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
 cardView = false
 cardViewScreenWidth = false
 constrainItemsWidth = false
 groupByYear = true
-layoutBackgroundBlur = true # only used when heroStyle equals background or thumbAndBackground
+layoutBackgroundBlur = false # only used when heroStyle equals background or thumbAndBackground
 layoutBackgroundHeaderSpace = true # only used when heroStyle equals background
 orderByWeight = false
 showBreadcrumbs = false
@@ -114,9 +114,9 @@ showViews = false
 excludedKinds = ["taxonomy", "term"]
 
 [taxonomy]
-showHero = false
+showHero = true
 showTermCount = true
-# heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
+heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
 cardView = false
 showBreadcrumbs = false
 showLikes = false
@@ -124,8 +124,8 @@ showTableOfContents = false
 showViews = false
 
 [term]
-showHero = false
-# heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
+showHero = true
+heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
 cardView = false
 cardViewScreenWidth = false
 groupByYear = false
