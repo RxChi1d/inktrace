@@ -36,7 +36,7 @@ verification = {}
 # Add your custom CSS files here. They will be loaded after the theme's CSS.
 # Example:
 # customCSS = ["css/custom.css", "css/another-custom-file.css"]
-customCSS = ["css/homepage-custom.css", "css/blockquote-alerts.css"]
+customCSS = ["css/homepage-custom.css", "css/blockquote-alerts.css", "css/global.css"]
 
 math = false
 
