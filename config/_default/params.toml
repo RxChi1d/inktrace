@@ -138,6 +138,7 @@ showTableOfContents = true
 showViews = false
 
 [posts]
+listTitle = "所有文章" # Posts 列表頁面的標題
 titleLineClamp = 2 # Max lines for timeline title (0 for no limit)
 
 # [firebase]
