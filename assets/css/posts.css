@@ -23,9 +23,9 @@
   content: "";
   position: absolute;
   left: 5.8rem; /* 調整線條位置使其與圓點中心對齊 */
-  top: 0;
+  top: -0.7rem; /* 向上延伸線條 */
   width: 4px;
-  height: 100%;
+  height: calc(100% + 0.7rem); /* 增加線條高度以覆蓋向上延伸的部分 */
   background: #e5e7eb;
   z-index: 0;
   min-height: 100%;
@@ -186,6 +186,8 @@
 
 .dark .timeline-list::before {
   background: #cdcdcd; /* 調整時間軸線條顏色 */
+  top: -0.7rem; /* 向上延伸線條 */
+  height: calc(100% + 0.7rem); /* 增加線條高度以覆蓋向上延伸的部分 */
 }
 
 .dark .timeline-dot {
