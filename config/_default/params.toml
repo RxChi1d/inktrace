@@ -109,6 +109,7 @@ showLikes = false
 showSummary = true
 showTableOfContents = false
 showViews = false
+summaryLineClamp = 3 # 0 means no line limit
 
 [sitemap]
 excludedKinds = ["taxonomy", "term"]
@@ -175,5 +176,3 @@ showViews = false
 # [rssnext]
 # feedId = ""
 # userId = ""
-
-
