@@ -11,11 +11,11 @@
 }
 
 a.article-card-hover:hover {
-  background-color: rgba(0, 0, 0, 0.08); /* Light 模式下稍微加深背景 */
-  transition: background-color 0.3s ease; /* 平滑過渡 */
+  background-color: rgba(0, 0, 0, 0.03); /* Slightly darken background in Light mode */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 .dark a.article-card-hover:hover {
-  background-color: rgba(255, 255, 255, 0.08); /* Dark 模式下稍微加深背景 */
-  transition: background-color 0.3s ease; /* 平滑過渡 */
+  background-color: rgba(255, 255, 255, 0.04); /* Slightly darken background in Dark mode */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
