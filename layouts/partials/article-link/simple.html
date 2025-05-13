@@ -2,7 +2,7 @@
 
 {{ $articleClasses := "flex flex-wrap md:flex-nowrap article" }}
 {{ if .Site.Params.list.showCards }}
-{{ $articleClasses = delimit (slice $articleClasses "border border-neutral-200 dark:border-neutral-700 border-2 rounded-md overflow-hidden article-card-hover") " " }}
+{{ $articleClasses = delimit (slice $articleClasses "border border-neutral-200 dark:border-neutral-700 border-2 rounded-2xl overflow-hidden article-card-hover") " " }}
 {{ else }}
 {{ $articleClasses = delimit (slice $articleClasses "") " " }}
 {{ end }}
