@@ -11,3 +11,6 @@ Thumbs.db
 # Obsidian files
 .obsidian/
 preamble.sty
+
+# Cline files
+.clinerules/
