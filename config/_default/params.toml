@@ -137,6 +137,9 @@ showLikes = false
 showTableOfContents = true
 showViews = false
 
+[posts]
+titleLineClamp = 2 # Max lines for timeline title (0 for no limit)
+
 # [firebase]
 # apiKey = "XXXXXX"
 # authDomain = "XXXXXX"

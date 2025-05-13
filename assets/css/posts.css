@@ -17,7 +17,8 @@
   align-items: center;
   min-height: 1.1rem;
   position: relative;
-  margin-bottom: 1.5rem; /* 增加年份行與下方文章的間距 */
+  margin-top: 2.0rem;
+  margin-bottom: 2.0rem; /* 調整年份行上下間距 */
 }
 
 /* 針對同時有 timeline-date 和 timeline-year class 的元素設定樣式 */
@@ -42,7 +43,7 @@
 .timeline-list::before {
   content: "";
   position: absolute;
-  left: 5.6rem;
+  left: 5.7rem; /* 調整線條位置使其與圓點中心對齊 */
   top: 0;
   width: 4px;
   height: 100%;
@@ -55,7 +56,8 @@
   display: flex;
   align-items: center; /* 確保垂直置中 */
   position: relative;
-  margin-bottom: 2.2rem;
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem; /* 調整文章項目上下間距 */
   min-height: 2.5rem;
 }
 
@@ -103,6 +105,7 @@
   flex: 1;
   padding-top: 0;
   margin-left: 0.5rem;
+  min-width: 0; /* 確保在 flex 容器中正確收縮 */
 }
 
 .timeline-title {
@@ -111,6 +114,11 @@
   color: #22223b;
   text-decoration: none;
   transition: color 0.2s;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 限制為兩行 */
+  -webkit-box-orient: vertical;
+  max-width: 100%;
 }
 
 .timeline-title:hover {
@@ -132,10 +140,11 @@
     min-width: 1.2rem;
   }
   .timeline-list::before {
-    left: 3.9rem;
+    left: 3.3rem; /* 調整響應式線條位置使其與圓點中心對齊 */
   }
   .timeline-content {
     margin-left: 0.2rem;
+    min-width: 0; /* 確保在 flex 容器中正確收縮 */
   }
   .timeline-year-row {
     min-height: 1.1rem;

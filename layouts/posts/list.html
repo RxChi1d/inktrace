@@ -1,6 +1,14 @@
 {{ define "main" }}
 <link rel="stylesheet" href="/assets/css/posts.css">
 
+{{ with .Site.Params.posts.titleLineClamp }}
+<style>
+  .timeline-title {
+    -webkit-line-clamp: {{ . }};
+  }
+</style>
+{{ end }}
+
 {{ .Scratch.Set "scope" "list" }}
 {{ if .Site.Params.list.showHero | default false }}
 {{ $heroStyle := print "hero/" .Site.Params.list.heroStyle ".html" }}
@@ -81,17 +89,17 @@
                   <div class="timeline-content"></div>
                 </div>
               {{ end }}
-              {{ range $group.Pages }}
+              {{ range $index, $page := $group.Pages }}
                 <div class="timeline-item">
                   <div class="timeline-date">
-                    {{ .Date.Format "01-02" }}
+                    {{ $page.Date.Format "01-02" }}
                   </div>
                   <div class="timeline-center">
                     <span class="timeline-dot"></span>
                     <span class="timeline-line"></span>
                   </div>
                   <div class="timeline-content">
-                    <a href="{{ .RelPermalink }}" class="timeline-title">{{ .Title | emojify }}</a>
+                    <a href="{{ $page.RelPermalink }}" class="timeline-title">{{ $page.Title | emojify }}</a>
                   </div>
                 </div>
               {{ end }}
@@ -99,20 +107,20 @@
           </div>
         {{ else }}
           <div class="timeline-list">
-            {{ range (.Paginate (.Pages.ByWeight)).Pages }}
+            {{ range $index, $page := (.Paginate (.Pages.ByWeight)).Pages }}
               <div class="timeline-item">
                 <div class="timeline-date">
-                  {{ .Date.Format "01-02" }}
+                  {{ $page.Date.Format "01-02" }}
                 </div>
                 <div class="timeline-center">
-                  <span class="timeline-dot"></span>
-                  <span class="timeline-line"></span>
+                    <span class="timeline-dot"></span>
+                    <span class="timeline-line"></span>
+                  </div>
+                  <div class="timeline-content">
+                    <a href="{{ $page.RelPermalink }}" class="timeline-title">{{ $page.Title | emojify }}</a>
+                  </div>
                 </div>
-                <div class="timeline-content">
-                  <a href="{{ .RelPermalink }}" class="timeline-title">{{ .Title | emojify }}</a>
-                </div>
-              </div>
-            {{ end }}
+              {{ end }}
           </div>
         {{ end }}
       </section>
