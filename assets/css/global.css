@@ -1,1 +1,5 @@
 .max-w-8xl { max-width: 90rem; }
+
+.max-w-prose-xl {
+  max-width: 90ch;
+}
