@@ -1,0 +1,149 @@
+/* Timeline 主要區塊 */
+.timeline-archive {
+  position: relative;
+  /* 移除 max-width 和 margin: 0 auto; */
+  padding: 2rem 0 2rem 0;
+}
+
+/* Header 內容容器，用於控制標題區塊的左右留白 */
+.header-content-container {
+  /* 移除 max-width 和 margin: 0 auto; */
+  padding: 0 0 2rem 0; /* 底部增加一些間距 */
+}
+
+
+.timeline-year-row {
+  display: flex;
+  align-items: center;
+  min-height: 1.1rem;
+  position: relative;
+  margin-bottom: 1.5rem; /* 增加年份行與下方文章的間距 */
+}
+
+/* 針對同時有 timeline-date 和 timeline-year class 的元素設定樣式 */
+.timeline-date.timeline-year {
+  font-size: 1.5rem; /* 調整字體大小，比日期大 */
+  font-weight: bold; /* 加粗字體 */
+  color: #4a4a4a;
+  background: none; /* 移除白色背景 */
+  z-index: 2;
+  text-align: right;
+  min-width: 3.5rem; /* 與 timeline-date 寬度一致 */
+  margin-right: 1.2rem; /* 與 timeline-date margin-right 一致 */
+  flex-shrink: 0;
+  margin-top: 0; /* 移除 margin-top */
+}
+
+.timeline-list {
+  position: relative;
+  margin-left: 0;
+  padding-left: 0;
+}
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 5.6rem;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: #e5e7eb;
+  z-index: 0;
+  min-height: 100%;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center; /* 確保垂直置中 */
+  position: relative;
+  margin-bottom: 2.2rem;
+  min-height: 2.5rem;
+}
+
+.timeline-date {
+  min-width: 3.5rem;
+  text-align: right;
+  font-size: 1rem;
+  color: #4a4a4a;
+  margin-right: 1.2rem;
+  margin-top: 0;
+  font-family: 'Menlo', 'Consolas', monospace;
+  flex-shrink: 0;
+}
+
+.timeline-center {
+  position: relative;
+  width: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  min-width: 2.2rem;
+  min-height: 1.1rem;
+}
+
+.timeline-dot {
+  position: relative;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 4px solid #60a5fa;
+  box-shadow: 0 0 0 2px #e5e7eb;
+  z-index: 3;
+  margin: 0 auto;
+  top: 0;
+}
+
+.timeline-year-dot {
+  border-color: #f59e42;
+  background: #fffbe6;
+}
+
+.timeline-content {
+  flex: 1;
+  padding-top: 0;
+  margin-left: 0.5rem;
+}
+
+.timeline-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #22223b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.timeline-title:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .timeline-archive {
+    padding-left: 0.5rem;
+  }
+  .timeline-date {
+    min-width: 2.2rem;
+    font-size: 0.95rem;
+    margin-right: 0.5rem;
+  }
+  .timeline-center {
+    width: 1.2rem;
+    min-width: 1.2rem;
+  }
+  .timeline-list::before {
+    left: 3.9rem;
+  }
+  .timeline-content {
+    margin-left: 0.2rem;
+  }
+  .timeline-year-row {
+    min-height: 1.1rem;
+  }
+  /* 針對同時有 timeline-date 和 timeline-year class 的元素設定響應式樣式 */
+  .timeline-date.timeline-year {
+    min-width: 2.2rem;
+    margin-right: 0.5rem;
+    font-size: 1.4rem; /* 調整響應式字體大小 */
+  }
+}
