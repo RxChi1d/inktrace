@@ -9,7 +9,7 @@ summaryLength = 0
 theme = "blowfish"
 
 [pagination]
-pagerSize = 100
+pagerSize =  50
 
 [imaging]
 anchor = "Center"
