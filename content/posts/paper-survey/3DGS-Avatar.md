@@ -3,7 +3,7 @@ title: "論文筆記 - 3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussia
 date: 2025-01-20T11:35:00+08:00
 lastmod: 2025-05-11T23:07:40+08:00
 tags: ["3DGS", "Human Reconstruction"]
-categories: ["論文筆記"]
+categories: ["Paper Survey"]
 params: 
     math: true
 ---

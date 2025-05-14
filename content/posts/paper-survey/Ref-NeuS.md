@@ -3,7 +3,7 @@ title: "論文筆記 - Ref-NeuS: Ambiguity-Reduced Neural Implicit Surface Learn
 date: 2023-12-21T21:29:00+08:00
 lastmod: 2025-05-12T00:54:41+08:00
 tags: ["NeuS"]
-categories: ["論文筆記"]
+categories: ["Paper Survey"]
 params: 
     math: true
 ---

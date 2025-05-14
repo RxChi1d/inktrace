@@ -3,7 +3,7 @@ title: "論文筆記 - Ref-DVGO: Reflection-Aware Direct Voxel Grid Optimization
 date: 2023-12-14T12:34:00+08:00
 lastmod: 2025-05-12T00:42:09+08:00
 tags: ["NeRF"]
-categories: ["論文筆記"]
+categories: ["Paper Survey"]
 params: 
     math: true
 ---
