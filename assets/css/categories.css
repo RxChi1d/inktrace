@@ -6,18 +6,29 @@
 }
 .category-item{
   text-decoration:none;
-  border-radius:0.5rem;   /* 保持圓角一致 */
-  background-color: rgba(255, 255, 255, 0.8); /* 淺色背景，用於與頁面背景區分 */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 初始的細微陰影 */
-  /* HTML class="... transition-all" 已提供過渡效果 */
+  border-radius:0.75rem;   /* 更柔和的圓角 */
+  background-color: rgba(255, 255, 255, 0.65); /* 淺色模式毛玻璃背景色 */
+  backdrop-filter: blur(10px); /* 毛玻璃效果 */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 邊框 */
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* 過渡效果 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 陰影 */
 }
 .dark .category-item {
-  background-color: rgba(0, 0, 0, 0.6); /* 深色背景，用於暗黑模式 */
+  background-color: rgba(26, 32, 44, 0.7); /* 深色模式毛玻璃背景色 */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* 深色模式邊框 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 深色模式陰影 */
 }
 .category-item:hover{
-  /* background-color 變化已由 HTML class="... hover:bg-neutral-700" 提供 */
-  transform: translateY(-2px); /* 輕微上移 */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* hover 時陰影更明顯 */
+  background-color: rgba(255, 255, 255, 0.85); /* 淺色模式懸停背景 */
+  transform: translateY(-3px); /* 懸停上移效果 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 懸停陰影 */
+  border-color: rgba(0, 0, 0, 0.15); /* 懸停邊框顏色 */
+}
+.dark .category-item:hover {
+  background-color: rgba(45, 55, 72, 0.85); /* 深色模式懸停背景 */
+  transform: translateY(-3px); /* 懸停上移效果 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 深色模式懸停陰影 */
+  border-color: rgba(255, 255, 255, 0.25); /* 深色模式懸停邊框顏色 */
 }
 .folder-icon{
   flex-shrink:0;
