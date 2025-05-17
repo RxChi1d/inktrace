@@ -1,3 +1,17 @@
+/* === Tag theme tokens === */
+:root {
+  --tag-accent-h: 198;
+  --tag-accent-s: 93%;
+  --tag-accent-l: 53%;          /* Light‑mode Hue/Sat/Light */
+  --tag-accent-bg-light: 0.10;  /* BG opacity for light mode */
+}
+
+[data-theme="dark"] {
+  --tag-accent-l: 60%;          /* Brighter text/border in dark mode */
+  --tag-accent-bg-light: 0.18;  /* Stronger BG tint in dark mode */
+}
+
+/* Base Tag styling */
 section.flex.flex-wrap.gap-4.mt-4 > a {
   display: inline-flex;
   align-items: center;
@@ -14,6 +28,7 @@ section.flex.flex-wrap.gap-4.mt-4 > a {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 細微陰影 */
 }
 
+/* Base Tag styling (Dark mode) */
 .dark section.flex.flex-wrap.gap-4.mt-4 > a {
   background-color: rgba(26, 32, 44, 0.7); /* 更深邃精緻的背景 (類似帶透明度的 gray-800) */
   border: 1px solid rgba(255, 255, 255, 0.15); /* 深色模式下更細微的邊框 */
@@ -21,6 +36,7 @@ section.flex.flex-wrap.gap-4.mt-4 > a {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 深色模式陰影 */
 }
 
+/* Tag Hover effect */
 section.flex.flex-wrap.gap-4.mt-4 > a:hover {
   background-color: rgba(255, 255, 255, 0.85); /* 懸停時更亮 */
   transform: translateY(-3px); /* 輕微增加上移幅度 */
@@ -28,6 +44,7 @@ section.flex.flex-wrap.gap-4.mt-4 > a:hover {
   border-color: rgba(0, 0, 0, 0.15); /* 懸停時邊框顏色也調整 */
 }
 
+/* Tag Hover effect (Dark mode) */
 .dark section.flex.flex-wrap.gap-4.mt-4 > a:hover {
   background-color: rgba(45, 55, 72, 0.85); /* 精緻的深色懸停背景 (類似帶透明度的 gray-700) */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 懸停時增強深色陰影 */
@@ -46,6 +63,32 @@ section.flex.flex-wrap.gap-4.mt-4 > a .tag-count {
   transition: background-color 0.3s ease;
 }
 
-.dark section.flex.flex-wrap.gap-4.mt-4 > a .tag-count {
-  background-color: rgba(255, 255, 255, 0.15); /* 深色模式下更亮的背景以形成對比 */
+/* hashtag 圖示：維持辨識；稍微拉高透明度以呼應主色 */
+.tags-list > a::before {
+  content: "#";
+  margin-right: 0.45rem;
+  font-weight: 700;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* Specific .tags-list Tag styling (Light mode) */
+section.flex.flex-wrap.gap-4.mt-4.tags-list > a {
+  border-color: #4F46E5; /* indigo-600 */
+  color: #4F46E5;
+  background-color: rgba(79, 70, 229, 0.15);
+  font-size: 1rem;
+}
+
+/* Specific .tags-list Tag styling (Dark mode) */
+.dark section.flex.flex-wrap.gap-4.mt-4.tags-list > a {
+  border-color: #18f4f7;
+  color: #18f4f7;
+  background-color: rgba(24, 244, 247, 0.24);
+  font-size: 1rem;
+}
+
+/* Specific .tags-list Badge styling */
+section.flex.flex-wrap.gap-4.mt-4.tags-list > a .tag-count {
+  background-color: color-mix(in srgb, hsl(var(--tag-accent-h) var(--tag-accent-s) var(--tag-accent-l)) 25%, transparent);
 }

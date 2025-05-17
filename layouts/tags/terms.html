@@ -50,7 +50,7 @@
   <script type="text/javascript" src="{{ $jsPage.RelPermalink }}" integrity="{{ $jsPage.Data.Integrity }}"></script>
   {{ end }}
 
-  <section class="flex flex-wrap gap-4 mt-4">
+  <section class="flex flex-wrap gap-4 mt-4 tags-list">
     {{ range .Data.Terms }}
       <a href="{{ .Page.RelPermalink }}" class="inline-flex items-center rounded-lg border border-sky-400/40 px-4 py-2 hover:bg-sky-500/10 transition">
         <span class="tag-title text-sky-300 font-medium">{{ (i18n .Page.LinkTitle) | default .Page.LinkTitle }}</span>
