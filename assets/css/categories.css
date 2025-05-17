@@ -1,0 +1,51 @@
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 0.5rem 0; /* 保留上下 padding 給陰影空間 */
+}
+.category-item{
+  text-decoration:none;
+  border-radius:0.5rem;   /* 保持圓角一致 */
+  background-color: rgba(255, 255, 255, 0.8); /* 淺色背景，用於與頁面背景區分 */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 初始的細微陰影 */
+  /* HTML class="... transition-all" 已提供過渡效果 */
+}
+.dark .category-item {
+  background-color: rgba(0, 0, 0, 0.6); /* 深色背景，用於暗黑模式 */
+}
+.category-item:hover{
+  /* background-color 變化已由 HTML class="... hover:bg-neutral-700" 提供 */
+  transform: translateY(-2px); /* 輕微上移 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* hover 時陰影更明顯 */
+}
+.folder-icon{
+  flex-shrink:0;
+  margin-right:.75rem;
+  width: 1.25rem; /* 強制設定寬度，對應 Tailwind w-5 */
+  height: 1.25rem; /* 強制設定高度，對應 Tailwind h-5 */
+  display: inline-block; /* 確保 icon 不會破壞 flex 佈局 */
+}
+.category-item .title{
+  font-weight:600;
+  white-space: nowrap; /* 防止標題換行 */
+}
+.category-item .count{
+  margin-left:.5rem;
+  font-size: 0.9em; /* 相對於父元素調整字體大小 */
+  opacity: 0.8;     /* 讓計數稍微不那麼突出 */
+  white-space: nowrap; /* 防止計數換行 */
+}
+
+.size-6 {
+  width: 1em;   /* 24px 對應 1.5rem */
+  height: 1em;
+}
+
+/* ===== Single-item shrink and center ===== */
+.category-item:only-child {
+  width: 100%;         /* 用於配合 max-width 生效 */
+  max-width: 30rem;    /* 當只有一個項目時，限制寬度 */
+  justify-self: start; /* 在 grid 容器中靠左對齊 */
+}
+/* ====================================== */

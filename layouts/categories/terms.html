@@ -1,0 +1,61 @@
+{{ define "main" }}
+
+{{ .Scratch.Set "scope" "list" }}
+{{ if .Site.Params.taxonomy.showHero | default false }}
+{{ $heroStyle := print "hero/" .Site.Params.taxonomy.heroStyle ".html" }}
+{{ if templates.Exists ( printf "partials/%s" $heroStyle ) }}
+{{ partial $heroStyle . }}
+{{ else }}
+{{ partial "hero/basic.html" . }}
+{{ end }}
+{{- end -}}
+
+{{ $toc := and (.Params.showTableOfContents | default (.Site.Params.taxonomy.showTableOfContents | default false)) (in
+.TableOfContents "<ul") }} 
+
+  <header>
+    {{ if .Params.showBreadcrumbs | default (.Site.Params.taxonomy.showBreadcrumbs | default false) }}
+      {{ partial "breadcrumbs.html" . }}
+    {{ end }}
+    <h1 class="text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+      {{ (i18n .Title) | default .Title }}
+    </h1>
+    <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+      {{ partial "article-meta/taxonomy.html" (dict "context" . "scope" "single") }}
+    </div>
+  </header>
+  {{ if .Content }}
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      <div class="min-w-0 min-h-0 max-w-prose">
+        {{ .Content }}
+      </div>
+    </section>
+  <script>
+    var oid = "views_taxonomy_{{ .Data.Plural }}"
+    var oid_likes = "likes_taxonomy_{{ .Data.Plural }}"
+  </script>
+  {{ $jsPage := resources.Get "js/page.js" }}
+  {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint "sha512" }}
+  <script type="text/javascript" src="{{ $jsPage.RelPermalink }}" integrity="{{ $jsPage.Data.Integrity }}"></script>
+  {{ end }}
+
+  <section class="category-list">
+    {{ range .Data.Terms }}
+      <a href="{{ .Page.RelPermalink }}" class="category-item flex items-center justify-between rounded-md bg-neutral-800 hover:bg-neutral-700 px-4 py-3 transition-all">
+        <div class="flex items-center">
+          <svg class="folder-icon w-5 h-5 text-neutral-400 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h5l2 2h9a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+          </svg>
+          <span class="title text-lg font-medium text-neutral-100">
+            {{ (i18n .Page.LinkTitle) | default .Page.LinkTitle }}
+          </span>
+          <span class="count ml-2 text-sm text-neutral-400">{{ .Count }} {{ if eq .Count 1 }}post{{ else }}posts{{ end }}</span>
+        </div>
+        <svg class="chevron-icon w-3 h-3 text-neutral-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    {{ end }}
+  </section>
+
+{{ end }}

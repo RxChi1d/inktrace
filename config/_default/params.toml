@@ -4,7 +4,6 @@
 #
 # Refer to the theme docs for more details about each of these parameters.
 # https://blowfish.page/docs/configuration/#theme-parameters
-
 autoSwitchAppearance = true
 colorScheme = "blowfish"
 defaultAppearance = "light" # valid options: light or dark
@@ -14,30 +13,27 @@ enableCodeCopy = true
 enableSearch = true
 replyByEmail = false
 # backgroundImageWidth = 1200
-
 defaultBackgroundImage = "img/background.svg" # used as default for background images
 # defaultFeaturedImage = "IMAGE.jpg" # used as default for featured images in all articles
-
 highlightCurrentMenuArea = true
 smartTOC = true
 # smartTOCHideUnfocusedChildren = false
-
-buymeacoffee = {}
-fathomAnalytics = {}
-firebase = {}
+buymeacoffee = {  }
+fathomAnalytics = {  }
+firebase = {  }
 forgejoDefaultServer = "https://v8.next.forgejo.org"
 giteaDefaultServer = "https://git.fsfe.org"
-rssnext = {}
-selineAnalytics = {}
-umamiAnalytics = {}
-verification = {}
-
-# Custom CSS files
-# Add your custom CSS files here. They will be loaded after the theme's CSS.
-# Example:
-# customCSS = ["css/custom.css", "css/another-custom-file.css"]
-customCSS = ["css/homepage-custom.css", "css/blockquote-alerts.css", "css/global.css", "css/posts.css"]
-
+rssnext = {  }
+selineAnalytics = {  }
+umamiAnalytics = {  }
+verification = {  }
+customCSS = [
+    "css/homepage-custom.css",
+    "css/blockquote-alerts.css",
+    "css/global.css",
+    "css/posts.css",
+    "css/categories.css"
+]
 math = false
 
 [header]
@@ -88,9 +84,9 @@ showPagination = true
 showReadingTime = true
 showRelatedContent = true
 showTableOfContents = true
-showTaxonomies = true  # Show all taxonomies (categories & tags)
+showTaxonomies = true # Show all taxonomies (categories & tags)
 showCategories = false # Show categories (only if showTaxonomies = false)
-showTags = false      # Show tags (only if showTaxonomies = false)
+showTags = false # Show tags (only if showTaxonomies = false)
 showWordCount = true
 # sharingLinks = [ "linkedin", "twitter", "bluesky", "mastodon", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]
 showZenMode = false
@@ -140,7 +136,6 @@ showViews = false
 [posts]
 listTitle = "所有文章" # Posts 列表頁面的標題
 titleLineClamp = 2 # Max lines for timeline title (0 for no limit)
-
 # [firebase]
 # apiKey = "XXXXXX"
 # authDomain = "XXXXXX"
@@ -149,36 +144,30 @@ titleLineClamp = 2 # Max lines for timeline title (0 for no limit)
 # messagingSenderId = "XXXXXX"
 # appId = "XXXXXX"
 # measurementId = "XXXXXX"
-
 # [fathomAnalytics]
 # site = "ABC12345"
 # domain = "llama.yoursite.com"
-
 # [umamiAnalytics]
 # websiteid = "ABC12345"
 # domain = "llama.yoursite.com"
 # dataDomains = "yoursite.com,yoursite2.com"
 # scriptName = ""
 # enableTrackEvent = true
-
 # [selineAnalytics]
 # token = "XXXXXX"
 # enableTrackEvent = true
-
 # [buymeacoffee]
 # identifier = ""
 # globalWidget = true
 # globalWidgetMessage = "Hello"
 # globalWidgetColor = "#FFDD00"
 # globalWidgetPosition = "Right"
-
 # [verification]
 # google = ""
 # bing = ""
 # pinterest = ""
 # yandex = ""
 # fediverse = ""
-
 # [rssnext]
 # feedId = ""
 # userId = ""
