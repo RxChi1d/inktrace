@@ -26,7 +26,6 @@ giteaDefaultServer = "https://git.fsfe.org"
 rssnext = {  }
 selineAnalytics = {  }
 umamiAnalytics = {  }
-verification = {  }
 customCSS = [
     "css/homepage-custom.css",
     "css/blockquote-alerts.css",
@@ -137,6 +136,7 @@ showViews = false
 [posts]
 listTitle = "所有文章" # Posts 列表頁面的標題
 titleLineClamp = 2 # Max lines for timeline title (0 for no limit)
+
 # [firebase]
 # apiKey = "XXXXXX"
 # authDomain = "XXXXXX"
@@ -163,9 +163,9 @@ titleLineClamp = 2 # Max lines for timeline title (0 for no limit)
 # globalWidgetMessage = "Hello"
 # globalWidgetColor = "#FFDD00"
 # globalWidgetPosition = "Right"
-# [verification]
-# google = ""
-# bing = ""
+[verification]
+google = "PGdVdsXCCSMU_kaDfls1TK8xwWF7o2QQY0cjMgpdS7k"
+bing = "2FF5886CF60FF79E361265C1DC40CFE5"
 # pinterest = ""
 # yandex = ""
 # fediverse = ""

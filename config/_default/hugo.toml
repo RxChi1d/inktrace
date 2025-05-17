@@ -7,6 +7,7 @@ enableRobotsTXT = true
 hasCJKLanguage = true
 summaryLength = 0
 theme = "blowfish"
+googleAnalytics = "G-7VRLM7FY91"
 
 [pagination]
 pagerSize =  50
