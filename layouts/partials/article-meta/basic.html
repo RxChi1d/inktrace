@@ -90,7 +90,7 @@
     {{/* Display Categories */}}
     {{ with .Params.categories }}
       {{ range . }}
-        <span style="margin-top:0.5rem" class="mr-2" onclick="window.open({{ (( . | urlize | printf "/categories/%s" ) | relLangURL) | safeJS }},'_self');return false;">
+        <span style="margin-top:0.5rem; cursor: pointer;" class="mr-2" onclick="event.stopPropagation(); window.open('{{ (( . | urlize | printf "/categories/%s" ) | relLangURL) | safeJS }}','_self'); return false;">
           {{ partial "badge.html" (dict "text" . "type" "category") }}
         </span>
       {{ end }}
@@ -98,7 +98,7 @@
     {{/* Display Tags */}}
     {{ with .Params.tags }}
       {{ range . }}
-        <span style="margin-top:0.5rem" class="mr-2" onclick="window.open({{ (( . | urlize | printf "/tags/%s" ) | relLangURL) | safeJS }},'_self');return false;">
+        <span style="margin-top:0.5rem; cursor: pointer;" class="mr-2" onclick="event.stopPropagation(); window.open('{{ (( . | urlize | printf "/tags/%s" ) | relLangURL) | safeJS }}','_self'); return false;">
           {{ partial "badge.html" (dict "text" . "type" "tag") }}
         </span>
       {{ end }}
@@ -112,7 +112,7 @@
       {{/* Display Categories */}}
       {{ with .Params.categories }}
         {{ range . }}
-          <span style="margin-top:0.5rem" class="mr-2" onclick="window.open({{ (( . | urlize | printf "/categories/%s" ) | relLangURL) | safeJS }},'_self');return false;">
+          <span style="margin-top:0.5rem; cursor: pointer;" class="mr-2" onclick="event.stopPropagation(); window.open('{{ (( . | urlize | printf "/categories/%s" ) | relLangURL) | safeJS }}','_self'); return false;">
             {{ partial "badge.html" (dict "text" . "type" "category") }}
           </span>
         {{ end }}
@@ -122,7 +122,7 @@
       {{/* Display Tags */}}
       {{ with .Params.tags }}
         {{ range . }}
-          <span style="margin-top:0.5rem" class="mr-2" onclick="window.open({{ (( . | urlize | printf "/tags/%s" ) | relLangURL) | safeJS }},'_self');return false;">
+          <span style="margin-top:0.5rem; cursor: pointer;" class="mr-2" onclick="event.stopPropagation(); window.open('{{ (( . | urlize | printf "/tags/%s" ) | relLangURL) | safeJS }}','_self'); return false;">
             {{ partial "badge.html" (dict "text" . "type" "tag") }}
           </span>
         {{ end }}
