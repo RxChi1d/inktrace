@@ -18,7 +18,7 @@
       {{ partial "breadcrumbs.html" . }}
     {{ end }}
     <h1 class="text-4xl font-extrabold text-neutral-900 dark:text-neutral">
-      {{ (i18n .Title) | default .Title }}
+      {{ (i18n .Name) | default .Name }}
     </h1>
     <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
       {{ partial "article-meta/taxonomy.html" (dict "context" . "scope" "single") }}
@@ -47,7 +47,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h5l2 2h9a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
           </svg>
           <span class="title text-lg font-medium text-neutral-100">
-            {{ (i18n .Page.LinkTitle) | default .Page.LinkTitle }}
+            {{ (i18n (.Page.Title | lower)) | default .Page.Title }}
           </span>
           <span class="count ml-2 text-sm text-neutral-400">{{ .Count }} {{ if eq .Count 1 }}post{{ else }}posts{{ end }}</span>
         </div>

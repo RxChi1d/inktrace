@@ -17,5 +17,20 @@ success: 成功
 check: 完成
 
 # Categories
-Linux Technical: Linux 技術
-Paper Survey: 論文筆記
+linux-technical: Linux 技術
+paper-survey: 論文筆記
+container-platform: 容器化平台
+
+# Tags
+nerf: NeRF
+neus: NeuS
+3dgs: 3DGS
+human-reconstruction: 人體重建
+debian-ubuntu: Debian/Ubuntu
+package: 套件
+docker: Docker
+grafana: Grafana
+immich: Immich
+nginx-proxy-manager: Nginx Proxy Manager
+monitor: 監控
+nginx: Nginx

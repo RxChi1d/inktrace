@@ -1,9 +1,9 @@
 ---
 title: "論文筆記 - Ref-NeuS: Ambiguity-Reduced Neural Implicit Surface Learning for Multi-View Reconstruction with Reflection"
 date: 2023-12-21T21:29:00+08:00
-lastmod: 2025-05-12T00:54:41+08:00
-tags: ["NeuS"]
-categories: ["Paper Survey"]
+lastmod: 2025-06-01T00:40:58+08:00
+tags: ["neus"]
+categories: ["paper-survey"]
 params: 
     math: true
 ---

@@ -14,3 +14,9 @@ preamble.sty
 
 # Cline files
 .clinerules/
+
+# Cursor files
+.cursor/
+
+# Development files
+TODO.md
