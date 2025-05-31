@@ -1,7 +1,7 @@
 ---
 title: "Immich 部署、設定與反向代理 - Google 相簿的最佳開源替代方案"
 date: 2025-04-26 00:00:00 +0800
-lastmod: 2025-06-01T01:01:49+08:00
+lastmod: 2025-06-01T01:14:04+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 slug: "immich-deployment"
@@ -137,12 +137,12 @@ slug: "immich-deployment"
 
     通過添加 `entrypoint` 設定，未來每次重啟 stack，在 immich_server 容器啟動時，會自動下載並安裝最新版本的臺灣中文化地理資料。
     
->  💡 **Note:**
+>  [!TIP]
 >  如果是簡體中文或中國的用戶可以參考 [ZingLix/immich-geodata-cn](https://github.com/ZingLix/immich-geodata-cn) ，該專案除了簡體中文翻譯之外，亦有針對中國地區之地名進行優化。
 
 ## 影片轉碼硬體加速
 
-> 💡 **NOTE:**
+>  [!WARNING]
 > 安裝之前需要先安裝顯示卡的驅動程式與容器驅動。
 > **以 NVIDIA 顯示卡為例:** 需安裝 NVIDIA Driver 以及 [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)。
 
@@ -167,7 +167,7 @@ slug: "immich-deployment"
         # 其他配置省略
     ```
     
-    > 💡 如果是 NVDIA 的顯示卡還需要加上：
+    >  [!NOTE] 如果是 NVDIA 的顯示卡還需要加上：
     >     
     > ```yaml
     > immich-server:
@@ -190,7 +190,7 @@ slug: "immich-deployment"
 
 ## 機器學習硬體加速
 
-> 本篇使用 NVIDIA 的顯示卡實作。
+>  [!TIP] 本篇使用 NVIDIA 的顯示卡實作。
 > 如果是使用其他的硬體，或需要更詳細的參考文件，可以參考官方的 [Hardware-Accelerated Machine Learning](https://immich.app/docs/features/ml-hardware-acceleration)。
 
 1. **停止 stack。**
@@ -227,11 +227,13 @@ slug: "immich-deployment"
         ```
         
     
-    > **NOTE:** immich-machine-learning 容器「不需要」加上 `runtime=nvidia` 和 `NVIDIA_VISIBLE_DEVICES=all` 變數。
+    >  [!NOTE]
+    > immich-machine-learning 容器「不需要」加上 `runtime=nvidia` 和 `NVIDIA_VISIBLE_DEVICES=all` 變數。
     
 4. **啟動 stack。**
     
-    > **NOTE:** 機器學習硬體加速設定後，「不需要」在 WebUI 中做額外的設定。
+    >  [!NOTE]
+    > 機器學習硬體加速設定後，「不需要」在 WebUI 中做額外的設定。
 
 ## 更換機器學習模型
 
@@ -254,9 +256,9 @@ slug: "immich-deployment"
 
     在設定頁面中，`機器學習設定` → `智慧搜尋` → `CLIP 模型`，填入所需模型的名稱即可。
 
-    > 💡 **NOTE:**
-    > 無需自行下載模型，immich-machine-learning 容器會在 Immich 需要調用模型時自動下載對應的模型。
-    > 剛設定完後，可以在手動執行一次 `智慧搜尋` 作業，並在 immich-machine-learning 容器的 log 中查看是否有自動下載模型，並載入。
+    >  [!TIP] 
+    > - 無需自行下載模型，immich-machine-learning 容器會在 Immich 需要調用模型時自動下載對應的模型。
+    > - 剛設定完後，可以在手動執行一次 `智慧搜尋` 作業，並在 immich-machine-learning 容器的 log 中查看是否有自動下載模型，並載入。
 
 ### 人臉辨識模型
 
@@ -266,7 +268,8 @@ slug: "immich-deployment"
 
 由於官方沒有提供顯存開銷，這邊我提供我自己測試的結果供大家參考：
 
-> - 測試顯卡為 NVIDIA Tesla P4
+>  [!INFO] 
+> - 測試顯卡為 NVIDIA Tesla P4。
 > - 由於並非特別將環境設定至顯卡空佔用，因此需要將表格的值扣除初始顯存開銷 (約 0.416 GiB) 才比較接近模型本身的顯存佔用。
 > - 「儲存開銷欄位」表示模型的檔案大小。
 

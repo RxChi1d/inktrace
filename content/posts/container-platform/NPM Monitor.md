@@ -1,7 +1,7 @@
 ---
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - 通過 Grafana 監控 NPM 的代理狀態"
 date: 2025-04-26 00:00:00 +0800
-lastmod: 2025-06-01T01:01:49+08:00
+lastmod: 2025-06-01T01:14:04+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 slug: "nginx-proxy-manager-monitor-deployment"
@@ -11,7 +11,7 @@ slug: "nginx-proxy-manager-monitor-deployment"
 
 <!--more-->
 
-> 💡 **工作原理**  
+>  [!INFO] 工作原理
 > 使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。
 
 
@@ -30,7 +30,7 @@ slug: "nginx-proxy-manager-monitor-deployment"
 docker network create grafana
 ```
 
-> 💡 **提醒**
+>  [!NOTE] 
 > Grafana 的容器設置一併做相應的調整喔～ (加上 network 設定)
 
 ## 3. 調整 Nginx Proxy Manager 的 Nginx 設置
@@ -365,5 +365,5 @@ networks:
     
     兩個使用的優先級為 labelFilter > regexFilter。
     
-    > 💡 **設計兩種 Filter 的原因**
+    >  [!INFO]  **設計兩種 Filter 的原因**
     > labelFilter 的過濾效率比較高，也易於使用，但為了避免將變化較大的資料轉換成 label 造成 loki 負擔。因此對於值變化較大的參數，比如 remote_addr，可以使用 regexFilter 過濾。

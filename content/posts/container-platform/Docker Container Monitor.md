@@ -1,7 +1,7 @@
 ---
 title: "Docker Container Monitor - 通過 Grafana 監視 Docker 容器的狀態"
 date: 2025-04-26 00:00:00 +0800
-lastmod: 2025-06-01T01:01:49+08:00
+lastmod: 2025-06-01T01:14:04+08:00
 tags: ["docker", "grafana", "monitor"]
 categories: ["container-platform"]
 slug: "docker-container-monitor-deployment"
@@ -11,7 +11,7 @@ slug: "docker-container-monitor-deployment"
 
 <!--more-->
 
-> [!NOTE] 工作原理
+>  [!INFO] 工作原理
 > 使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。
 
 
@@ -200,7 +200,7 @@ docker network create grafana
         ![CleanShot 2025-02-26 at 22.32.17.png](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Docker_Container_Monitor/image-04.png)
         
 
-> **Temperature panel 顯示 “No data”**  
+> [!NOTE] Temperature panel 顯示 “No data”
 > 
 > 預設 node-exporter 會通過 `/sys/class/thermal` 底下的 `thermal_zone*` 來獲取 cpu 溫度。但某些電腦並沒有相關的 sensor，因此 `/sys/class/thermal` 中不會有相關的檔案，因此在 dashboard 中 cpu 溫度相關的 panel 會沒有數據。
 >
