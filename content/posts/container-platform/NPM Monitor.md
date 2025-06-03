@@ -1,7 +1,7 @@
 ---
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - 通過 Grafana 監控 NPM 的代理狀態"
 date: 2025-04-26 00:00:00 +0800
-lastmod: 2025-06-01T01:14:04+08:00
+lastmod: 2025-06-03T20:26:08+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 slug: "nginx-proxy-manager-monitor-deployment"
@@ -17,11 +17,11 @@ slug: "nginx-proxy-manager-monitor-deployment"
 
 ## 1. 部署 grafana
 
-如果尚未有 grafana 的 container，請參考 [grafana](https://hackmd.io/@RxChi1d/HJFdtYDJxl)。
+如果尚未有 grafana 的 container，請參考 [grafana](/posts/container-platform/grafana-basic-deployment/)。
 
 ## 2. 新增 docker network
 
-為了方便 grafana, loki 以及 promtail 的 container 之間通訊，因此提前先創建一個 bridge mode 的 docker network。如果有其他方法或需求，可以直接跳至[步驟三](#3-調整-nginx-proxy-manager-的-nginx-設置)。
+為了方便 grafana, loki 以及 promtail 的 container 之間通訊，因此提前先創建一個 bridge mode 的 docker network。如果有其他方法或需求，可以直接跳至[步驟三]({{< relref "#3-調整-nginx-proxy-manager-的-nginx-設置" >}})。
 
 - 可以使用 portainer 增新網路配置。
 - 或是通過命令：
