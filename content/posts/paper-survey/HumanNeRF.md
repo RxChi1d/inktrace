@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video"
 date: 2023-03-02T00:00:00+08:00
-lastmod: 2025-06-01T00:40:58+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -43,7 +43,7 @@ params:
 
 ### Overview
 
-![Fig.2. Overview. 我們的方法以視頻幀為輸入，並針對標準外觀進行優化，將其呈現為連續場，同時也為從觀察空間到標準空間的運動場進行映射。運動場被拆分為骨架的剛性和非剛性運動，分別以離散網格和連續場的形式呈現。我們還使用現有的身體姿態估計器來初始化身體姿態，進一步進行微調，以獲得更好的對齊效果。我們在觀察空間的體積渲染和輸入圖像之間施加了一個損失，以引導優化朝著解決方案的方向進行。](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/overview.png "Fig.2. Overview. 我們的方法以視頻幀為輸入，並針對標準外觀進行優化，將其呈現為連續場，同時也為從觀察空間到標準空間的運動場進行映射。運動場被拆分為骨架的剛性和非剛性運動，分別以離散網格和連續場的形式呈現。我們還使用現有的身體姿態估計器來初始化身體姿態，進一步進行微調，以獲得更好的對齊效果。我們在觀察空間的體積渲染和輸入圖像之間施加了一個損失，以引導優化朝著解決方案的方向進行。")
+![Fig.2. Overview. 我們的方法以視頻幀為輸入，並針對標準外觀進行優化，將其呈現為連續場，同時也為從觀察空間到標準空間的運動場進行映射。運動場被拆分為骨架的剛性和非剛性運動，分別以離散網格和連續場的形式呈現。我們還使用現有的身體姿態估計器來初始化身體姿態，進一步進行微調，以獲得更好的對齊效果。我們在觀察空間的體積渲染和輸入圖像之間施加了一個損失，以引導優化朝著解決方案的方向進行。](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-2.png "Fig.2. Overview. 我們的方法以視頻幀為輸入，並針對標準外觀進行優化，將其呈現為連續場，同時也為從觀察空間到標準空間的運動場進行映射。運動場被拆分為骨架的剛性和非剛性運動，分別以離散網格和連續場的形式呈現。我們還使用現有的身體姿態估計器來初始化身體姿態，進一步進行微調，以獲得更好的對齊效果。我們在觀察空間的體積渲染和輸入圖像之間施加了一個損失，以引導優化朝著解決方案的方向進行。")
 
 ### Representing a Human as a Neural Field
 
@@ -83,7 +83,7 @@ $$
 
 #### Canonical volume
 
-![Canonical Space](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/canonical_space.png "Canonical Space")
+![Canonical Space](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/canonical-space.png "Canonical Space")
 
 作者利用一個 MLP 將 canonical volume $F_c$ 表示成一個 continuous field：
 
@@ -103,7 +103,7 @@ $$
 
 #### Skeletal motion
 
-![Skeletal Motion](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/skeletal_motion.png "Skeletal Motion")
+![Skeletal Motion](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/skeletal-motion.png "Skeletal Motion")
 
 根據 Vid2Actor，作者計算的 skeletal deformation $T_{\text{skel}}$ 是一種 inverse, linear blend skinning 的方式，將 observation space 中的點映射到 canonical space：
 
@@ -186,7 +186,7 @@ $$
 
 #### Non-rigid motion
 
-![Non-rigid Motion Module](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/non_rigid_motion.png "Non-rigid Motion Module")
+![Non-rigid Motion Module](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/non-rigid-motion.png "Non-rigid Motion Module")
 
 作者將 non-rigid motion $T_{\text{NR}}$ 表示成 skeleton-driven motion 的一個 offset $\Delta \mathbf{x}$：
 
@@ -236,7 +236,7 @@ $$
 \end{equation}
 $$
 
-![Pose Correction Module](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/pose_correction.png "Pose Correction Module")
+![Pose Correction Module](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/pose-correction.png "Pose Correction Module")
 
 ### Optimizing a HumanNeRF
 
@@ -339,7 +339,7 @@ $$
     - LPIPS (VGG)
 - Comparison Targets
     
-    ![table_2](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/table_2.png)
+    ![table_2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/table-2.png)
 
 ### Optimization details
 
@@ -355,43 +355,43 @@ $$
 
 ### Comparisons
 
-![figure_4](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_4.png)
+![figure_4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-4.png)
 
 從 Fig.4 中可以看到，HyperNeRF 無法為 novel views 產生有意義的深度圖，作者認為因為 HyperNeRF 依賴 multi-views， 僅僅是將 input view 記起來。此外，動態人體運動也比使用 HyperNeRF 的範例更極端。
 
-![table_1](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/table_1.png)
+![table_1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/table-1.png)
 
 HumanNeRF 在幾乎所有的場景中都比 NeuralBody 表現更好。
 
-![figure_3](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_3.png)
+![figure_3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-3.png)
 
 在 Fig.3 中同樣可以看到 HumanNeRF 的渲染品質優於 NeuralBody
 
-![figure_5](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_5.png)
+![figure_5](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-5.png)
 
 Fig.5 展示了 self-captured 與 YouTube videos 的渲染結果，HumanNeRF 同樣更好。
 
 ### Ablation studies
 
-![table_3](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/table_3.png)
+![table_3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/table-3.png)
 
 Tab.3 展示，僅使用 skeletal deformation 就能獲得比 NeuralBody 更好的的效果。
 
 加入 non-rigid deformation 後，可以獲得更好的效果。
 
-![figure_6](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_6.png)
+![figure_6](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-6.png)
 
 Fig.6 展示了野外場景的可視化效果。從中可以看到 non-rigid motion 的重要性，與 pose correction 對於 unseen view 的重要性。
 
-![figure_7](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_7.png)
+![figure_7](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-7.png)
 
 Fig.7 顯示了 delayed optimization 對於解耦 skeletal deformation 與 non-rigid deformation 的重要性。 
 
-![figure_8](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_8.png)
+![figure_8](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-8.png)
 
 當解耦不好時，對新視圖的泛化會很差，如 Fig.8 所示。
 
-![figure_13](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_13.png)
+![figure_13](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-13.png)
 
 作者另外測試了不同的 Motion Field Decomposition 方案，分別如下：
 
@@ -423,7 +423,7 @@ Fig.7 顯示了 delayed optimization 對於解耦 skeletal deformation 與 non-r
     $$
     
 
-![figure_14](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-03-02-HumanNeRF/figure_14.png)
+![figure_14](https://cdn.rxchi1d.me/inktrace-files/paper-survey/HumanNeRF/figure-14.png)
 
 結果顯示 Design 3 的設計方案可以獲得最好的效果。
 

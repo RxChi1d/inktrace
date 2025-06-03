@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - 3DGS-Avatar: Animatable Avatars via Deformable 3D Gaussian Splatting"
 date: 2025-01-20T11:35:00+08:00
-lastmod: 2025-06-01T00:40:58+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["3dgs", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -37,7 +37,7 @@ params:
 
 ### Preliminary - **3D Gaussian Splatting**
 
-![The pipeline of 3D Gaussian Splatting.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/pipeline.png "The pipeline of 3D Gaussian Splatting.")
+![The pipeline of 3D Gaussian Splatting.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/pipeline.png "The pipeline of 3D Gaussian Splatting.")
 
 - 基本流程：
     1. 首先，需要給定場景的點雲作為初始的位置資訊。
@@ -58,7 +58,7 @@ params:
 
 ### Pipeline
 
-![Figure 2. Our framework for creating animatable avatars from monocular videos.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/figure_2.png "Figure 2. Our framework for creating animatable avatars from monocular videos.")
+![Figure 2. Our framework for creating animatable avatars from monocular videos.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/figure-2.png "Figure 2. Our framework for creating animatable avatars from monocular videos.")
 
 這個 3DGS-Avatar 從單目影像輸入開始，最終輸出可動畫的 3D 人物渲染圖像。
 
@@ -269,7 +269,7 @@ $$
 
 ### Quantitative Results on ZJU-MoCap
 
-![Table 3. **Quantitative Results on ZJU-MoCap [39].** We outperform both competitive baselines [59, 60] in terms of LPIPS while being two orders of magnitude faster in training and rendering. Cell color indicates best and second best. Instant-NVR [7] is trained and tested on a refined version of ZJU-MoCap, thus is not directly comparable to other baselines quantitatively. We train our model on the refined dataset for fair quantitative comparison to Instant-NVR and the metrics are reported in the last two rows of the table.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/table_3.png "Table 3. **Quantitative Results on ZJU-MoCap [39].** We outperform both competitive baselines [59, 60] in terms of LPIPS while being two orders of magnitude faster in training and rendering. Cell color indicates best and second best. Instant-NVR [7] is trained and tested on a refined version of ZJU-MoCap, thus is not directly comparable to other baselines quantitatively. We train our model on the refined dataset for fair quantitative comparison to Instant-NVR and the metrics are reported in the last two rows of the table.")
+![Table 3. **Quantitative Results on ZJU-MoCap [39].** We outperform both competitive baselines [59, 60] in terms of LPIPS while being two orders of magnitude faster in training and rendering. Cell color indicates best and second best. Instant-NVR [7] is trained and tested on a refined version of ZJU-MoCap, thus is not directly comparable to other baselines quantitatively. We train our model on the refined dataset for fair quantitative comparison to Instant-NVR and the metrics are reported in the last two rows of the table.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/table-3.png "Table 3. **Quantitative Results on ZJU-MoCap [39].** We outperform both competitive baselines [59, 60] in terms of LPIPS while being two orders of magnitude faster in training and rendering. Cell color indicates best and second best. Instant-NVR [7] is trained and tested on a refined version of ZJU-MoCap, thus is not directly comparable to other baselines quantitatively. We train our model on the refined dataset for fair quantitative comparison to Instant-NVR and the metrics are reported in the last two rows of the table.")
 
 - 該論文提出的方法在 PSNR 和 SSIM 指標上與 ARAH 方法表現相當，但在 LPIPS 指標上明顯優於所有基準方法。
 - 同時，該方法在訓練速度和推理速度方面也顯示出顯著的提升，對於實際應用具有重要意義。
@@ -277,7 +277,7 @@ $$
 
 ### Qualitative Comparison on ZJU-MoCap
 
-![Figure 3. **Qualitative Comparison on ZJU-MoCap [39].** We show the results for both novel view synthesis and novel pose animation of all sequences on ZJU-MoCap. Our method produces high-quality results that preserve cloth details even on out-of-distribution poses.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/figure_3.png "Figure 3. **Qualitative Comparison on ZJU-MoCap [39].** We show the results for both novel view synthesis and novel pose animation of all sequences on ZJU-MoCap. Our method produces high-quality results that preserve cloth details even on out-of-distribution poses.")
+![Figure 3. **Qualitative Comparison on ZJU-MoCap [39].** We show the results for both novel view synthesis and novel pose animation of all sequences on ZJU-MoCap. Our method produces high-quality results that preserve cloth details even on out-of-distribution poses.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/figure-3.png "Figure 3. **Qualitative Comparison on ZJU-MoCap [39].** We show the results for both novel view synthesis and novel pose animation of all sequences on ZJU-MoCap. Our method produces high-quality results that preserve cloth details even on out-of-distribution poses.")
 
 - Instant-NVR 生成的結果外觀過於平滑，且肢體部分容易出現嘈雜的偽影。
 - ARAH 方法則出現明顯的幾何缺陷，例如身體穿孔的問題。
@@ -288,24 +288,24 @@ $$
 
 ### Quantitative Results on PeopleSnapshot
 
-![Table 4. **Quantitative Results on PeopleSnapShot [1].**](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/table_4.png "Table 4. Quantitative Results on PeopleSnapShot [1].**")
+![Table 4. **Quantitative Results on PeopleSnapShot [1].**](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/table-4.png "Table 4. Quantitative Results on PeopleSnapShot [1].**")
 
 - 本篇方法在 PSNR 和 LPIP S 的表現明顯優於 InstantAvatar。
 - 同時在推理過程中速 度提高了 3 倍以上。
 
 ### Qualitative Comparison on PeopleSnapshot
 
-![Figure 12. **Qualitative Comparison on PeopleSnapshot [1]. Best viewed zoomed-in.**](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/figure_12.png "Figure 12. **Qualitative Comparison on PeopleSnapshot [1]. Best viewed zoomed-in.**")
+![Figure 12. **Qualitative Comparison on PeopleSnapshot [1]. Best viewed zoomed-in.**](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/figure-12.png "Figure 12. **Qualitative Comparison on PeopleSnapshot [1]. Best viewed zoomed-in.**")
 
 - 在 PeopleSnapshot 上的定性比較，差異較小。（論文內文認為更具細節，尤其是在臉部）
 
 ### Ablation Study
 
-![Table 5. **Ablation Study on ZJU-MoCap [39].** The proposed model achieves the lowest LPIPS, demonstrating the effectiveness of all components.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/table_5.png "Table 5. **Ablation Study on ZJU-MoCap [39].** The proposed model achieves the lowest LPIPS, demonstrating the effectiveness of all components.")
+![Table 5. **Ablation Study on ZJU-MoCap [39].** The proposed model achieves the lowest LPIPS, demonstrating the effectiveness of all components.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/table-5.png "Table 5. **Ablation Study on ZJU-MoCap [39].** The proposed model achieves the lowest LPIPS, demonstrating the effectiveness of all components.")
 
 - 在定量比較中，可以觀察到當移除不同模組後，LPIPS 指標顯示模型的性能有著相對應的下降。
 
-![Figure 4. **Ablation Study** on as-isometric-as-possible regularization, which removes the artifacts on highly articulated poses.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2025-01-20-3DGS-Avatar/figure_4.png "Figure 4. **Ablation Study** on as-isometric-as-possible regularization, which removes the artifacts on highly articulated poses.")
+![Figure 4. **Ablation Study** on as-isometric-as-possible regularization, which removes the artifacts on highly articulated poses.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/3DGS-Avatar/figure-4.png "Figure 4. **Ablation Study** on as-isometric-as-possible regularization, which removes the artifacts on highly articulated poses.")
 
 - 作者進一步對分布外的姿勢進行定性比較。
 - 結果顯示盡可能等距的損失有助於約束 3D Gaussian 分佈在變形過程中遵循一致的運動，從而提高對新姿勢的泛化能力。

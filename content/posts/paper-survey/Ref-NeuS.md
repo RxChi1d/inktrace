@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - Ref-NeuS: Ambiguity-Reduced Neural Implicit Surface Learning for Multi-View Reconstruction with Reflection"
 date: 2023-12-21T21:29:00+08:00
-lastmod: 2025-06-01T00:40:58+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["neus"]
 categories: ["paper-survey"]
 params: 
@@ -31,7 +31,7 @@ params:
     - NeRF 和 NeuS：對於具有反射的物體，會產生模糊的結果。
     - Ref-NeRF 和 Neural-Warp：雖然可以透過以反射方向取代入射方向改善生成品質，但是無法產生平滑的表面法向量，因此提升效果有限。
     
-    ![Figure 1](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/figure_1.png "Figure 1")
+    ![Figure 1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/figure-1.png "Figure 1")
     
 - **Contribution**
     - 提出了第⼀個⽤於重建具有反射表⾯的物體的神經隱式表⾯學習框架。
@@ -42,7 +42,7 @@ params:
 
 ### Overview
 
-![Figure 2](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/figure_2.png "Figure 2")
+![Figure 2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/figure-2.png "Figure 2")
 
 Geometry Network 與 Radiance Network 是使用與 NeuS 相同的架構。
 
@@ -186,7 +186,7 @@ $$
 
 由於自遮擋，某些像素實際上並不可見，因此在計算反射分數的時候不需要被考慮。
 
-![Figure 3](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/figure_3.png "Figure 3")
+![Figure 3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/figure-3.png "Figure 3")
 
 首先，先定義表面：
 
@@ -260,7 +260,7 @@ $$
 
 作者在 Fig.4 中展示反射分數的可視化結果：
 
-![Figure 4](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/figure_4.png "Figure 4")
+![Figure 4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/figure-4.png "Figure 4")
 
 > [!NOTE]
 > 黑色表示高反射區域。
@@ -349,22 +349,22 @@ $$
 
 ### Comparison with State-of-the-Art Methods
 
-![Table 1: Comparison with state-of-the-art methods on Shiny Blender Dataset. Except for Ref-NeRF and PhySG, whose results are taken from the original paper of Ref-NeRF, we implemented the released code on Shiny Blender dataset for other methods. IDR failed to recover meaningful geometry for helmet and toaster, so the results remain empty. Note that NeRF-W failed to produce meshes since it focuses on novel view synthesis in the wild, and COLMAP generated meshes with severe artifacts and missing parts. The quantitative results were not provided. **Bold** results have the best score and underlined the second best. Our method outperforms these methods by a large margin.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/table_1.png "Table 1: Comparison with state-of-the-art methods on Shiny Blender Dataset. Except for Ref-NeRF and PhySG, whose results are taken from the original paper of Ref-NeRF, we implemented the released code on Shiny Blender dataset for other methods. IDR failed to recover meaningful geometry for helmet and toaster, so the results remain empty. Note that NeRF-W failed to produce meshes since it focuses on novel view synthesis in the wild, and COLMAP generated meshes with severe artifacts and missing parts. The quantitative results were not provided. **Bold** results have the best score and underlined the second best. Our method outperforms these methods by a large margin.")
+![Table 1: Comparison with state-of-the-art methods on Shiny Blender Dataset. Except for Ref-NeRF and PhySG, whose results are taken from the original paper of Ref-NeRF, we implemented the released code on Shiny Blender dataset for other methods. IDR failed to recover meaningful geometry for helmet and toaster, so the results remain empty. Note that NeRF-W failed to produce meshes since it focuses on novel view synthesis in the wild, and COLMAP generated meshes with severe artifacts and missing parts. The quantitative results were not provided. **Bold** results have the best score and underlined the second best. Our method outperforms these methods by a large margin.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/table-1.png "Table 1: Comparison with state-of-the-art methods on Shiny Blender Dataset. Except for Ref-NeRF and PhySG, whose results are taken from the original paper of Ref-NeRF, we implemented the released code on Shiny Blender dataset for other methods. IDR failed to recover meaningful geometry for helmet and toaster, so the results remain empty. Note that NeRF-W failed to produce meshes since it focuses on novel view synthesis in the wild, and COLMAP generated meshes with severe artifacts and missing parts. The quantitative results were not provided. **Bold** results have the best score and underlined the second best. Our method outperforms these methods by a large margin.")
 
-![Table 2](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/table_2.png "Table 2")
+![Table 2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/table-2.png "Table 2")
 
 - 由於 COLMAP 與 NeRF-W 無法恢復反射表面，因此沒有與他們比較 Acc。
 - PhySG 和 Ref-NeRF 目的為新視角合成，因此論文中沒有展示 Acc。
 - IDR 無法為 helmet 與 toaster 產生有意義的重建，因此作者只展示 coffee 與 car。
 - 本篇的方法明顯優於其他的方法。
 
-![Figure 1. Our ambiguity-reduced framework significantly improves explicit surfaces geometry, surface normals and rendering realism for modeling reflective surfaces compared to NeuS and Ref-NeRF. Reconstruction accuracy (lower is better), surface normal mean angular error, i.e., MAE (lower is better) and PSNR (higher is better) are compared.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/figure_1.png "Figure 1. Our ambiguity-reduced framework significantly improves explicit surfaces geometry, surface normals and rendering realism for modeling reflective surfaces compared to NeuS and Ref-NeRF. Reconstruction accuracy (lower is better), surface normal mean angular error, i.e., MAE (lower is better) and PSNR (higher is better) are compared.")
+![Figure 1. Our ambiguity-reduced framework significantly improves explicit surfaces geometry, surface normals and rendering realism for modeling reflective surfaces compared to NeuS and Ref-NeRF. Reconstruction accuracy (lower is better), surface normal mean angular error, i.e., MAE (lower is better) and PSNR (higher is better) are compared.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/figure-1.png "Figure 1. Our ambiguity-reduced framework significantly improves explicit surfaces geometry, surface normals and rendering realism for modeling reflective surfaces compared to NeuS and Ref-NeRF. Reconstruction accuracy (lower is better), surface normal mean angular error, i.e., MAE (lower is better) and PSNR (higher is better) are compared.")
 
-![Figure 5. The geometry of reconstructed meshes and estimated surface normals on Shiny Blender dataset [43]. We ran NeuS, Geo-Neus and Ref-NeRF official implementations. Our method obviously produces better geometry and surface normals than other methods.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/figure_5.png "Figure 5. The geometry of reconstructed meshes and estimated surface normals on Shiny Blender dataset [43]. We ran NeuS, Geo-Neus and Ref-NeRF official implementations. Our method obviously produces better geometry and surface normals than other methods.")
+![Figure 5. The geometry of reconstructed meshes and estimated surface normals on Shiny Blender dataset [43]. We ran NeuS, Geo-Neus and Ref-NeRF official implementations. Our method obviously produces better geometry and surface normals than other methods.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/figure-5.png "Figure 5. The geometry of reconstructed meshes and estimated surface normals on Shiny Blender dataset [43]. We ran NeuS, Geo-Neus and Ref-NeRF official implementations. Our method obviously produces better geometry and surface normals than other methods.")
 
 從 Fig.1 與 Fig.5 都可以看出本篇的方法在幾何精度與表面法線的預測都有明顯的改進。
 
-![Table 3. Rendering quality comparison on Shiny Blender dataset. PSNR is adopted as evluation metric.](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/table_3.png "Table 3. Rendering quality comparison on Shiny Blender dataset. PSNR is adopted as evluation metric.")
+![Table 3. Rendering quality comparison on Shiny Blender dataset. PSNR is adopted as evluation metric.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/table-3.png "Table 3. Rendering quality comparison on Shiny Blender dataset. PSNR is adopted as evluation metric.")
 
 在重建任務的渲染品質比較，本篇方法也與 Ref-NeRF 有可比性。
 
@@ -373,7 +373,7 @@ $$
 
 ### Ablation Study
 
-![Table 4](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-21-Ref-NeuS/table_4.png "Table 4")
+![Table 4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-NeuS/table-4.png "Table 4")
 
 - “NeuS w/ RS”: 使⽤反射分數作為變異數仍然有利於改進幾何形狀。
 - 使用反射方向估計 radiance 有效提升效果。

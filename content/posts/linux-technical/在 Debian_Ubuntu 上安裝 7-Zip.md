@@ -1,7 +1,7 @@
 ---
 title: "在 Debian/Ubuntu 上 7-Zip 安裝"
 date: 2024-06-19 00:00:00 +0800
-lastmod: 2025-06-01T01:14:04+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["debian-ubuntu", "package"]
 categories: ["linux-technical"]
 slug: "install-7zip-on-debian-ubuntu"
@@ -19,7 +19,7 @@ slug: "install-7zip-on-debian-ubuntu"
     
     在 [官網下載頁面](https://www.7-zip.org/download.html) 中查找最新版本的安裝包，並複製下載連結。
     
-    ![官網下載頁面](https://cdn.rxchi1d.me/inktrace-files/Linux_Related/2024-06-19-Install_7-Zip_on_Debian_Ubuntu/image-01.png)
+    ![官網下載頁面](https://cdn.rxchi1d.me/inktrace-files/linux-technical/install-7zip-on-debian-ubuntu/image-01.png)
     _官網下載頁面_
     
     ```bash

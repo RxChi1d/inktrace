@@ -1,7 +1,7 @@
 ---
 title: "Immich 部署、設定與反向代理 - Google 相簿的最佳開源替代方案"
 date: 2025-04-26 00:00:00 +0800
-lastmod: 2025-06-01T01:14:04+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 slug: "immich-deployment"
@@ -249,7 +249,7 @@ slug: "immich-deployment"
 
     這邊我們可以參考「簡體中文」的表格來進行選擇。如果顯存足夠的話，可以直接選表現最好的模型 `nllb-clip-large-siglip__v1`：
 
-    ![模型的簡體中文性能比較表](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Immich_Deployment_Configuration_and_Reverse_Proxy/Model_CN_Perf_Compare.png)
+    ![模型的簡體中文性能比較表](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-deployment/model-cn-perf-compare.png)
     _模型的簡體中文性能比較表_
 
 2. **設定模型:**

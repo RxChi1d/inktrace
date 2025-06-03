@@ -1,7 +1,7 @@
 ---
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - 通過 Grafana 監控 NPM 的代理狀態"
 date: 2025-04-26 00:00:00 +0800
-lastmod: 2025-06-03T20:26:08+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 slug: "nginx-proxy-manager-monitor-deployment"
@@ -56,9 +56,9 @@ Nginx 需要調整的部分有兩個，分別是「啟用 geoip2」和「配置 
     
     其中 `GeoLite2-ASN.mmdb`, `GeoLite2-City.mmdb` 和 `GeoLite2-Country.mmdb` 需要下載 (或參考 [P3TERX/GeoLite.mmdb](https://github.com/P3TERX/GeoLite.mmdb)。  ):  
     
-    - [GeoLite2-ASN.mmdb](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/GeoLite2-ASN.mmdb)
-    - [GeoLite2-City.mmdb](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/GeoLite2-City.mmdb)
-    - [GeoLite2-Country.mmdb](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/GeoLite2-Country.mmdb)
+    - [GeoLite2-ASN.mmdb](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/GeoLite2-ASN.mmdb)
+    - [GeoLite2-City.mmdb](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/GeoLite2-City.mmdb)
+    - [GeoLite2-Country.mmdb](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/GeoLite2-Country.mmdb)
     
     
     - `events.conf`
@@ -339,26 +339,26 @@ networks:
     2. 選擇 `Loki`
     3. **Name 為 `loki` ，Connection 的 url 填入** `http://loki:3100` 。隨後點擊 `Save & test`。
         
-        ![CleanShot_2025-02-25_at_15.22.24](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/image-01.png)
+        ![CleanShot_2025-02-25_at_15.22.24](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-01.png)
         
 3. 增新 Dashboard
     1. 進入 `Dashboards` ，點擊 `New` - `Import`
 
-        ![CleanShot_2025-02-22_at_19.56.022x](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/image-02.png)
+        ![CleanShot_2025-02-22_at_19.56.022x](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-02.png)
 
         
     2. 上傳 NPM-Monitor 的 json
         
-        [NPM Monitor.json](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/NPM-Monitor.json)
+        [NPM Monitor.json](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/NPM-Monitor.json)
 
     3. 選擇對應的 loki Data Source
         
-        ![CleanShot_2025-02-25_at_15.26.18](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/image-03.png)
+        ![CleanShot_2025-02-25_at_15.26.18](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-03.png)
 
         
 4. 按需求調整 labelFilter 與 regexFilter
     
-    ![CleanShot_2025-02-25_at_15.24.33](https://cdn.rxchi1d.me/inktrace-files/Docker_Container_Deployment/2025-04-26-Nginx_Proxy_Manager_Monitor/image-04.png)
+    ![CleanShot_2025-02-25_at_15.24.33](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-04.png)
 
     
     預設 regexFilter 用以排除來源為 `192.168.50.0/24` 之資料。

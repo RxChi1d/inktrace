@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - Ref-DVGO: Reflection-Aware Direct Voxel Grid Optimization for an Improved Quality-Efficiency Trade-Off in Reflective Scene Reconstruction"
 date: 2023-12-14T12:34:00+08:00
-lastmod: 2025-06-01T00:40:58+08:00
+lastmod: 2025-06-03T21:02:22+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 params: 
@@ -37,7 +37,7 @@ params:
 
 ### Overview
 
-![Overview](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/overview.png "Overview")
+![Overview](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/overview.png "Overview")
 
 將 Ref-NeRF 中需要透過大型 MLP 生成的各種屬性，改以六個 voxel grid 表示。
 
@@ -90,19 +90,19 @@ params:
 
 ### Results on Shiny Blender Dataset
 
-![Table 1](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/table_1.png "Table 1")
+![Table 1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/table-1.png "Table 1")
 
-![Figure 3](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/figure_3.png "Figure 3")
+![Figure 3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/figure-3.png "Figure 3")
 
 Tab.1 與 Fig.3 展⽰了重建品質和訓練/渲染時間之間的改進權衡。
 
-![Figure 2](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/figure_2.png "Figure 2")
+![Figure 2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/figure-2.png "Figure 2")
 
 Fig.2 可視化渲染圖。
 
 ### Ablation Study
 
-![Table 2](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/table_2.png "Table 2")
+![Table 2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/table-2.png "Table 2")
 
 展⽰了架構和優化過程的不同組成部分的重要性。
 
@@ -111,7 +111,7 @@ NOTE: 移除 predicted normals penalty 會略微提⾼所有指標的表現。
 ### Outperforming DVGO
 
 
-![Table 3](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/table_3.png "Table 3")
+![Table 3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/table-3.png "Table 3")
 
 作者認為一般的模型容易受到局部極小值和過擬合的影響。
 
@@ -129,7 +129,7 @@ NOTE: 移除 predicted normals penalty 會略微提⾼所有指標的表現。
 
 ### Limitations
 
-![Figure 4](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2023-12-14-Ref-DVGO/figure_4.png "Figure 4")
+![Figure 4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Ref-DVGO/figure-4.png "Figure 4")
 
 混合表示似乎在分解 view-consistent 和 view-dependent 的外觀以支持後面步驟時遇到更大的困難，同時也導致更多的半透明表面和偽影，如擋風玻璃上的孔。
 
