@@ -61,6 +61,21 @@
 - **list.html**:
   這是用於渲染文章列表的模板。它擴展了 `baseof.html` 模板，並在 "main" 區塊中定義了文章列表的佈局。它包含了顯示 Hero 區塊、麵包屑、頁面標題（可能是「文章」）和頁面內容的邏輯。然後，它列出了文章，提供時間軸視圖或卡片視圖選項，並可按年份分組或按權重排序。時間軸視圖使用 `article-link/simple.html` Partial，卡片視圖使用 `article-link/card.html` Partial。它還包含分頁功能。
 
+## shortcodes/
+
+- **video.html**:
+  這是用於在 Markdown 內容中嵌入影片的 Shortcode 模板。它支援本地影片檔案和 CDN 影片連結，並提供豐富的自訂參數。它使用 HTML5 `<video>` 元素配合 `<figure>` 和 `<figcaption>` 結構來提供語義化的影片嵌入功能。支援的參數包括：
+  - **src** (必填): 影片來源路徑，可以是本地檔案或 CDN 連結
+  - **poster** (選填): 影片封面圖片
+  - **width/height** (選填): 自訂影片尺寸，預設為 100% 寬度和自動高度
+  - **autoplay/loop/muted/controls** (選填): 播放控制選項
+  - **preload** (選填): 預載設定 (none/metadata/auto)
+  - **title** (選填): 影片標題，會顯示在影片上方並置中對齊
+  - **caption** (選填): 影片說明文字，使用 `<figcaption>` 標籤並支援 Markdown 語法
+  - **class** (選填): 自訂 CSS 類別，用於 gallery 佈局等特殊用途
+  
+  該 Shortcode 會自動根據檔案副檔名設定正確的 MIME 類型，支援 .mp4、.webm、.ogg、.mov、.avi 等格式。它還提供無障礙功能支援，包括 aria-label 屬性和備用文字連結。搭配 `assets/css/video-shortcode.css` 檔案提供響應式設計和深色/淺色主題適配。
+
 ## tags/
 
 - **term.html**:

@@ -32,7 +32,8 @@ customCSS = [
     "css/global.css",
     "css/posts.css",
     "css/categories.css",
-    "css/tags.css"
+    "css/tags.css",
+    "css/video-shortcode.css"
 ]
 math = false
 
