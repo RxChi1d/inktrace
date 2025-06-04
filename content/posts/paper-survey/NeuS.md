@@ -4,12 +4,14 @@ date: 2024-01-16 20:48:00 +0800
 lastmod: 2025-06-03T21:02:22+08:00
 tags: ["NeuS"]
 categories: ["paper-survey"]
-description: 本篇筆記整理了 NeuS (NeurIPS 2021) 的研究內容。該論文致力於從多視角影像（multi-view images）中實現高品質的 3D 表面重建，旨在結合隱式表面表示（implicit surface representation）和體積渲染（volume rendering）的優點，同時克服先前方法（如 IDR 和 NeRF）各自的局限性。筆記內容涵蓋了其核心方法：將 3D 表面表示為神經符號距離函數（Neural Signed Distance Function, SDF）的零水平集（zero-level set），並提出一種新穎的體積渲染方案來訓練此 SDF 網路。此方案的關鍵在於設計了一個基於 SDF 導數（S-density）的權重函數（weight function）和對應的不透明度密度（opaque density），使其既能無偏差地（unbiased）定位表面，又能處理遮擋（occlusion-aware）。此外，筆記也記錄了其訓練細節，包括損失函數（包含顏色損失、Eikonal 正規化和可選的遮罩損失）以及層級採樣（hierarchical sampling）策略，最終目標是重建出高保真度的物體表面。
 math: true
-draft: true
 ---
 
-> **論文資訊**  
+本篇筆記整理了 NeuS (NeurIPS 2021) 的研究內容。該論文致力於從多視角影像（multi-view images）中實現高品質的 3D 表面重建，旨在結合隱式表面表示（implicit surface representation）和體積渲染（volume rendering）的優點，同時克服先前方法（如 IDR 和 NeRF）各自的局限性。筆記內容涵蓋了其核心方法：將 3D 表面表示為神經符號距離函數（Neural Signed Distance Function, SDF）的零水平集（zero-level set），並提出一種新穎的體積渲染方案來訓練此 SDF 網路。此方案的關鍵在於設計了一個基於 SDF 導數（S-density）的權重函數（weight function）和對應的不透明度密度（opaque density），使其既能無偏差地（unbiased）定位表面，又能處理遮擋（occlusion-aware）。此外，筆記也記錄了其訓練細節，包括損失函數（包含顏色損失、Eikonal 正規化和可選的遮罩損失）以及層級採樣（hierarchical sampling）策略，最終目標是重建出高保真度的物體表面。
+
+<!--more-->
+
+> [!INFO] 論文資訊
 > - **Link:** https://arxiv.org/abs/2106.10689
 > - **Conference:** NeurIPS 2021
 {: .prompt-info }
@@ -28,8 +30,7 @@ draft: true
             - 只學習 volume density field 無法提取出高品質的表面。
             - 儘管可以還原突然的深度變化，但在某些平面區域中包含明顯雜訊。
     
-    ![figure_1](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_1.png)
-    _Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality._
+    ![Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-1.png "Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality.")
     
 - **Contribution**
     - 以 volume rendering 技術來學習隱式 SDF 表示。
@@ -44,8 +45,7 @@ draft: true
 
 ### Overview
 
-![overview](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/overview.png)
-_Overview_
+![Overview](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/overview.png "Overview")
 
 ### Rendering Procedure
 
@@ -60,19 +60,20 @@ $$
 \end{align*}
 $$
 
-$$f$$ 用於將空間座標 ($$\mathbb{R}^{3}$$) 映射到其到物體的 signed distance。
+$f$ 用於將空間座標 ($\mathbb{R}^{3}$) 映射到其到物體的 signed distance。
 
-$$c$$ 用於根據點 ($$\mathbb{R}^3$$) 與 viewing direction ($$\mathbb{S}^{2}$$) 來編碼顏色。
+$c$ 用於根據點 ($\mathbb{R}^3$) 與 viewing direction ($\mathbb{S}^{2}$) 來編碼顏色。
 
-物體的表面 $$\mathcal{S}$$ 可以寫成 Eq.1：
+物體的表面 $\mathcal{S}$ 可以寫成 Eq. \eqref{eq:1}：
 
 $$
 \begin{equation}
     \mathcal{S} = \{ \mathbf{x} \in \mathbb{R}^{3} | f(\mathbf{x}) = 0 \}. \tag{1}
+    \label{eq:1}
 \end{equation}
 $$
 
-為了應用 volume rendering 來訓練 SDF network，作者引入 probability density function $$\phi_{s}(f(\mathbf{x}))$$，稱為 S-density。
+為了應用 volume rendering 來訓練 SDF network，作者引入 probability density function $\phi_{s}(f(\mathbf{x}))$，稱為 S-density。
 
 $$
 \begin{equation*}
@@ -80,31 +81,31 @@ $$
 \end{equation*}
 $$
 
-其中 $$\phi_{s}(x) = \frac{se^{-sx}}{(1+e^{-sx})^{2}}$$ 是 SIgmoid function $$\Phi_{s}(s) = (1+e^{-sx})^{-1}$$  的導數，即 $$\phi_{s}(x) = \Phi_{s}'(x)$$。
+其中 $\phi_{s}(x) = \frac{se^{-sx}}{(1+e^{-sx})^{2}}$ 是 SIgmoid function $\Phi_{s}(s) = (1+e^{-sx})^{-1}$  的導數，即 $\phi_{s}(x) = \Phi_{s}'(x)$。
 
-$$\phi_{s}(x)$$ 的標準差為 $$1/s$$，也是 trainable parameter，訓練後趨近於 0。
+$\phi_{s}(x)$ 的標準差為 $1/s$，也是 trainable parameter，訓練後趨近於 0。
 
 NeuS 的主要思想是借助 S-density field，使用 volume rendering 來訓練網路。基於此監督，SDF 的 zero-level 集合即為重建表面。
 
 #### Rendering
 
-假設從該像素發出的光線表示為 $$\{ \mathbf{p}(t) = \mathbf{o} + t \mathbf{v} | t \geq 0 \}$$ ，$$\mathbf{o}$$ 是相機原點，$$\mathbf{v}$$ 是 viewing direction。沿著射線的累積顏色可以表示成 Eq.2：
-<!-- 修正 jekyll 格式跑掉的註解 -->
+假設從該像素發出的光線表示為 $\{ \mathbf{p}(t) = \mathbf{o} + t \mathbf{v} | t \geq 0 \}$ ，$\mathbf{o}$ 是相機原點，$\mathbf{v}$ 是 viewing direction。沿著射線的累積顏色可以表示成 Eq. \eqref{eq:2}：
   
 $$
 \begin{align*}
     C(\mathbf{o}, \mathbf{v}) = \int_{0}^{+\infty} w(t)c(\mathbf{p}(t), \mathbf{v})dt, \tag{2}
+    \label{eq:2}
 \end{align*}
 $$
 
 | 符號 | 描述 |
 | --- | --- |  
-| $$\mathbf{p}(t)$$ | The sampled point. |
-| $$\mathbf{o}$$ | The camera position. |
-| $$\mathbf{v}$$ | The viewing direction. |
-| $$C(\mathbf{o}, \mathbf{v})$$ | The output color for this pixel. |
-| $$w(t)$$ | The weight of the point. |
-| $$c(\mathbf{p}(t), \mathbf{v})$$ | The color at the point. |
+| $\mathbf{p}(t)$ | The sampled point. |
+| $\mathbf{o}$ | The camera position. |
+| $\mathbf{v}$ | The viewing direction. |
+| $C(\mathbf{o}, \mathbf{v})$ | The output color for this pixel. |
+| $w(t)$ | The weight of the point. |
+| $c(\mathbf{p}(t), \mathbf{v})$ | The color at the point. |
 
 #### Requirements on weight function
 
@@ -112,7 +113,7 @@ $$
     - 規則：在表面交點獲得局部最大值。
     - 確保相機光線與 SDF 的 zero-level set 的相交像素顏色貢獻度最大。
 2. Occlusion-aware
-    - 規則：當給定任意兩個深度值 $$t_0$$ 和 $$t_1$$，若滿足 $$f(t_0) = f(t_1)$$ 、 $$w(t_0) > 0$$ 、 $$w(t_1) > 0$$ 以及 $$t_0 < t_1$$，則 $$w(t_0) > w(t_1)$$。也就是說，當兩個點具有相同的 SDF 值，更靠近視點的點具有更大的貢獻度。
+    - 規則：當給定任意兩個深度值 $t_0$ 和 $t_1$，若滿足 $f(t_0) = f(t_1)$ 、 $w(t_0) > 0$ 、 $w(t_1) > 0$ 以及 $t_0 < t_1$，則 $w(t_0) > w(t_1)$。也就是說，當兩個點具有相同的 SDF 值，更靠近視點的點具有更大的貢獻度。
     - 確保當光線循序通過多個表面時，正確使用最近相機的表面顏色來計算輸出顏色。
 
 #### Naive Solution
@@ -126,20 +127,19 @@ $$
 $$
 
 $$
-\begin{equation}
+\begin{equation*}
     T(t) = \exp (\int^{t}_{0} \sigma(u)du)
-\end{equation}
+\end{equation*}
 $$
 
 | 符號 | 描述 |
 | --- | --- |  
-| $$\sigma(t)$$ | The volume density in classical volume rendering. |
-| $$T(t)$$ | The accumulated transmittance along the ray. |
+| $\sigma(t)$ | The volume density in classical volume rendering. |
+| $T(t)$ | The accumulated transmittance along the ray. |
 
 這樣的計算方式是有 bias 的，如 Fig.2 (a) 所示，weight function 在到達表面之前就已達到局部最大值。
 
-![figure_2](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_2.png)
-_Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF._
+![Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-2.png "Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF.")
 
 #### Our Solution
 
@@ -148,28 +148,28 @@ _Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight
 $$
 \begin{align*}
     w(t) = \frac{\phi_s(f(\mathbf{p}(t)))}{\int_{0}^{+\infty} \phi_s(f(\mathbf{p}(u)))du}. \tag{4}
+    \label{eq:4}
 \end{align*}
 $$
 
-然而這種 weight function 無法感知遮擋。因此需要遵循標準 volume rendering 框架進行設計。作者首先定義一個不透明密度函數 $$\rho(t)$$，以替代標準 volume rendering 中的 $$\sigma$$：
+然而這種 weight function 無法感知遮擋。因此需要遵循標準 volume rendering 框架進行設計。作者首先定義一個不透明密度函數 $\rho(t)$，以替代標準 volume rendering 中的 $\sigma$：
 
 $$
 \begin{align*}
     w(t) = T(t)\rho(t), \text{ where } T(t) = \exp\left(-\int_{0}^{t} \rho(u)du\right). \tag{5}
+    \label{eq:5}
 \end{align*}
 $$
 
-#### How We Derive Opaque density $$\rho$$
+#### How We Derive Opaque density $\rho$
 
 - **單平面**
     
-    若考慮只有一個表面相交的情況， Eq.4 確實滿足了上面的要求。  
+    若考慮只有一個表面相交的情況， Eq. \eqref{eq:4} 確實滿足了上面的要求。  
     
-    如果只是單一表面，並且其為一平面，可以很容易得到他的 SDF $$f(\mathbf{p}(t))$$ 是 $$-|\cos(\theta)| \cdot (t-t^*)$$。其中 $$\theta$$ 是 viewing direction 與表面法向量的夾角。  
-    <!-- 修正 jekyll 格式跑掉的註解 -->
+    如果只是單一表面，並且其為一平面，可以很容易得到他的 SDF $f(\mathbf{p}(t))$ 是 $-|\cos(\theta)| \cdot (t-t^*)$。其中 $\theta$ 是 viewing direction 與表面法向量的夾角。  
 
-    由於表面假設為一平面，因此 $$| \cos(\theta)|$$ 是常數，那 Eq.4 可以通過推導得到 Eq.6：  
-    <!-- 修正 jekyll 格式跑掉的註解 -->
+    由於表面假設為一平面，因此 $| \cos(\theta)|$ 是常數，那 Eq. \eqref{eq:4} 可以通過推導得到 Eq. \eqref{eq:6}：  
     
     $$
     \begin{equation}
@@ -177,20 +177,22 @@ $$
             w(t) &= \lim_{t^* \to +\infty} \frac{\phi_s(f(\mathbf{p}(t)))}{\int_{0}^{+\infty} \phi_s(f(\mathbf{p}(u)))\mathrm{d}u} \\&= \lim_{t^* \to +\infty} \frac{\phi_s(f(\mathbf{p}(t)))}{\int_{0}^{+\infty} \phi_s(-|\cos(\theta)|(u - t^*))\mathrm{d}u} \\&= \lim_{t^* \to +\infty} \frac{\phi_s(f(\mathbf{p}(t)))}{\int_{-t^*}^{+\infty} \phi_s(-|\cos(\theta)|u^*)\mathrm{d}u^*} \\&= \lim_{t^* \to +\infty} \frac{\phi_s(f(\mathbf{p}(t)))}{|\cos(\theta)|^{-1} - \int_{-|\cos(\theta)|t^*}^{+\infty} \phi_s(\hat{u})\mathrm{d}\hat{u}} \\&= |\cos(\theta)|\phi_s(f(\mathbf{p}(t))). 
         \end{aligned}
         \tag{6}
+        \label{eq:6}
     \end{equation}
     $$
     
-    由於 volume rendering 定義為 $$T(t) \rho(t)$$，因此可以表示成 Eq.7：
+    由於 volume rendering 定義為 $T(t) \rho(t)$，因此可以表示成 Eq. \eqref{eq:7}：
     
     $$
     \begin{align*}
         T(t)\rho(t) = |\cos(\theta)|\phi_s(f(\mathbf{p}(t))). \tag{7}
+        \label{eq:7}
     \end{align*}
     $$
     
     推導過程：
     
-    1. 由於 $$T(t) = \exp(-\int^t_0 \rho(u)\mathrm{d}u)$$ ，因此：
+    1. 由於 $T(t) = \exp(-\int^t_0 \rho(u)\mathrm{d}u)$ ，因此：
         
         $$
         \begin{equation*}
@@ -198,8 +200,7 @@ $$
         \end{equation*}
         $$
         
-    2. 前面有提到 $$|\cos(\theta)|\phi_s(f(\mathbf{p}(t))) = -\frac{\mathrm{d}\Phi_s}{\mathrm{d}t}(f(\mathbf{p}(t)))$$ （$$\Phi$$ 是 Sigmoid function），因此： 
-        <!-- 修正 jekyll 格式跑掉的註解 -->
+    2. 前面有提到 $|\cos(\theta)|\phi_s(f(\mathbf{p}(t))) = -\frac{\mathrm{d}\Phi_s}{\mathrm{d}t}(f(\mathbf{p}(t)))$ （$\Phi$ 是 Sigmoid function），因此： 
         
         $$
         \begin{equation*}
@@ -227,19 +228,18 @@ $$
         $$
         
     
-    這是單平面相交情況下的不透明度公式。由 $$\rho(t)$$ 導出的 weight function 如 Fig.2 (b) 所示。
+    這是單平面相交情況下的不透明度公式。由 $\rho(t)$ 導出的 weight function 如 Fig.2 (b) 所示。
     
 
 - **多平面**
     
     接下來作者需要將其推廣到多平面的設定。
     
-    當光線與多個表面相交，隨著 SDF 值增加， $$-\frac{\mathrm{d}\Phi_s}{\mathrm{d}t}(f(\mathbf{p}(t)))$$ 在線段上可能會變成負值，因此需要將其裁剪為零，以確保 $$\rho$$ 始終為非負數。(Fig.3)
+    當光線與多個表面相交，隨著 SDF 值增加， $-\frac{\mathrm{d}\Phi_s}{\mathrm{d}t}(f(\mathbf{p}(t)))$ 在線段上可能會變成負值，因此需要將其裁剪為零，以確保 $\rho$ 始終為非負數。(Fig.3)
     
-    ![figure_3](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_3.png)
-    _Figure 3: Illustration of weight distribution in case of multiple surface intersection._
+    ![Figure 3: Illustration of weight distribution in case of multiple surface intersection.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-3.png "Figure 3: Illustration of weight distribution in case of multiple surface intersection.")
     
-    不透明度密度函數會改寫成 Eq.10：
+    不透明度密度函數會改寫成 Eq. \eqref{eq:10}：
     
     $$
     \begin{equation}
@@ -247,12 +247,13 @@ $$
 		    \rho(t) = \max\left( \frac{-\frac{-\mathrm{d}\Phi_s}{\mathrm{d}t} \left( f(\mathbf{p}(t)) \right)}{\Phi_s (f(\mathbf{p}(t)))}, 0 \right).
 	    \end{aligned}
 	    \tag{10}
+        \label{eq:10}
     \end{equation}
     $$
     
     有了這個方程式，就能使用標準 volume rendering 來計算 weight function。
     
-    作者通過推導證明，使用 Eq.5 與 Eq.10 進行 volume rendering 是 unbiased 的。即 weight function 會在第一個表面達到最大值。（推導過程在補充資料）
+    作者通過推導證明，使用 Eq. \eqref{eq:5} 與 Eq. \eqref{eq:10} 進行 volume rendering 是 unbiased 的。即 weight function 會在第一個表面達到最大值。（推導過程在補充資料）
     
 #### Discretization
 
@@ -260,24 +261,20 @@ $$
 
 $$
 \begin{equation}
-	\begin{aligned}
-		\hat{C} = \sum_{i=1}^{n} T_{i} \alpha_i c_i,
-	\end{aligned}
+    \hat{C} = \sum_{i=1}^{n} T_{i} \alpha_i c_i,
 	\tag{11}
 \end{equation}
 $$
 
-$$T_i$$ 是離散累積透射率：
+$T_i$ 是離散累積透射率：
 
 $$
-\begin{equation}
-	\begin{aligned}
-		T_i = \prod_{j=1}^{i-1} (1 - \alpha_j),
-	\end{aligned}
-\end{equation}
+\begin{equation*}
+    T_i = \prod_{j=1}^{i-1} (1 - \alpha_j),
+\end{equation*}
 $$
 
-$$\alpha_i$$ 離散不透明度：
+$\alpha_i$ 離散不透明度：
 
 $$
 \begin{equation}
@@ -395,12 +392,11 @@ $$
 - 有 mask 監督
 - 無 mask 監督
 
-![table_1](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/table_1.png)
-_Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。_
+![Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/table-1.png "Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。")
 
-![figure_4](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_4.png)
+![figure_4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-4.png)
 
-![figure_5](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_5.png)
+![figure_5](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-5.png)
 
 Fig.4 和 Fig.5 展示兩種設定下的可視化結果。
 
@@ -412,8 +408,7 @@ Fig.4 和 Fig.5 展示兩種設定下的可視化結果。
 
 #### Ablation Study
 
-![figure_6](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_6.png)
-_Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values._
+![Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-6.png "Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values.")
 
 (a) Naive Solution: 會給表面重建帶來 bias。
 
@@ -423,8 +418,7 @@ _Figure 6: Ablation studies. We show the qualitative results and report the quan
 
 #### Thin Structures
 
-![figure_8](https://cdn.rxchi1d.me/inktrace-files/Paper_Survey/2024-01-16-NeuS/figure_8.png)
-_Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface._
+![Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-8.png "Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface.")
 
 作者另外挑選了兩個具有挑戰性的薄物體。
 
