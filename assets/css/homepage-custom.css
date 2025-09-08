@@ -1,17 +1,45 @@
+/* Mobile-first: stack vertically, center content */
+.custom-profile-left {
+  margin-left: 0;
+  margin-right: 0;
+}
+/* Ensure header behaves normally on mobile */
+.custom-profile-left > header {
+  position: static;
+  transform: none;
+  margin-left: 0; /* keep centered with parent alignment */
+}
+
 @media (min-width: 768px) { /* Corresponds to Tailwind's 'md' breakpoint */
   .custom-profile-layout {
     display: flex !important;
     flex-direction: row !important;
-    align-items: flex-start; /* Vertically align the tops of the two columns */
+    /* Make the two columns equal height */
+    align-items: stretch !important;
+    /* Reduce the distance between columns */
+    gap: 1rem;
   }
 
   .custom-profile-left { /* Author section, on the left */
+    /* 1/3 width and stretch full height of the row */
     flex-basis: 33.333333%;
-    padding-left: 1rem;  /* Removed to reduce gap, gap will be handled by .custom-profile-right's padding-left */
+    /* Let the column stretch to row height and center header vertically */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical centering within the row */
+    align-items: flex-end;   /* stick content to the right edge */
+    padding-left: 0; /* no extra inner gap on the left column */
+  }
+
+  /* Right-align header without taking it out of the normal flow */
+  .custom-profile-left > header {
+    margin-left: auto;
   }
 
   .custom-profile-right { /* Blog info section, on the right */
     flex-basis: 66.666667%;
-    padding-right: 1rem;   /* Adjusted space between author and blog info to 1rem */
+    /* allow natural height; container controls equal height */
+    /* remove inner padding-based spacing; gap on container controls distance */
+    padding-right: 0;
   }
 }
