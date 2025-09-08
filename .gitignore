@@ -8,15 +8,5 @@ resources/_gen/
 Thumbs.db
 .vscode/
 
-# Obsidian files
-.obsidian/
-preamble.sty
-
-# Cline files
-.clinerules/
-
-# Cursor files
-.cursor/
-
 # Development files
 TODO.md
