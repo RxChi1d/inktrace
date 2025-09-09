@@ -92,3 +92,4 @@ section.flex.flex-wrap.gap-4.mt-4.tags-list > a {
 section.flex.flex-wrap.gap-4.mt-4.tags-list > a .tag-count {
   background-color: color-mix(in srgb, hsl(var(--tag-accent-h) var(--tag-accent-s) var(--tag-accent-l)) 25%, transparent);
 }
+

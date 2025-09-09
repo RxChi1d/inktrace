@@ -26,15 +26,7 @@ giteaDefaultServer = "https://git.fsfe.org"
 rssnext = {  }
 selineAnalytics = {  }
 umamiAnalytics = {  }
-customCSS = [
-    "css/homepage-custom.css",
-    "css/blockquote-alerts.css",
-    "css/global.css",
-    "css/posts.css",
-    "css/categories.css",
-    "css/tags.css",
-    "css/video-shortcode.css"
-]
+# Note: site-specific CSS is bundled and loaded via `layouts/partials/extend-head.html`.
 math = false
 
 [header]

@@ -226,3 +226,4 @@ details.prose.custom-alert > summary::after {
 details.prose.custom-alert[open] > summary::after {
   transform: rotate(-135deg); /* Expanded state: v arrow */
 }
+
