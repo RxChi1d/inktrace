@@ -1,30 +1,13 @@
-{{/* Inject site-specific CSS after theme head without overriding it. */}}
+{{/*
+  Load site-specific CSS after the theme head without overriding it.
+  - Includes all files under assets/css/custom/*.css
+  - Files are sorted by filename; to control order, prefix with numbers (e.g., 00-base.css, 10-components.css)
+  - Keeps Blowfish head fully intact and upgradable
+*/}}
 {{- $algo := site.Params.fingerprintAlgorithm | default "sha512" -}}
-{{- $extras := slice -}}
-
-{{/* Add known CSS files in a stable order (compat with current layout). */}}
-{{- $known := slice
-  "css/custom/homepage-custom.css"
-  "css/custom/blockquote-alerts.css"
-  "css/custom/global.css"
-  "css/custom/posts.css"
-  "css/custom/categories.css"
-  "css/custom/tags.css"
-  "css/custom/video-shortcode.css"
- -}}
-{{- range $known }}
-  {{- with resources.Get . }}
-    {{- $extras = $extras | append . -}}
-  {{- end -}}
-{{- end -}}
-
-{{/* Also include any files placed under css/custom/ for future additions. */}}
-{{- $glob := resources.Match "css/custom/*.css" -}}
-{{- range $glob -}}
-  {{- $extras = $extras | append . -}}
-{{- end -}}
-
-{{- if gt (len $extras) 0 -}}
+{{- $extras := resources.Match "css/custom/*.css" -}}
+{{- if $extras -}}
+  {{- $extras = sort $extras "Name" -}}
   {{- $bundle := $extras | resources.Concat "css/custom.bundle.css" | resources.Minify | resources.Fingerprint $algo -}}
   <link type="text/css" rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
 {{- end -}}
