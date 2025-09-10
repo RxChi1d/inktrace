@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - (Humans in Minutes) Learning Neural Volumetric Representations of Dynamic Humans in Minutes"
 date: 2023-10-19T10:01:00+08:00
-lastmod: 2025-09-09T19:13:54+08:00
+lastmod: 2025-09-10T16:45:09+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -136,6 +136,8 @@ params:
     \end{align*}\tag{8}
     \label{eq:8}
     $$
+
+## Experiments
 
 ### Training
 
