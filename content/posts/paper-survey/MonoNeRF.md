@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - MonoNeRF: Learning Generalizable NeRFs from Monocular Videos without Camera Poses"
 date: 2024-01-06 18:46:00 +0800
-lastmod: 2025-06-03T21:02:22+08:00
+lastmod: 2025-09-10T17:55:32+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 math: true
@@ -11,7 +11,7 @@ MonoNeRF (ICML 2023) 這篇論文探索了一個重要的問題：如何在缺�
 
 <!--more-->
 
-> [!INFO] 論文資訊
+> [!NOTE] 論文資訊
 > - **Link:** https://arxiv.org/abs/2210.07181
 > - **Conference:** ICML 2023
 

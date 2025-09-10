@@ -1,6 +1,7 @@
 ---
 title: "論文筆記 - NSF: Neural Surface Fields for Human Modeling from Monocular Depth Scene Reconstruction"
 date: 2023-12-06 21:24:00 +0800
+lastmod: 2025-09-10T17:54:23+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 math: true
@@ -10,7 +11,7 @@ math: true
 
 <!--more-->
 
-> [!INFO] 論文資訊
+> [!NOTE] 論文資訊
 > - **Link:** https://arxiv.org/abs/2308.14847  
 > - **Conference:** ICCV 2023  
 
@@ -317,7 +318,7 @@ E. 使用 LBS 重新將姿勢接入 human model。
     - PINA (與本篇有相似的問題設定)
     - DSFN：從單目 RBG-D 影片中學習 SMPL-based 3D avatars
     
-    > [!INFO] PINA 與 DSFN
+    > [!NOTE] PINA 與 DSFN
     > 沒有發布程式碼，因此作者使用 BuFF 資料集驗證本篇方法，並使用他們論文中展示的數值比較。
     
     - POP
