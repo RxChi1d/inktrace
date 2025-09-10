@@ -1,7 +1,7 @@
 ---
 title: "論文筆記 - (Humans in Minutes) Learning Neural Volumetric Representations of Dynamic Humans in Minutes"
 date: 2023-10-19T10:01:00+08:00
-lastmod: 2025-09-10T16:45:09+08:00
+lastmod: 2025-09-10T16:51:09+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -59,7 +59,6 @@ params:
         $$
         
         | $\mathbf{x}$ | The query point |
-        | --- | --- |
         | $\mathbf{w}$ | The blend weight |
         | $\rho$ | The human pose |
         | $G_j$ | The transformation matrices derived  form $\rho$ |
@@ -74,7 +73,6 @@ params:
         $$
         
         | $\psi_{\text{res}}$ | The multiresolution hash encoding |
-        | --- | --- |
         | $t$ | The latent code of time |
         - 作者觀察到典型的人體動作通常發生在 surface level 而非 volumetric level。因此 UV coordinate 中相近的座標會有相似的運動。
         - 透過這樣的先驗，可以將訓練所需的 4D volumetric motion 降維成 3D surface-time domain，進而加速訓練。$(x,y,z,t) \rightarrow (u,v,t)$
@@ -124,7 +122,6 @@ params:
         $$
         
         | $\mathbf{d}$ | The viewing direction |
-        | --- | --- |
         | $\ell_t$ | The latent embedding for each video frame $t$ |
 - 由於有 $K$ 個 part，因此最終會得到 $K$ 個預測結果 $\{(\sigma_k, \mathbf{c}_k)\}^K_{k=1}$，並透過 Eq.\ref{eq:8} 計算得到最終的 density 與 color。也就是以該點具有最大 density 的 color 作為最終的 color。
 
