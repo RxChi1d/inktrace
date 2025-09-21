@@ -8,6 +8,7 @@ categories: ["paper-survey"]
 params: 
     math: true
 ---
+
 針對自由／任意相机軌跡於大型無界場景的重建與渲染，F2‑NeRF（CVPR 2023）提出以可見相機投影建構的 perspective warping，搭配多重雜湊網格與視角一致採樣，並用 octree 自適應分配前景／背景網格，配合 disparity 與 TV 正則抑制偽影；在 LLFF、NeRF‑360‑V2、Free dataset 展現高速訓練與高品質重建。
 
 <!--more-->
