@@ -1,0 +1,7 @@
+{{/*
+  Inject math scripts when enabled at site or page level.
+  Using an uncached partial keeps page context available for .Param lookups.
+*/}}
+{{- if .Param "math" -}}
+  {{ partialCached "math.html" . }}
+{{- end -}}
