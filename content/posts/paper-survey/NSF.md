@@ -1,6 +1,7 @@
 ---
 title: "論文筆記 - NSF: Neural Surface Fields for Human Modeling from Monocular Depth Scene Reconstruction"
-date: 2023-12-06 21:24:00 +0800
+slug: "nsf"
+date: 2023-12-06T21:24:00+08:00
 lastmod: 2025-09-10T17:54:23+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]

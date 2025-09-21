@@ -1,10 +1,10 @@
 ---
 title: "Docker Container Monitor - 通過 Grafana 監視 Docker 容器的狀態"
-date: 2025-04-26 00:00:00 +0800
+slug: "docker-container-monitor-deployment"
+date: 2025-04-26T00:00:00+08:00
 lastmod: 2025-06-03T21:02:22+08:00
 tags: ["docker", "grafana", "monitor"]
 categories: ["container-platform"]
-slug: "docker-container-monitor-deployment"
 ---
 
 這篇文章詳細介紹如何利用 Prometheus、Node Exporter、cAdvisor 和 Grafana 搭建一套完整的 Docker 容器監控系統。內容涵蓋建立 Docker 網路、準備 Prometheus 設定檔、使用 Docker Compose 部署監控服務，以及在 Grafana 中設定資料來源與匯入儀表板，幫助使用者有效監控 Docker 容器的效能與狀態。

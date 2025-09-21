@@ -1,10 +1,10 @@
 ---
 title: "Immich 部署、設定與反向代理 - Google 相簿的最佳開源替代方案"
-date: 2025-04-26 00:00:00 +0800
+slug: "immich-deployment"
+date: 2025-04-26T00:00:00+08:00
 lastmod: 2025-06-03T21:02:22+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
-slug: "immich-deployment"
 ---
 
 這篇文章介紹如何使用 Docker Compose 和 Portainer 部署 Immich，並提供優化臺灣繁體中文地名反向地理編碼、設定影片轉碼與機器學習硬體加速 (以 NVIDIA 為例)，以及更換機器學習模型的詳細步驟。

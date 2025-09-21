@@ -1,10 +1,10 @@
 ---
 title: "在 Debian/Ubuntu 上 7-Zip 安裝"
-date: 2024-06-19 00:00:00 +0800
+slug: "install-7zip-on-debian-ubuntu"
+date: 2024-06-19T00:00:00+08:00
 lastmod: 2025-06-03T21:02:22+08:00
 tags: ["debian-ubuntu", "package"]
 categories: ["linux-technical"]
-slug: "install-7zip-on-debian-ubuntu"
 ---
 
 在 Debian/Ubuntu 上安裝最新版 7-Zip 教學。可以解決 `p7zip` 存在的一些 bug，如無法壓縮大檔案等問題。

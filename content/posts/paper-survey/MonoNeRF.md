@@ -1,6 +1,7 @@
 ---
 title: "論文筆記 - MonoNeRF: Learning Generalizable NeRFs from Monocular Videos without Camera Poses"
-date: 2024-01-06 18:46:00 +0800
+slug: "mononerf"
+date: 2024-01-06T18:46:00+08:00
 lastmod: 2025-09-10T17:55:32+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]

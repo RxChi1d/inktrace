@@ -1,10 +1,10 @@
 ---
 title: "Grafana 基本部署"
-date: 2025-04-26 00:00:00 +0800
+slug: "grafana-basic-deployment"
+date: 2025-04-26T00:00:00+08:00
 lastmod: 2025-06-01T01:01:49+08:00
 tags: ["docker", "grafana"]
 categories: ["container-platform"]
-slug: "grafana-basic-deployment"
 ---
 
 本文介紹如何使用 Docker 部署 Grafana，包含創建資料夾、設定 docker compose 以及登入初始化步驟。
