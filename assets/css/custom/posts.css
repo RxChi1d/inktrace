@@ -174,8 +174,14 @@
     --timeline-dot-size: 0.85rem;
     --timeline-year-dot-size: 1.2rem;
     --timeline-gap: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+  .timeline-page {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
   }
   .timeline-date {
     min-width: var(--timeline-date-width);
