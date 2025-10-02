@@ -6,6 +6,54 @@
 
 本專案是個人部落格的儲存庫，使用框架為 Hugo，搭配 Blowfish 主題。
 
+## CSS 組織規範
+
+本專案使用模組化的方式管理自訂 CSS，透過 `extend-head.html` 自動載入 `custom/` 目錄下的所有樣式檔案。
+
+使用 `layouts/partials/extend-head.html` 搭配 Hugo Pipes 的 `resources.Match` 和 `resources.Concat`：
+
+- 自動掃描 `assets/css/custom/*.css` 下的所有檔案
+- 按檔名排序後合併成單一 bundle
+- 在主題樣式之後載入，可覆寫預設樣式
+
+### 檔案組織規則
+
+**目錄結構：**
+```
+assets/css/custom/
+├── global.css          # 全域樣式
+├── homepage-custom.css # 首頁樣式
+├── posts.css           # 文章頁樣式
+├── categories.css      # 分類頁樣式
+├── tags.css            # 標籤頁樣式
+└── blockquote-alerts.css # 元件樣式
+```
+
+> 僅提供範例作爲參考
+
+**命名規範：**
+- 使用 `kebab-case` 命名
+- 檔名清楚描述功能或頁面類型
+- 建議前綴數字控制載入順序（如 `00-global.css`, `10-posts.css`）
+
+### 修改 CSS 時的操作
+
+**新增樣式檔案：**
+- 在 `assets/css/custom/` 建立新的 `.css` 檔案
+- 無需額外配置，`extend-head.html` 會自動偵測並載入
+
+**修改現有樣式：**
+- 直接編輯 `assets/css/custom/` 下對應的檔案
+
+**移除樣式檔案：**
+- 直接刪除 `assets/css/custom/` 下的檔案即可
+
+### 禁止事項
+
+- **絕不修改 `themes/blowfish/` 下的任何檔案**
+- 所有自訂樣式必須放在專案層級的 `assets/css/custom/` 下
+- 避免在 `custom/` 目錄外放置其他 CSS 檔案（會被自動掃描）
+
 ## 語言規則
 
 **重要：請嚴格遵循以下語言規則**

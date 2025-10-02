@@ -1,13 +1,30 @@
 {{/*
-  Load site-specific CSS after the theme head without overriding it.
-  - Includes all files under assets/css/custom/*.css
-  - Files are sorted by filename; to control order, prefix with numbers (e.g., 00-base.css, 10-components.css)
-  - Keeps Blowfish head fully intact and upgradable
+  Custom head extensions for inktrace-blowfish
+
+  This partial is automatically loaded by Blowfish theme's head.html.
+
+  Purpose:
+  - Load custom CSS from assets/css/custom/ directory
+  - Provide extension point for additional head elements (meta tags, scripts, etc.)
+
+  Why not use Blowfish's official custom.css method?
+  - Blowfish loads assets/css/custom.css via resources.Get
+  - Hugo's resources.Get does NOT process @import statements
+  - This prevents modular CSS organization (multiple files)
+
+  Our solution:
+  - Use resources.Match to scan all CSS files in custom/ directory
+  - Sort by filename (use numeric prefix like "00-", "10-" to control order)
+  - Concatenate, minify, and fingerprint into a single bundle
+  - Automatically load without manual maintenance
 */}}
+
 {{- $algo := site.Params.fingerprintAlgorithm | default "sha512" -}}
-{{- $extras := resources.Match "css/custom/*.css" -}}
-{{- if $extras -}}
-  {{- $extras = sort $extras "Name" -}}
-  {{- $bundle := $extras | resources.Concat "css/custom.bundle.css" | resources.Minify | resources.Fingerprint $algo -}}
-  <link type="text/css" rel="stylesheet" href="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}">
+{{- $customFiles := resources.Match "css/custom/*.css" -}}
+{{- if $customFiles -}}
+  {{- $customFiles = sort $customFiles "Name" -}}
+  {{- $customCSS := $customFiles | resources.Concat "css/custom.bundle.css" | resources.Minify | resources.Fingerprint $algo -}}
+  <link type="text/css" rel="stylesheet" href="{{ $customCSS.RelPermalink }}" integrity="{{ $customCSS.Data.Integrity }}">
 {{- end -}}
+
+{{/* Add additional custom head elements below this line */}}
