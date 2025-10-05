@@ -6,7 +6,7 @@ tags: ["docker", "immich"]
 categories: ["container-platform"]
 ---
 
-<!-- 本文介紹 immich-geodata-zh-tw 專案，針對臺灣優化 Immich 的反向地理編碼：將地名中文化、補齊行政區層級並提升精準度。內容包含整合式（entrypoint）與手動部署教學、安裝驗證與更新方式、版本指定與常見問題，並說明如何重新提取元數據以讓舊照片套用新地理資訊。 -->
+本文介紹 immich-geodata-zh-tw 專案，針對臺灣優化 Immich 的反向地理編碼：將地名中文化、補齊行政區層級並提升精準度。內容包含整合式（entrypoint）與手動部署教學、安裝驗證與更新方式、版本指定與常見問題，並說明如何重新提取元數據以讓舊照片套用新地理資訊。
 
 <!--more-->
 
