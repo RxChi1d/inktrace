@@ -4,6 +4,7 @@ slug: "n8n-ffmpeg"
 date: 2025-11-19T22:35:00+08:00
 tags: ["n8n", "docker", "ffmpeg", "github-actions"]
 categories: ["container-platform"]
+draft: true
 ---
 
 This article introduces the n8n-ffmpeg open-source project, which provides an n8n Docker image pre-installed with FFmpeg that automatically syncs with the latest official version. The content covers the project's operational principles, an analysis of the GitHub Actions automated build process, and guides on how to quickly deploy via Docker Compose or manually build a customized environment.
