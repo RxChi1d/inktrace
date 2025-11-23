@@ -113,32 +113,40 @@ categories: ["container-platform"]
 
 ## 優化反向地理編碼資料（中文化＋臺灣地名顯示優化）
 
-參考我的臺灣繁體中文化專案 [RxChi1d/immich-geodata-zh-tw](https://github.com/RxChi1d/immich-geodata-zh-tw) 設定 Immich 的 docker compose file。
+Immich 預設的地理資訊是英文顯示，且臺灣地名不夠精確。為了解決這個問題，我開發了 [immich-geodata-zh-tw](https://github.com/RxChi1d/immich-geodata-zh-tw) 專案，針對臺灣優化反向地理編碼功能：
 
-在這個專案中，將地名翻譯為臺灣大眾習慣之繁體中文名稱之外，也優化了臺灣的行政區表示，使其可以準確地顯示出縣市以及鄉鎮市區。除此之外，也使用 [中華民國國土測繪中心](https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx) 的開放資料取代 [geodata](https://www.geodata.com/en/) 的開放資料，藉此更精準的反解臺灣的地名。
+- 將地名翻譯為臺灣大眾習慣的繁體中文名稱
+- 優化臺灣行政區表示（縣市 → 鄉鎮市區）
+- 使用 [中華民國國土測繪中心](https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx) 開放資料提升精準度
 
-1. **停止 stack。**
+### 快速設定
 
-2. **在 stack 設定中添加 `entrypoint`：**
+在 `immich-server` 的 docker compose 設定中添加 `entrypoint`：
 
-    ```yaml
-    services:
-      immich_server:
-       container_name: immich_server
+```yaml
+services:
+  immich_server:
+    container_name: immich_server
 
-       # 其他配置省略
+    # 其他配置省略
 
-       entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://raw.githubusercontent.com/RxChi1d/immich-geodata-zh-tw/refs/heads/main/update_data.sh) --install && exec /bin/bash start.sh" ]
-       
-       # 其他配置省略
-       ```
-       
-3. **啟動 stack。**
+    entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://raw.githubusercontent.com/RxChi1d/immich-geodata-zh-tw/refs/heads/main/update_data.sh) --install && exec /bin/bash start.sh" ]
 
-    通過添加 `entrypoint` 設定，未來每次重啟 stack，在 immich_server 容器啟動時，會自動下載並安裝最新版本的臺灣中文化地理資料。
-    
+    # 其他配置省略
+```
+
+設定完成後重啟 stack 即可。容器每次啟動時會自動下載並安裝最新版本的臺灣中文化地理資料。
+
+### 詳細教學
+
+想了解更多細節（包含安裝驗證、手動部署、版本指定、常見問題等），請參考專案介紹文章：
+
+👉 **[Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學](/posts/container-platform/immich-geodata-zh-tw/)**
+
+或直接查看 [GitHub 專案倉庫](https://github.com/RxChi1d/immich-geodata-zh-tw)。
+
 >  [!TIP]
->  如果是簡體中文或中國的用戶可以參考 [ZingLix/immich-geodata-cn](https://github.com/ZingLix/immich-geodata-cn) ，該專案除了簡體中文翻譯之外，亦有針對中國地區之地名進行優化。
+>  如果是簡體中文的用戶可以參考 [ZingLix/immich-geodata-cn](https://github.com/ZingLix/immich-geodata-cn)，該專案除了簡體中文翻譯之外，亦有針對中國地區之地名進行優化。
 
 ## 影片轉碼硬體加速
 
