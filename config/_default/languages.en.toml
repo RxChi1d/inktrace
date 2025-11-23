@@ -1,0 +1,26 @@
+disabled = false
+languageCode = "en"
+languageName = "English"
+title = "InkTrace｜RxChi1d"
+weight = 2
+
+[params]
+dateFormat = "2006-01-02"
+description = '''
+  Where ink is still wet and meaning flows.\
+  Scattered fragments become insights, errors bloom into breakthroughs, and inspiration stirs in the shadows.\
+  Code is how I speak to the world; words are how I listen to myself.\
+  \
+  This is Ink Trace—a place where thoughts settle and memories linger.'''
+displayName = "English"
+isoCode = "en"
+rtl = false
+
+[params.author]
+email = "rchildlin@gmail.com"
+image = "https://cdn.rxchi1d.me/inktrace-files/profile/avatar.jpg"
+links = [
+  {github = "https://github.com/rxchi1d"},
+  {email = "mailto:rchildlin@gmail.com"},
+]
+name = "RxChi1d"
