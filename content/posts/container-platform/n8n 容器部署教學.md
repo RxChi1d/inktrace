@@ -95,7 +95,7 @@ services:
 | `TZ` | 容器系統時區 | `UTC` |
 | `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS` | 強制檢查設定檔權限，提升安全性 | `false` |
 
-> [!INFO]
+> [!IMPORTANT]
 > 時區設定對於排程工作流程非常重要。`GENERIC_TIMEZONE` 影響工作流程中的時間邏輯，`TZ` 影響容器系統時間。兩者應設定一致。
 
 ### 啟動容器
@@ -316,7 +316,7 @@ Redis 節點支援多種操作，例如：
 2. ✅ 擁有網域名稱（如 `n8n.example.com`）
 3. ✅ DNS A 記錄已指向伺服器 IP
 
-> [!INFO]
+> [!NOTE]
 > 如果您尚未部署 NPM，可以參考 [Nginx Proxy Manager 官方文件](https://nginxproxymanager.com/guide/)或相關教學文章。
 
 ### n8n 環境變數調整

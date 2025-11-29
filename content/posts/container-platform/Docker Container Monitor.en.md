@@ -2,6 +2,7 @@
 title: "Docker Container Monitor - Monitoring Docker Container Status with Grafana"
 slug: "docker-container-monitor-deployment"
 date: 2025-11-23T14:00:00+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["docker", "grafana", "monitor"]
 categories: ["container-platform"]
 ---
@@ -10,7 +11,7 @@ This comprehensive guide demonstrates how to build a complete Docker container m
 
 <!--more-->
 
-> [!INFO] How It Works
+> [!NOTE] How It Works
 > Promtail parses Nginx Proxy Manager logs and sends them to the Loki database. Grafana reads data from Loki and visualizes it through dashboards.
 
 

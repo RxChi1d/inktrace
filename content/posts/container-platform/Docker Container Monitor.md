@@ -2,7 +2,7 @@
 title: "Docker Container Monitor - 通過 Grafana 監視 Docker 容器的狀態"
 slug: "docker-container-monitor-deployment"
 date: 2025-04-26T00:00:00+08:00
-lastmod: 2025-06-03T21:02:22+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["docker", "grafana", "monitor"]
 categories: ["container-platform"]
 ---
@@ -11,7 +11,7 @@ categories: ["container-platform"]
 
 <!--more-->
 
->  [!INFO] 工作原理
+>  [!NOTE] 工作原理
 > 使用 promtail 解析 nginx proxy manager 的 log 後，送入 loki database。Grafana 讀取 loki 的資料並以 dashboard 將數據視覺化。
 
 

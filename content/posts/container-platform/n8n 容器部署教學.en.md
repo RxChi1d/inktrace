@@ -95,7 +95,7 @@ services:
 | `TZ` | System timezone for the container | `UTC` |
 | `N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS` | Enforces permission checks on the config file for better security | `false` |
 
-> [!INFO]
+> [!IMPORTANT]
 > Timezone settings are critical for scheduled workflows. `GENERIC_TIMEZONE` affects time logic within workflows, while `TZ` affects the container's system time. Ideally, both should be set to the same value.
 
 ### Starting the Container
@@ -304,7 +304,7 @@ Before starting, ensure:
 2.  ✅ You own a domain name (e.g., `n8n.example.com`).
 3.  ✅ A DNS 'A' record points to your server IP.
 
-> [!INFO]
+> [!NOTE]
 > If you haven't deployed NPM yet, refer to the [Nginx Proxy Manager Official Guide](https://nginxproxymanager.com/guide/) or related tutorials.
 
 ### Adjusting n8n Environment Variables

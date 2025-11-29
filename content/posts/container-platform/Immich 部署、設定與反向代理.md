@@ -2,7 +2,7 @@
 title: "Immich 部署、設定與反向代理 - Google 相簿的最佳開源替代方案"
 slug: "immich-deployment"
 date: 2025-04-26T00:00:00+08:00
-lastmod: 2025-06-03T21:02:22+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -276,7 +276,7 @@ services:
 
 由於官方沒有提供顯存開銷，這邊我提供我自己測試的結果供大家參考：
 
->  [!INFO] 
+>  [!NOTE] 
 > - 測試顯卡為 NVIDIA Tesla P4。
 > - 由於並非特別將環境設定至顯卡空佔用，因此需要將表格的值扣除初始顯存開銷 (約 0.416 GiB) 才比較接近模型本身的顯存佔用。
 > - 「儲存開銷欄位」表示模型的檔案大小。

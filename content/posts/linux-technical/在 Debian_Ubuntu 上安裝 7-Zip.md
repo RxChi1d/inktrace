@@ -2,7 +2,7 @@
 title: "在 Debian/Ubuntu 上 7-Zip 安裝"
 slug: "install-7zip-on-debian-ubuntu"
 date: 2024-06-19T00:00:00+08:00
-lastmod: 2025-06-03T21:02:22+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["debian-ubuntu", "package"]
 categories: ["linux-technical"]
 ---
@@ -11,7 +11,7 @@ categories: ["linux-technical"]
 
 <!--more-->
 
->  [!INFO] 需要手動安裝 7-Zip 的原因
+>  [!NOTE] 需要手動安裝 7-Zip 的原因
 >  p7zip 太舊了，有 bug (超過5GB的大檔案無法壓縮)。
 >  apt 中的 7zip 也是舊版，因此需要從官網下載。
 

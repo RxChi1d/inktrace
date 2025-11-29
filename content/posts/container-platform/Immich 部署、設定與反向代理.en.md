@@ -2,6 +2,7 @@
 title: "Immich Deployment, Configuration, and Reverse Proxy - The Best Open-Source Alternative to Google Photos"
 slug: "immich-deployment"
 date: 2025-11-23T00:00:00+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -275,7 +276,7 @@ According to online sources, `antelopev2` currently provides the best results.
 
 Since the official documentation doesn't provide VRAM overhead information, here are my test results for reference:
 
->  [!INFO]
+>  [!NOTE]
 > - Test GPU: NVIDIA Tesla P4.
 > - Since the environment wasn't specifically configured for idle GPU state, subtract the initial VRAM overhead (approximately 0.416 GiB) from the table values to get closer to the model's actual VRAM usage.
 > - The "Storage Overhead" column represents the model file size.

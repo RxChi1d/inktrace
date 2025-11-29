@@ -2,6 +2,7 @@
 title: "Installing 7-Zip on Debian/Ubuntu"
 slug: "install-7zip-on-debian-ubuntu"
 date: 2025-11-23T14:05:00+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["debian-ubuntu", "package"]
 categories: ["linux-technical"]
 ---
@@ -10,7 +11,7 @@ A guide to installing the latest version of 7-Zip on Debian/Ubuntu. This resolve
 
 <!--more-->
 
-> [!INFO] Why Manual Installation is Necessary
+> [!NOTE] Why Manual Installation is Necessary
 > p7zip is outdated and has bugs (cannot compress files larger than 5GB).
 > The 7zip package in apt repositories is also an older version, so downloading from the official website is required.
 

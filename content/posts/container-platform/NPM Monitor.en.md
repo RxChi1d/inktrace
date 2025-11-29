@@ -2,6 +2,7 @@
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - Monitoring NPM Proxy Status with Grafana"
 slug: "nginx-proxy-manager-monitor-deployment"
 date: 2025-11-23T13:31:00+08:00
+lastmod: 2025-11-29T22:26:07+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 ---
@@ -10,7 +11,7 @@ This guide walks you through setting up a monitoring system for Nginx Proxy Mana
 
 <!--more-->
 
-> [!INFO] How It Works
+> [!NOTE] How It Works
 > Promtail parses Nginx Proxy Manager logs and sends them to the Loki database. Grafana reads data from Loki and visualizes it through dashboards.
 
 
@@ -364,5 +365,5 @@ networks:
 
     Filter priority: labelFilter takes precedence over regexFilter.
 
-    > [!INFO] **Why Two Types of Filters?**
+    > [!NOTE] **Why Two Types of Filters?**
     > labelFilter offers better performance and is easier to use, but converting high-cardinality data to labels can burden Loki. For fields with many unique values like remote_addr, use regexFilter instead.
