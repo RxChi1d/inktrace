@@ -2,29 +2,6 @@
 <article class="custom-profile-layout {{ if not .Site.Params.homepage.showRecent }}
     h-full
   {{ end }} w-full flex flex-col items-center text-center mt-20 mb-12">
-  {{/* 背景圖片與遮罩區塊，參考 background.html 實作，插入於主內容前 */}}
-  <div class="fixed inset-x-0 top-0" style="z-index:-10">
-    {{ $homepageImage := "" }}
-    {{ with .Site.Params.defaultBackgroundImage }}
-      {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
-        {{ $homepageImage = resources.GetRemote . }}
-      {{ else }}
-        {{ $homepageImage = resources.Get . }}
-      {{ end }}
-    {{ end }}
-    {{ with .Site.Params.homepage.homepageImage }}
-      {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
-        {{ $homepageImage = resources.GetRemote . }}
-      {{ else }}
-        {{ $homepageImage = resources.Get . }}
-      {{ end }}
-    {{ end }}
-    {{ if $homepageImage }}
-      <img class="w-full h-[1000px] object-cover m-0 nozoom" src="{{ $homepageImage.RelPermalink }}" role="presentation" style="margin:0;" />
-      <div class="absolute inset-0 h-[1000px] bg-gradient-to-t from-neutral dark:from-neutral-800 to-transparent mix-blend-normal"></div>
-      <div class="opacity-60 absolute inset-0 h-[1000px] bg-gradient-to-t from-neutral dark:from-neutral-800 to-neutral-100 dark:to-neutral-800 mix-blend-normal"></div>
-    {{ end }}
-  </div>
   {{/* Author Profile Section */}}
   <div class="custom-profile-left flex flex-col items-center text-center md:items-end md:text-right">
     <header class="relative px-1 py-1 flex flex-col items-center md:items-end mb-3">

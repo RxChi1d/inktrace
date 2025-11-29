@@ -13,6 +13,29 @@
 
   <body
     class="flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-8xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32 scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600">
+    {{/* 背景圖片與遮罩區塊，全站統一背景 */}}
+    <div class="fixed inset-x-0 top-0" style="z-index:-10">
+      {{ $homepageImage := "" }}
+      {{ with .Site.Params.defaultBackgroundImage }}
+        {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+          {{ $homepageImage = resources.GetRemote . }}
+        {{ else }}
+          {{ $homepageImage = resources.Get . }}
+        {{ end }}
+      {{ end }}
+      {{ with .Site.Params.homepage.homepageImage }}
+        {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+          {{ $homepageImage = resources.GetRemote . }}
+        {{ else }}
+          {{ $homepageImage = resources.Get . }}
+        {{ end }}
+      {{ end }}
+      {{ if $homepageImage }}
+        <img class="w-full h-[1000px] object-cover m-0 nozoom" src="{{ $homepageImage.RelPermalink }}" role="presentation" style="margin:0;" />
+        <div class="absolute inset-0 h-[1000px] bg-gradient-to-t from-neutral dark:from-neutral-800 to-transparent mix-blend-normal"></div>
+        <div class="opacity-60 absolute inset-0 h-[1000px] bg-gradient-to-t from-neutral dark:from-neutral-800 to-neutral-100 dark:to-neutral-800 mix-blend-normal"></div>
+      {{ end }}
+    </div>
     <div id="the-top" class="absolute flex self-center">
       <a
         class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
