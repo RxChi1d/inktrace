@@ -47,11 +47,27 @@ echo "$staged_output" | while IFS= read -r raw_escaped_file_path; do
     continue
   fi
 
-  # 檢查檔案是否包含 lastmod
+  # 1. 檢查 date 是否存在，若不存在則新增
+  if ! grep -q '^date:' "$file_path"; then
+    # 嘗試插入在 slug 之後，若無則插入在 title 之後，若無則插入在第一行 --- 之後
+    if grep -q '^slug:' "$file_path"; then
+       awk -v time="$current_time" '/^slug:/ { print; print "date: " time; next }1' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
+       echo "Added date to $file_path (after slug)"
+    elif grep -q '^title:' "$file_path"; then
+       awk -v time="$current_time" '/^title:/ { print; print "date: " time; next }1' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
+       echo "Added date to $file_path (after title)"
+    else
+       # 插入在第一行 --- 之後 (Front matter start)
+       awk -v time="$current_time" 'NR==1 && /^---/ { print; print "date: " time; next }1' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
+       echo "Added date to $file_path (after frontmatter start)"
+    fi
+  fi
+
+  # 2. 檢查 lastmod
   if grep -q '^lastmod:' "$file_path"; then
     # 如果 lastmod 存在，則更新它
     # 直接替換整行以避免 FS/OFS 和時間字符串中冒號的衝突
-    awk -v new_lastmod_value="$current_time" '
+    awk -v new_lastmod_value="$current_time" ' 
     /^lastmod:/ { print "lastmod: " new_lastmod_value; next }
     { print }
     ' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
@@ -65,7 +81,7 @@ echo "$staged_output" | while IFS= read -r raw_escaped_file_path; do
       # 比較日期 (YYYY-MM-DD)
       if [ "$file_date_value" != "$current_date_only" ]; then
         # 如果 date 的日期與當前日期不同，則在 date 之後插入 lastmod
-        awk -v time="$current_time" '
+        awk -v time="$current_time" ' 
         { print }
         /^date:/ { print "lastmod: " time }
         ' "$file_path" > "$file_path.tmp" && mv "$file_path.tmp" "$file_path"
