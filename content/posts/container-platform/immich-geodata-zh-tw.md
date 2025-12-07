@@ -2,8 +2,11 @@
 title: "Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
+lastmod: 2025-12-07T15:55:51+08:00
 tags: ["docker", "immich"]
 categories: ["container-platform"]
+series: ["immich-geodata-zh-tw"]
+series_order: 1
 ---
 
 本文介紹 immich-geodata-zh-tw 專案，這是一個專為繁體中文使用者打造的 Immich 反向地理編碼優化方案。除了針對臺灣進行深度的在地化處理（中文化、行政區層級補齊），v2.0 版本起更將支援範圍擴展至日本與南韓，並提供更穩定的自動化更新機制。
