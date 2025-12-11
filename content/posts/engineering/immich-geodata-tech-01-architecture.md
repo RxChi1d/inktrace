@@ -2,16 +2,20 @@
 title: "Immich-geodata-zh-tw 技術解析 (一)：架構設計與擴充指南"
 slug: "immich-geodata-zh-tw-tech-01-architecture"
 date: 2025-12-07T15:55:51+08:00
+lastmod: 2025-12-11T10:36:07+08:00
 tags: ["immich", "software-architecture", "etl", "design-pattern"]
 categories: ["Engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 2
 ---
 
-在 Immich 地理編碼優化專案的 v2.0 版本中，我們引入了全新的 **ETL (Extract-Transform-Load)** 架構與 **Registry 設計模式**。本文將深入探討這些架構決策，並提供一份清晰的開發指南，說明如何利用這套架構快速擴充新的國家支援。
+在 Immich 地理編碼優化專案的 v2.0 版本中，我引入了全新的 **ETL (Extract-Transform-Load)** 架構與 **Registry 設計模式**。本文將深入探討這些架構決策，並提供一份清晰的開發指南，說明如何利用這套架構快速擴充新的國家支援。
 
 <!--more-->
 
+> [!info] 背景提示
+> 本專案旨在優化 Immich 的反向地理編碼功能，透過替換 GeoNames 原始的 `cities500.txt` 資料，解決中文翻譯不佳、臺灣行政區顯示不完整等問題。如果你還不熟悉這個專案，建議先閱讀本系列的[專案介紹與使用教學]({{< ref "posts/container-platform/immich-geodata-zh-tw" >}}) 。
+> 
 ## 為什麼需要重構？v1.0 的痛點
 
 在 v1.0 版本中，處理邏輯高度耦合：
@@ -19,15 +23,37 @@ series_order: 2
 -   **輸出不一致**：缺乏統一的 Schema，導致有些國家有 `admin_3`，有些則無，增加了後續處理的複雜度。
 -   **難以維護**：所有邏輯擠在 `main.py` 或散落的腳本中，新增一個國家需要修改多處代碼。
 
-為了徹底解決這些問題，我們在 v2.0 引入了 **模組化 ETL 架構**。
+為了徹底解決這些問題，我在 v2.0 引入了 **模組化 ETL 架構**。
 
 ---
 
-## 核心架構：GeoDataHandler 與 Registry
+## 核心架構：ETL 模式與模組化設計
 
-v2.0 的核心在於 `core/geodata/base.py` 中定義的 `GeoDataHandler` 抽象基類。它採用了 **Template Method Pattern**，將通用的流程固定下來，而將變動的邏輯留給子類實作。
+v2.0 的核心設計理念是將地理資料處理標準化為 **ETL (Extract-Transform-Load)** 流程，並透過 `GeoDataHandler` 抽象基類實現模組化。
 
-### 1. 抽象基類 (`GeoDataHandler`)
+### 1. ETL 三階段流程
+
+{{< figure
+    src="https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-architecture/etl-diagram.PNG"
+    alt="ETL 資料處理流程架構圖"
+    caption="ETL 三階段流程：Extract（開發者實作）→ Transform → Load（基類自動處理）"
+>}}
+
+每個國家的資料處理都遵循相同的三階段流程：
+
+| 階段 | 方法 | 說明 | 需要自訂？ |
+|:---|:---|:---|:---:|
+| **Extract** | `extract_from_shapefile()` | 從原始 Shapefile 提取資料，輸出標準化 CSV | ✅ 必須 |
+| **Transform** | `convert_to_cities_schema()` | 將 CSV 轉換為 Immich 的 `cities500` Schema | 通常不需要 |
+| **Load** | `replace_in_dataset()` | 將處理後的資料合併回主資料集 | 通常不需要 |
+
+-   **Extract**：這是開發者主要需要實作的部分。每個國家的官方資料格式不同，需要撰寫客製化的提取邏輯。
+-   **Transform**：基類預設會執行標準轉換，包括**自動偵測並分配不重複的 `geoname_id`**（計算現有資料集中的最大 ID 並遞增，以避免衝突）、填入設定好的時區與國家代碼。若你的國家資料不需要額外的翻譯處理，則完全不需覆寫此方法，直接使用基類邏輯即可。
+-   **Load**：基類會根據 `COUNTRY_CODE` 自動篩選並替換主資料集中對應國家的紀錄。除非你需要自訂合併策略，否則不需覆寫。
+
+### 2. GeoDataHandler 抽象基類
+
+`GeoDataHandler`（定義於 `core/geodata/base.py`）採用 **Template Method Pattern**，將通用的流程固定下來，而將變動的邏輯留給子類實作。
 
 這個基類處理了 80% 的髒活累活，讓開發者只需專注於該國特有的資料邏輯。
 
@@ -49,9 +75,9 @@ class GeoDataHandler(ABC):
     # convert_to_cities_schema 通常不需要覆寫，除非有特殊需求
 ```
 
-### 2. 自動註冊機制 (Registry)
+### 3. 自動註冊機制 (Registry)
 
-我們使用裝飾器 `@register_handler` 來實現工廠模式，讓系統能動態載入處理器。
+本專案使用裝飾器 `@register_handler` 來實現工廠模式，讓系統能動態載入處理器。
 
 ```python
 # core/geodata/base.py
@@ -68,7 +94,7 @@ def register_handler(country_code):
 
 ---
 
-## [開發指南] 如何實作一個新的 Handler？
+## 開發指南：如何實作一個新的 Handler？
 
 如果你想為這個專案新增一個國家，你只需要關注一個檔案。以下是一個標準 Handler 的實作模板，展示了你需要填寫哪些部分。
 
@@ -127,6 +153,7 @@ class ThailandGeoDataHandler(GeoDataHandler):
 ```bash
 # 驗證指令
 python main.py extract --country TH --shapefile data/thailand.shp
+python main.py enhance --country-code TH
 ```
 
 透過這種高度模組化的設計，貢獻者不需要理解整個 ETL 流程的複雜度，只需扮演好「翻譯官」的角色，將該國的資料翻譯成專案的通用語言即可。
