@@ -2,7 +2,7 @@
 title: "Immich-geodata-zh-tw 技術解析 (一)：架構設計與擴充指南"
 slug: "immich-geodata-zh-tw-tech-01-architecture"
 date: 2025-12-07T15:55:51+08:00
-lastmod: 2025-12-11T10:36:07+08:00
+lastmod: 2025-12-13T12:21:20+08:00
 tags: ["immich", "software-architecture", "etl", "design-pattern"]
 categories: ["Engineering"]
 series: ["immich-geodata-zh-tw"]
@@ -152,7 +152,11 @@ class ThailandGeoDataHandler(GeoDataHandler):
 
 ```bash
 # 驗證指令
+
+# 1. 執行 Extract 階段 (產生 meta_data/th_geodata.csv)
 python main.py extract --country TH --shapefile data/thailand.shp
+
+# 2. 執行 Transform & Load 階段 (整合並輸出 cities500_optimized.txt)
 python main.py enhance --country-code TH
 ```
 
