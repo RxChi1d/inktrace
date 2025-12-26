@@ -10,3 +10,7 @@ Thumbs.db
 
 # Development files
 TODO.md
+
+# AI tool files
+.codex/
+.claude/
