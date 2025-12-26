@@ -25,8 +25,7 @@ assets/css/custom/
 ├── homepage-custom.css # 首頁樣式
 ├── posts.css           # 文章頁樣式
 ├── categories.css      # 分類頁樣式
-├── tags.css            # 標籤頁樣式
-└── blockquote-alerts.css # 元件樣式
+└── tags.css            # 標籤頁樣式
 ```
 
 > 僅提供範例作爲參考

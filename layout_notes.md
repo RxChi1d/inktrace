@@ -13,9 +13,6 @@
 - **term.html**:
   這是用於渲染分類或標籤等 Taxonomy Term 頁面的模板。它擴展了 `baseof.html` 模板，並在 "main" 區塊中定義了 Term 頁面的佈局。它包含了顯示 Hero 區塊、麵包屑、Term 標題、Term 元資訊、Term 內容以及與該 Term 相關聯的頁面列表。頁面列表支援簡單列表或卡片視圖，並可按年份分組。
 
-- **_markup/render-blockquote.html**:
-  這是 Markdown 中用於渲染 Blockquote 的 Render Hook。它增強了預設的 Blockquote 渲染，以支援具有不同類型（note, info, tip, important, warning, caution, danger, error, success, check）、自訂標題和可選摺疊行為的自訂警示/提示區塊。它包含了根據警示類型選擇適當圖標的邏輯。
-
 ## categories/
 
 - **term.html**:
