@@ -2,7 +2,7 @@
 title: "n8n-ffmpeg: n8n Docker Image with FFmpeg Integration and Automated Builds"
 slug: "n8n-ffmpeg"
 date: 2025-11-19T22:35:00+08:00
-lastmod: 2025-11-23T11:00:11+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["n8n", "docker", "ffmpeg", "github-actions"]
 categories: ["container-platform"]
 ---
@@ -97,8 +97,8 @@ To achieve the goal of "version synchronization," the project introduces GitHub 
 
 This workflow ensures that the project's image can follow up within the shortest time after an official update, so users don't have to worry about compatibility issues.
 
-> [!NOTE]
-> 
+> [!INFO]
+>
 > This project only provides officially supported architectures (amd64/arm64). If your hardware environment uses other architectures (such as RISC-V), you need to refer to the Dockerfile above for manual construction.
 
 ---

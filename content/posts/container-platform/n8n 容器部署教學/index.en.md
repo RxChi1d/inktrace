@@ -2,6 +2,7 @@
 title: "n8n Container Deployment Guide - Docker Compose, Redis, and Reverse Proxy Setup"
 slug: "n8n-deployment"
 date: 2025-11-29T21:46:47+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["docker", "n8n", "redis", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -59,7 +60,7 @@ Directory Details:
 - `/appdata/n8n/data`: Stores core data such as the database, workflows, and credentials.
 - `/appdata/n8n/files`: Stores files processed within workflows.
 
-> [!NOTE]
+> [!INFO]
 > You can adjust these paths as needed, but ensure Docker has read/write permissions. If you are using a non-root user, it is recommended to place directories within your home directory (e.g., `~/appdata/n8n`).
 
 ### Creating docker-compose.yml

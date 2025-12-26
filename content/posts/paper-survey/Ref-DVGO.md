@@ -2,7 +2,7 @@
 title: "論文筆記 - Ref-DVGO: Reflection-Aware Direct Voxel Grid Optimization for an Improved Quality-Efficiency Trade-Off in Reflective Scene Reconstruction"
 slug: "ref-dvgo"
 date: 2023-12-14T12:34:00+08:00
-lastmod: 2025-09-10T17:54:23+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 params: 
@@ -13,7 +13,7 @@ params:
 
 <!--more-->
 
-> [!NOTE]+ 論文資訊
+> [!ABSTRACT]+ 論文資訊
 > - **Link:** https://arxiv.org/abs/2308.08530
 > - **Conference:** ICCV 2023
 

@@ -2,7 +2,7 @@
 title: "論文筆記 - MonoHuman: Animatable Human Neural Field from Monocular Video"
 slug: "monohuman"
 date: 2023-10-11T12:32:00+08:00
-lastmod: 2025-09-21T13:53:54+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -13,7 +13,7 @@ params:
 
 <!--more-->
 
-> [!NOTE]+ 論文資訊
+> [!ABSTRACT]+ 論文資訊
 > - **Link:** https://arxiv.org/abs/2304.02001
 > - **Conference:** CVPR 2023
 

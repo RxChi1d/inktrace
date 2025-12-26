@@ -2,6 +2,7 @@
 title: "n8n 容器部署教學 - Docker Compose 配置、Redis 快取與反向代理設定"
 slug: "n8n-deployment"
 date: 2025-11-29T21:46:47+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["docker", "n8n", "redis", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -59,7 +60,7 @@ sudo chown -R 1000:1000 /appdata/n8n
 - `/appdata/n8n/data`：儲存 n8n 的資料庫、工作流程、憑證等核心資料
 - `/appdata/n8n/files`：儲存工作流程中處理的檔案
 
-> [!NOTE]
+> [!INFO]
 > 您可以根據需求調整路徑，但需確保 Docker 有讀寫權限。若使用非 root 使用者，建議將目錄放在家目錄下（如 `~/appdata/n8n`）。
 
 ### 撰寫 docker-compose.yml
@@ -166,7 +167,7 @@ Redis 是一個高效能的記憶體資料庫。在 n8n 中，你可以透過**�
 - ✅ 需要在多個工作流程間共享資料
 - ✅ 實作自定義的快取邏輯
 
-> [!NOTE]
+> [!INFO]
 > **關於 Queue Mode**：n8n 也支援將 Redis 作為訊息佇列的 **Queue Mode**，用於大量並發場景。此功能需要額外配置（包含設定環境變數與新增 worker 容器），超出本文範圍。如有需求請參考[n8n Queue Mode 文件](https://docs.n8n.io/hosting/scaling/queue-mode/)。
 
 ### 更新 docker-compose.yml

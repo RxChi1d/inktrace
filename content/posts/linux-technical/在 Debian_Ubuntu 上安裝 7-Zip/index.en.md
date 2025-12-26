@@ -2,7 +2,7 @@
 title: "Installing 7-Zip on Debian/Ubuntu"
 slug: "install-7zip-on-debian-ubuntu"
 date: 2025-11-23T14:05:00+08:00
-lastmod: 2025-11-29T22:26:07+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["debian-ubuntu", "package"]
 categories: ["linux-technical"]
 ---
@@ -11,7 +11,7 @@ A guide to installing the latest version of 7-Zip on Debian/Ubuntu. This resolve
 
 <!--more-->
 
-> [!NOTE] Why Manual Installation is Necessary
+> [!INFO] Why Manual Installation is Necessary
 > p7zip is outdated and has bugs (cannot compress files larger than 5GB).
 > The 7zip package in apt repositories is also an older version, so downloading from the official website is required.
 
@@ -40,7 +40,7 @@ A guide to installing the latest version of 7-Zip on Debian/Ubuntu. This resolve
 
     Copy the `7zz` executable to the `/usr/local/bin/` directory to complete the installation.
 
-    > [!NOTE]
+    > [!IMPORTANT]
     > - Since `/usr/local/bin` is a system executable directory, `sudo` privileges are required to copy files.
     > - The 7-Zip executable is named `7zz`, which differs from p7zip's `7z`. Therefore, the command after installation is `7zz` rather than `7z`. For example: `7zz a test.7z test.txt`.
     > - If you prefer to use the `7z` command, first remove `p7zip` to avoid conflicts (if installed), then create a symbolic link pointing to `7zz`: `sudo ln -s /usr/local/bin/7zz /usr/local/bin/7z`.

@@ -14,3 +14,15 @@ TODO.md
 # AI tool files
 .codex/
 .claude/
+
+# Node.js build artifacts
+node_modules/
+dist/
+build/
+*.log
+.env*
+
+# Editor/temp files
+*.tmp
+*.swp
+.idea/

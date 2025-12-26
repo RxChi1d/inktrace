@@ -2,6 +2,7 @@
 title: "n8n-ffmpeg：整合 FFmpeg 的 n8n Docker 映像檔與自動化構建實作"
 slug: "n8n-ffmpeg"
 date: 2025-11-19T20:30:00+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["n8n", "docker", "ffmpeg", "github-actions"]
 categories: ["container-platform"]
 ---
@@ -98,8 +99,8 @@ USER node
 
 這套流程確保了本專案的映像檔能夠在官方更新後的最短時間內跟進，使用者無需擔心相容性問題。
 
-> [!NOTE]
-> 
+> [!INFO]
+>
 > 本專案僅提供官方支援的架構 (amd64/arm64)。若您的硬體環境為其他架構（如 RISC-V），則需要參考上述 Dockerfile 進行手動構建。
 
 ---
