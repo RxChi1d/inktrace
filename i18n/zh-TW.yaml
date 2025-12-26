@@ -22,3 +22,21 @@ immich: Immich
 nginx-proxy-manager: Nginx Proxy Manager
 monitor: 監控
 nginx: Nginx
+
+# Admonition (override to keep English titles)
+admonition:
+  abstract: abstract
+  bug: bug
+  caution: caution
+  danger: danger
+  example: example
+  failure: failure
+  important: important
+  info: info
+  note: note
+  question: question
+  quote: quote
+  success: success
+  tip: tip
+  todo: todo
+  warning: warning

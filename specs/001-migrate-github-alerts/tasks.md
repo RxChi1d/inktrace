@@ -104,42 +104,42 @@ git reset --hard HEAD^  # 回滾到上一個 commit
 - Blowfish submodule 版本為 v2.94.0
 - GitHub Alert 使用 Blowfish 原生樣式正確顯示
 - 所有類型的 alert（NOTE、TIP、IMPORTANT、WARNING、CAUTION）正確渲染
-- admonition 標題顯示英文小寫（note, tip, important 等）
+- admonition 標題顯示英文（視覺樣式為首字母大寫）
 - 其他頁面功能持續正常
 - 瀏覽器控制台無錯誤訊息
 
 ### Implementation for User Story 2
 
-- [ ] T017 [US2] 進入 Blowfish submodule 目錄：`cd themes/blowfish`
-- [ ] T018 [US2] 拉取所有遠端標籤：執行 `git fetch --all --tags`
-- [ ] T019 [US2] 切換至 v2.94.0 標籤：執行 `git checkout v2.94.0`
-- [ ] T020 [US2] 驗證當前版本：執行 `git describe --tags` 確認輸出為 `v2.94.0`
-- [ ] T021 [US2] 返回專案根目錄：`cd ../..`
-- [ ] T022 [US2] 將 submodule 變更加入 staging：執行 `git add themes/blowfish`
-- [ ] T023 [US2] 執行 `npm run build` 重建 CSS 樣式
+- [x] T017 [US2] 進入 Blowfish submodule 目錄：`cd themes/blowfish`
+- [x] T018 [US2] 拉取所有遠端標籤：執行 `git fetch --all --tags`
+- [x] T019 [US2] 切換至 v2.94.0 標籤：執行 `git checkout v2.94.0`
+- [x] T020 [US2] 驗證當前版本：執行 `git describe --tags` 確認輸出為 `v2.94.0`
+- [x] T021 [US2] 返回專案根目錄：`cd ../..`
+- [x] T022 [US2] 將 submodule 變更加入 staging：執行 `git add themes/blowfish`
+- [x] T023 [US2] 執行 `npm run build` 重建 CSS 樣式
 - [ ] T024 [US2] 提交變更：使用 commit 訊息 `chore(theme): 升級 Blowfish 主題至 v2.94.0`，包含完整的變更說明和測試計劃參考
-- [ ] T025 [US2] 驗證 P2 階段：啟動 `hugo server`，執行人工驗證 checklist（見下方）
+- [x] T025 [US2] 驗證 P2 階段：啟動 `hugo server`，執行人工驗證 checklist（見下方）
 
 **P2 驗證 Checklist**（人工執行）:
 1. 瀏覽測試文章 `content/posts/container-platform/n8n 容器部署教學/index.md`
-   - [ ] NOTE alert 正確顯示（藍色、info icon、英文標題 "note"）
-   - [ ] TIP alert 正確顯示（綠色、lightbulb icon、英文標題 "tip"）
-   - [ ] IMPORTANT alert 正確顯示（紫色、star icon、英文標題 "important"）
-   - [ ] WARNING alert 正確顯示（橙色、triangle-exclamation icon、英文標題 "warning"）
-   - [ ] CAUTION alert 正確顯示（紅色、fire icon、英文標題 "caution"）
-   - [ ] 自訂標題功能正常（如使用 `> [!NOTE] 自訂標題`）
-   - [ ] 可摺疊功能正常（如使用 `+` 或 `-`）
+   - [x] NOTE alert 正確顯示（藍色、info icon、英文標題 "Note"）
+   - [x] TIP alert 正確顯示（綠色、lightbulb icon、英文標題 "Tip"）
+   - [x] IMPORTANT alert 正確顯示（紫色、star icon、英文標題 "Important"）
+   - [x] WARNING alert 正確顯示（橙色、triangle-exclamation icon、英文標題 "Warning"）
+   - [x] CAUTION alert 正確顯示（紅色、fire icon、英文標題 "Caution"）
+   - [x] 自訂標題功能正常（如使用 `> [!NOTE] 自訂標題`）
+   - [x] 可摺疊功能正常（如使用 `+` 或 `-`）
 2. 檢查其他頁面功能
-   - [ ] 首頁正常顯示
-   - [ ] 標籤頁正常顯示
-   - [ ] 分類頁正常顯示
-   - [ ] 導航功能正常
+   - [x] 首頁正常顯示
+   - [x] 標籤頁正常顯示
+   - [x] 分類頁正常顯示
+   - [x] 導航功能正常
 3. 檢查瀏覽器控制台
-   - [ ] 無 JavaScript 錯誤
-   - [ ] 無 CSS 載入錯誤
+   - [x] 無 JavaScript 錯誤
+   - [x] 無 CSS 載入錯誤
 4. 使用 Chrome DevTools 檢查 alert 元素
-   - [ ] 樣式來自 Blowfish 主題（非自訂 CSS）
-   - [ ] CSS 類別為 `.admonition` 和 `[data-type="{type}"]`
+   - [x] 樣式來自 Blowfish 主題（非自訂 CSS）
+   - [x] CSS 類別為 `.admonition` 和 `[data-type="{type}"]`
 
 **Rollback Strategy（如果驗證失敗）**:
 ```bash
@@ -176,7 +176,7 @@ cd ../..
 - [ ] T031 [US3] 使用 `rg '> \[!' content/` 搜尋所有包含 alert 語法的文章，建立測試清單
 - [ ] T032 [US3] 逐一瀏覽測試清單中的文章，驗證所有 alert 類型正確顯示
 - [ ] T033 [US3] 使用 Chrome DevTools 檢查至少 3 篇文章的 alert 元素，確認樣式來源為 Blowfish 主題
-- [ ] T034 [US3] 驗證 alert 標題顯示為英文小寫（note, tip, important 等），符合專案需求
+- [ ] T034 [US3] 驗證 alert 標題顯示為英文（視覺樣式為首字母大寫），符合專案需求
 - [ ] T035 [US3] 最終驗證：執行完整的網站導航測試（首頁、文章列表、標籤、分類、搜尋）
 
 **P3 驗證 Checklist**（人工執行）:
@@ -191,7 +191,7 @@ cd ../..
    - [ ] 無警告訊息
 3. 視覺驗證
    - [ ] 所有測試文章的 alert 正確顯示
-   - [ ] alert 標題統一顯示英文小寫
+   - [ ] alert 標題統一顯示英文（視覺樣式為首字母大寫）
    - [ ] 樣式來自 Blowfish 主題（使用 DevTools 確認）
 4. 功能驗證
    - [ ] 網站所有頁面正常顯示
