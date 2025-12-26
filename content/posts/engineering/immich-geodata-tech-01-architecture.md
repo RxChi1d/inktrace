@@ -2,7 +2,7 @@
 title: "Immich-geodata-zh-tw 技術解析 (一)：架構設計與擴充指南"
 slug: "immich-geodata-zh-tw-tech-01-architecture"
 date: 2025-12-07T15:55:51+08:00
-lastmod: 2025-12-13T12:21:20+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["immich", "software-architecture", "etl", "design-pattern"]
 categories: ["Engineering"]
 series: ["immich-geodata-zh-tw"]
@@ -13,7 +13,7 @@ series_order: 2
 
 <!--more-->
 
-> [!info] 背景提示
+> [!INFO] 背景提示
 > 本專案旨在優化 Immich 的反向地理編碼功能，透過替換 GeoNames 原始的 `cities500.txt` 資料，解決中文翻譯不佳、臺灣行政區顯示不完整等問題。如果你還不熟悉這個專案，建議先閱讀本系列的[專案介紹與使用教學]({{< ref "posts/container-platform/immich-geodata-zh-tw" >}}) 。
 > 
 ## 為什麼需要重構？v1.0 的痛點

@@ -2,7 +2,7 @@
 title: "論文筆記 - HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video"
 slug: "humannerf"
 date: 2023-03-02T00:00:00+08:00
-lastmod: 2025-09-10T17:54:23+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -13,7 +13,7 @@ params:
 
 <!--more-->
 
-> [!NOTE]+ 論文資訊
+> [!ABSTRACT]+ 論文資訊
 > - **Link:** https://arxiv.org/abs/2201.04127
 > - **Conference:** CVPR 2022
 

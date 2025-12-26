@@ -2,7 +2,7 @@
 title: "論文筆記 - (DVGO) Direct Voxel Grid Optimization: Super-fast Convergence for Radiance Fields Reconstruction"
 slug: "dvgo"
 date: 2023-04-12T16:22:00+08:00
-lastmod: 2025-09-10T17:50:31+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 params: 
@@ -13,7 +13,7 @@ params:
 
 <!--more-->
 
-> [!NOTE]+ 論文資訊
+> [!ABSTRACT]+ 論文資訊
 > - **Link:** https://arxiv.org/abs/2111.11215v2
 > - **Conference:** CVPR 2022
 

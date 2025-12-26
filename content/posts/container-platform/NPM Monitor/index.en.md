@@ -2,7 +2,7 @@
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - Monitoring NPM Proxy Status with Grafana"
 slug: "nginx-proxy-manager-monitor-deployment"
 date: 2025-11-23T13:31:00+08:00
-lastmod: 2025-11-29T22:26:07+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 ---
@@ -11,7 +11,7 @@ This guide walks you through setting up a monitoring system for Nginx Proxy Mana
 
 <!--more-->
 
-> [!NOTE] How It Works
+> [!INFO] How It Works
 > Promtail parses Nginx Proxy Manager logs and sends them to the Loki database. Grafana reads data from Loki and visualizes it through dashboards.
 
 
@@ -30,7 +30,7 @@ To facilitate communication between Grafana, Loki, and Promtail containers, we'l
 docker network create grafana
 ```
 
-> [!NOTE]
+> [!IMPORTANT]
 > Remember to update your Grafana container configuration to include this network.
 
 ## 3. Configure Nginx Proxy Manager Settings

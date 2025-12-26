@@ -2,7 +2,7 @@
 title: "Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2025-12-07T15:55:51+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["docker", "immich"]
 categories: ["container-platform"]
 series: ["immich-geodata-zh-tw"]
@@ -119,7 +119,7 @@ docker logs immich_server
       >}}
 
 <a id="tag:fix-import-failed"></a>
-> [!TIP] 沒看到導入訊息？
+> [!QUESTION] 沒看到導入訊息？
 > 若腳本執行成功但 Immich 未導入資料，請參考「[方法 B](#方法-b手動部署-️)」手動部署，並修改 `geodata-date.txt` 的時間戳，使其晚於當前時間，例如：`2025-09-19` 改為 `2025-09-20`。（超過當天日期也沒關係），以強制 Immich 重新載入地理資料。測試完成後可再改回整合式部署。    
 
 ---
@@ -136,7 +136,7 @@ volumes:
   - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/server/node_modules/i18n-iso-countries/langs:ro
 ```
 
-> [!NOTE]
+> [!IMPORTANT]
 > Immich v1.136.0 以前的版本，因為 Immich 容器內部結構不同，第二行的路徑請改為 `/path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/node_modules/i18n-iso-countries/langs:ro`。
 
 **2. 下載資料**
@@ -203,7 +203,7 @@ docker compose down && docker compose up -d
 
 這時，舊照片的地理資訊就會被更新成中文地名，而新上傳的照片則會直接套用！
 
-> [!NOTE] 提取元數據後，名稱卻沒有更新？
+> [!QUESTION] 提取元數據後，名稱卻沒有更新？
 > 請參考「[方法 B](#方法-b手動部署-️)」手動部署，並修改 `geodata-date.txt` 的時間戳，使其晚於當前時間，例如：`2025-09-19` 改為 `2025-09-20`。（超過當天日期也沒關係），以強制 Immich 重新載入地理資料。測試完成後可再改回整合式部署。   
 ---
 

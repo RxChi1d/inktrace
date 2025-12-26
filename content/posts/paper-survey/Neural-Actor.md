@@ -2,7 +2,7 @@
 title: "論文筆記 - Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control"
 slug: "neural-actor"
 date: 2023-10-06T10:48:00+08:00
-lastmod: 2025-09-21T12:41:29+08:00
+lastmod: 2025-12-26T17:22:36+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -13,7 +13,7 @@ params:
 
 <!--more-->
 
-> [!NOTE]+ 論文資訊
+> [!ABSTRACT]+ 論文資訊
 > - **Link:** https://arxiv.org/abs/2106.02019
 > - **Conference:** SIGGRAPH Asia 2021
 
