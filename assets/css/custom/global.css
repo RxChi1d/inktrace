@@ -1,4 +1,5 @@
-.max-w-8xl {
+/* Redefine theme's max-w-7xl to widen the whole site (Body + Header + Components) */
+.max-w-7xl {
   max-width: 90rem;
 }
 

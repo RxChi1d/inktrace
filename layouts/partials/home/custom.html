@@ -1,3 +1,4 @@
+{{ partial "hero/background.html" . }}
 {{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
 <article class="custom-profile-layout {{ if not .Site.Params.homepage.showRecent }}
     h-full
