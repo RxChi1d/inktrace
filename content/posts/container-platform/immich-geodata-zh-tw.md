@@ -2,7 +2,7 @@
 title: "Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2025-12-30T14:34:35+08:00
 tags: ["docker", "immich"]
 categories: ["container-platform"]
 series: ["immich-geodata-zh-tw"]
@@ -49,10 +49,8 @@ Immich 原生的反向地理編碼主要依賴 GeoNames 全球資料庫，這對
 
 ## 使用前後對比
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/comparison.png"
-    alt="使用前後對比"
-    >}}
+![使用前後對比](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/comparison.png)
+{style="width:80%;"}
 
 不僅地名更精確，中文搜尋體驗也大幅提升！
 
@@ -83,11 +81,7 @@ services:
 
 以 Immich 官方的 [docker-compose.yml 範例](https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml) 為例，完整內容如下圖：
 
-{{< figure
-  src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/docker-compose-example.png"
-  alt="docker-compose.yml 範例"
-  caption="docker-compose.yml 範例"
-  >}}
+![docker-compose.yml 範例](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/docker-compose-example.png "docker-compose.yml 範例")
 
 **2. 重啟 Immich**
 
@@ -106,17 +100,9 @@ docker logs immich_server
 檢查重點：
 1. 是否有看到 `immich-geodata-zh-tw` 的執行與下載訊息。  
   若看到類似以下訊息，表示腳本執行成功：  
-  {{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/check-geodata-script.png"
-    alt="檢查 immich-geodata-zh-tw 腳本執行結果"
-    caption="檢查 immich-geodata-zh-tw 腳本執行結果"
-    >}}
+  ![檢查 immich-geodata-zh-tw 腳本執行結果](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/check-geodata-script.png "檢查 immich-geodata-zh-tw 腳本執行結果")
 2. Immich 啟動後是否顯示 `10000 geodata records imported`（表示成功載入資料）。  
-  {{< figure
-      src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/check-geodata-import.png"
-      alt="檢查 Immich 載入地理資料結果"
-      caption="檢查 Immich 載入地理資料結果"
-      >}}
+  ![檢查 Immich 載入地理資料結果](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/check-geodata-import.png "檢查 Immich 載入地理資料結果")
 
 <a id="tag:fix-import-failed"></a>
 > [!QUESTION] 沒看到導入訊息？
@@ -183,23 +169,11 @@ docker compose down && docker compose up -d
 > 如果你的 Immich 中還沒有任何的照片，例如剛部署完，這個步驟可以跳過。
 
 1. **登入 Immich 後台**
-  {{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-1.png"
-    alt="登入 Immich 後台"
-    caption="登入 Immich 後台"
-    >}}
+  ![登入 Immich 後台](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-1.png "登入 Immich 後台")
 2. 進入 **系統管理 (Administration)** → **任務 (Jobs)**
-  {{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-2.png"
-    alt="進入系統管理的任務頁面"
-    caption="進入系統管理的任務頁面"
-    >}}
+  ![進入系統管理的任務頁面](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-2.png "進入系統管理的任務頁面")
 3. 找到 **提取元數據 (Extract Metadata)**，點擊 **全部 (All)**
-  {{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-3.png"
-    alt="選擇提取元數據並點擊全部"
-    caption="選擇提取元數據並點擊全部"
-    >}}
+  ![選擇提取元數據並點擊全部](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-3.png "選擇提取元數據並點擊全部")
 
 這時，舊照片的地理資訊就會被更新成中文地名，而新上傳的照片則會直接套用！
 

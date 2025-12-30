@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析 (二)：國家處理器架構與實作"
 slug: "immich-geodata-tech-02-handler-architecture"
 date: 2025-12-11T16:00:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2025-12-30T14:34:35+08:00
 tags: ["immich", "software-architecture", "etl", "design-pattern"]
 categories: ["Engineering"]
 series: ["immich-geodata-zh-tw"]
@@ -34,11 +34,8 @@ v2.0 的核心設計理念是將地理資料處理標準化為 **ETL (Extract-Tr
 
 ### 1. ETL 三階段流程
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-architecture/etl-diagram.PNG"
-    alt="ETL 資料處理流程架構圖"
-    caption="ETL 三階段流程：Extract（開發者實作）→ Transform → Load（基類自動處理）"
->}}
+![ETL 資料處理流程架構圖](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-architecture/etl-diagram.PNG "ETL 三階段流程：Extract（開發者實作）→ Transform → Load（基類自動處理）")
+{style="width:80%;"}
 
 每個國家的資料處理都遵循相同的三階段流程：
 

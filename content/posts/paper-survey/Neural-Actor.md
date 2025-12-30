@@ -2,7 +2,7 @@
 title: "論文筆記 - Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control"
 slug: "neural-actor"
 date: 2023-10-06T10:48:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2025-12-30T14:34:35+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -68,11 +68,7 @@ params:
 
 ### Overview
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-2.png"
-    alt="Figure 2."
-    caption="Fig. 2. Overview of Neural Actor."
-    >}}
+![Figure 2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-2.png "Fig. 2. Overview of Neural Actor.")
 
 ### Geometry-guided Deformable NeRF
 
@@ -157,11 +153,7 @@ NeRF 只能學習一個確定性的迴歸函數，這讓它不適合處理涉及
 2. 簡單後驗 $q(\mathcal{Z} | \mathcal{I}, \rho)$ 可⽤。對於每個訓練幀，我們可以通過將每個幀的訓練影像反投影到所有可見的頂點上，並通過計算所有視角中最正交紋素的中位數來產生最終的 texture map $\mathcal{Z}$。
 3. 先驗模型 $p(\mathcal{Z} | \rho)$ 的學習可以被構想為一個影像到影像的轉換任務，它將從擺放的網格生成的 normal maps 映射到 texture maps。
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-2-1.png"
-    alt="Figure 2-1."
-    caption="The zoom in demostration of Figure 2."
-    >}}
+![Figure 2-1.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-2-1.png "The zoom in demostration of Figure 2.")
 
 作者使用了⼀個額外的特徵提取器 $G(\cdot)$ 提取表⾯外觀的 high-level features $\mathcal{Z}$ ，其中包含比 texture map 的 RGB 值更多的資訊。
 
@@ -201,21 +193,14 @@ NeRF 只能學習一個確定性的迴歸函數，這讓它不適合處理涉及
 
 利用驅動人的姿勢參數和目標人的形狀參數獲得姿勢化的SMPL網格。
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-4.png"
-    alt="Figure 4."
-    >}}
+![Figure 4.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-4.png)
 
 使用DeepCap數據集和AIST數據集的測試姿勢作為 driving poses，並在 Fig.4 中展示了重演結果的示例。
 
 本篇的⽅法可以在各種運動中合成具有精細細節的⼈類圖像，並很好地推廣到具有挑戰性的運動。
   
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-6.png"
-    alt="Figure 6."
-    default=true
-    width=500
-    >}}
+![Figure 6.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-6.png)
+{style="width:70%;"}
 
 在一些非常具有挑戰性的姿勢（例如：屈腹、向前彎曲）上進一步測試 (Fig.6)，我們的方法能夠產生這些困難姿勢的合理合成結果，顯著優於 baselines。
 
@@ -224,10 +209,7 @@ NeRF 只能學習一個確定性的迴歸函數，這讓它不適合處理涉及
 
 #### Body Reshape
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-5.png"
-    alt="Figure 5."
-    >}}
+![Figure 5.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-5.png)
 
 Fig.5，可以調整 SMPL template 的形狀參數 （PC1和PC2）來合成不同形狀的⼈體動畫。
 
@@ -235,12 +217,8 @@ Fig.5，可以調整 SMPL template 的形狀參數 （PC1和PC2）來合成不�
 
 #### Novel Camera View Synthesis
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/table-1.png"
-    alt="Table 1."
-    default=true
-    width=500
-    >}}
+![Table 1.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/table-1.png)
+{style="width:70%;"}
 
 - 對於所有基線方法，當訓練集包含大量不同姿勢時，例如包含 20K 幀的姿勢序列，執行照片真實的渲染回放是困難的。
 - NV 和 NB 在他們的工作中展示了良好的結果，用於播放短序列，例如 300 幀，但是，將大量幀（例如 20K 幀）編碼到單一的場景表示網絡中，會因訓練數據的大變化而導致結果模糊。
@@ -253,15 +231,9 @@ Fig.5，可以調整 SMPL template 的形狀參數 （PC1和PC2）來合成不�
 
 #### Novel Pose Synthesis
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-7.png"
-    alt="Figure 7."
-    >}}
+![Figure 7.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-7.png)
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/table-2.png"
-    alt="Table 2."
-    >}}
+![Table 2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/table-2.png)
 
 1. 新姿勢合成比較：
     - 與四個基線方法在八個序列上進行比較，使用測試姿勢進行評估。
@@ -277,12 +249,8 @@ Fig.5，可以調整 SMPL template 的形狀參數 （PC1和PC2）來合成不�
     - 我們的方法只需要 SMPL 模型，並以 SMPL 模型作為輸入進行了比較（DDC with SMPL），並提供了具有特定於人模板的原始DDC結果作為參考。
     - 如 Figure 8 所示，DDC對於具有特定於人的模板工作得很好，但是變形粗糙的SMPL網格更具挑戰性，導致變形幾何上的人工物，如頭部。
         
-        {{< figure
-            src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-8.png"
-            alt="Figure 8."
-            default=true
-            width=450
-            >}}
+        ![Figure 8.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-8.png)
+        {style="width:70%;"}
 4. 與 Textured Neural Avatar (TNA) 的關係：
     - 由於 TNA 的代碼和數據不可用，僅從概念上討論與該工作的區別。
     - 與我們的方法不同，TNA 無法合成人類的動態外觀。
@@ -294,10 +262,7 @@ D1 上進⾏了 ablation study 並在每 10 幀的四個測試視圖上進⾏評
 
 #### Effect of Texture Features
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-9.png"
-    alt="Figure 9."
-    >}}
+![Figure 9.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-9.png)
 
 1. 在本篇方法中，每個採樣點都與從其最近表面點的2D紋理映射中提取的紋理特徵連接，作為預測殘差變形和動態外觀的條件。
 2. 比較了三種情況：
@@ -314,20 +279,14 @@ D1 上進⾏了 ablation study 並在每 10 幀的四個測試視圖上進⾏評
     1. **無殘留變形**：在姿態空間中的空間點只通過逆向運動學變換轉換到標準空間。
     2. **無幾何指導**：我們直接用變形網絡預測全部運動。
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-10.png"
-    alt="Figure 10."
-    >}}
+![Figure 10.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-10.png)
 
 - 如 Fig.10 所示，將全部變形建模為 **inverse kinematic transformations** 和 **residual non-rigid deformations** 可以獲得最好的質量。
 - 直接學習全部變形不是有效的，因此會產生嚴重的 artifacts。
 
 #### Sparse Inputs
 
-{{< figure
-    src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-11.png"
-    alt="Figure 11."
-    >}}
+![Figure 11.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-11.png)
 
 - 通過稀疏的訓練相機和訓練幀作為輸入來測試我們的方法。
 - 具體設計了兩種實驗設置：
@@ -340,19 +299,15 @@ D1 上進⾏了 ablation study 並在每 10 幀的四個測試視圖上進⾏評
 - 無法處理如裙子這樣的寬鬆服裝。
 - 無法忠實地生成手指 (Fig.12)。
     
-    {{< figure
-        src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-12.png"
-        alt="Figure 12."
-        >}}
+    ![Figure 12.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-12.png)
+    {style="width:70%;"}
     
     - 由於手部未被跟踪，SMPL 手是打開的，而 GT 手通常是拳頭，這導致手部生成的 GT 紋理中存在嚴重的 noise。
     - 即使使用改進的人體模型（如SMPL-X），由於在整個身體圖像中手部圖像的低解析度，準確跟踪手勢仍然具有挑戰性。
 - 雖然我們的方法可以很好地推廣到具有挑戰性的未見姿勢，但當姿勢與訓練姿勢完全不同，或者當存在過度的關節彎曲時，可能會失敗 (Fig.13)。
     
-    {{< figure
-        src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-13.png"
-        alt="Figure 13."
-        >}}
+    ![Figure 13.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/neural-actor/figure-13.png)
+    {style="width:70%;"}
 
 ## Conclusion
 

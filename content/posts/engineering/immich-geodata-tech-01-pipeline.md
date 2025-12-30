@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析 (一)：Pipeline 六階段實作"
 slug: "immich-geodata-tech-01-pipeline"
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2025-12-29T16:03:17+08:00
+lastmod: 2025-12-30T14:34:35+08:00
 description: "詳解 immich-geodata-zh-tw 專案的六階段資料處理管線：從下載 GeoNames 原始資料、資料增強、翻譯到最終打包的完整技術實作，讓你的 Immich 相簿擁有精準的繁體中文地名標註。"
 tags: ["immich", "geodata", "geonames", "reverse-geocoding", "python", "polars", "data-pipeline"]
 categories: ["Engineering"]
@@ -61,7 +61,7 @@ immich-geodata-zh-tw 利用這個特性，將 `en.json` 的內容替換為繁體
 > `admin2Codes.txt` 是二級行政區資料。Immich 雖然會下載，但實際上並不會在反地理編碼過程中使用，因此我們只需要保留該檔案以保持相同檔案結構，無需進行任何處理。
 
 ![GeoNames 資料檔案關係圖](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-pipeline/geonames-file-relationships.png "GeoNames 核心檔案之間的關係：cities500.txt 透過 admin1_code 和 admin2_code 參照行政區對照表")
-{style="width:80%; margin: 0 auto; display: block;"}
+{style="width:80%;"}
 
 <!--
 AI Image Prompt:
@@ -168,7 +168,7 @@ this.db
 這個查詢會先用 `earth_box` 縮小搜尋範圍，再用 `earth_distance` 精確排序，最後返回距離最近的那一筆資料。
 
 ![Immich 逆地理編碼流程圖](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-pipeline/immich-reverse-geocoding-flow.png "Immich 的資料匯入與查詢機制：從容器啟動到返回地理位置的完整流程")
-{style="width:80%; margin: 0 auto; display: block;"}
+{style="width:80%;"}
 
 <!--
 AI Image Prompt:
@@ -293,7 +293,7 @@ python main.py release --country-code TH
 這行命令會依序執行 **Cleanup → Prepare → Enhance → LocationIQ → Translate → Pack** 六個階段，從下載原始資料到最終打包，全自動完成約 20 萬筆地理資料的處理。
 
 ![Pipeline 六階段架構圖](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-pipeline/pipeline-6-stages.png "完整的資料處理流程：從環境清理到最終打包的六個階段")
-{style="width:80%; margin: 0 auto; display: block;"}
+{style="width:80%;"}
 
 <!--
 AI Image Prompt:
@@ -584,7 +584,7 @@ params = {
 但翻譯地名並不簡單。GeoNames 的資料品質參差不齊，有些地點有官方中文名，有些只有簡體中文，還有些完全沒有中文資料。為了應對這種複雜情況，我們設計了一套**三層優先級翻譯機制**：
 
 ![翻譯優先級機制](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-pipeline/translation-priority-waterfall.png "三層翻譯優先級：優先使用高品質的 Metadata，其次使用 GeoNames 對照表，最後解析 alternatenames 欄位")
-{style="width:80%; margin: 0 auto; display: block;"}
+{style="width:80%;"}
 
 <!--
 AI Image Prompt:
