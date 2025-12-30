@@ -2,7 +2,7 @@
 title: "Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2025-12-30T13:58:38+08:00
+lastmod: 2025-12-30T14:34:35+08:00
 tags: ["docker", "immich"]
 categories: ["container-platform"]
 series: ["immich-geodata-zh-tw"]

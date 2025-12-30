@@ -2,7 +2,7 @@
 title: "論文筆記 - F2-NeRF: Fast Neural Radiance Field Training with Free Camera Trajectories"
 slug: "f2-nerf"
 date: 2023-07-12T10:26:00+08:00
-lastmod: 2025-12-30T13:58:38+08:00
+lastmod: 2025-12-30T14:34:35+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 params: 
