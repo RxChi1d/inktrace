@@ -53,6 +53,18 @@ assets/css/custom/
 - 所有自訂樣式必須放在專案層級的 `assets/css/custom/` 下
 - 避免在 `custom/` 目錄外放置其他 CSS 檔案（會被自動掃描）
 
+## Blowfish 主題功能查閱準則
+
+為確保準確掌握 Blowfish 主題的原生功能支援，避免重複造輪子：
+
+- **查詢原生功能**：在建議或實作新的 UI 元件、Shortcode 或 Markdown 擴充語法前，**必須**通過搜尋以下檔案來準確瞭解主題設計的功能：
+  - `themes/blowfish/exampleSite/content/docs/shortcodes/index.md` (Shortcodes 總覽)
+  - `themes/blowfish/exampleSite/content/samples/**/index.md` (實作範例與語法展示)
+  - `themes/blowfish/exampleSite/content/docs/front-matter/` (頁面參數設定)
+  - `themes/blowfish/exampleSite/content/docs/configuration/` (全站配置)
+  - `themes/blowfish/exampleSite/content/docs/partials/` (Partials 元件)
+- **優先使用原生語法**：確認主題是否已提供所需功能，並優先使用原生的 Shortcode 或 Markdown 語法。
+
 ## 語言規則
 
 **重要：請嚴格遵循以下語言規則**

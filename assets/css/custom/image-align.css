@@ -1,0 +1,16 @@
+.article-content figure {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.article-content figure img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.article-content figure figcaption {
+  text-align: center;
+}
