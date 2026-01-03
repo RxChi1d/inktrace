@@ -1,0 +1,7 @@
+# AI tool files
+!.codex/
+!.claude/
+!.gemini/
+
+!temp-immich/
+!specs/
