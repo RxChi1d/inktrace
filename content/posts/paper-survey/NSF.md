@@ -2,7 +2,7 @@
 title: "論文筆記 - NSF: Neural Surface Fields for Human Modeling from Monocular Depth Scene Reconstruction"
 slug: "nsf"
 date: 2023-12-06T21:24:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-01-03T22:40:21+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 math: true
@@ -353,43 +353,51 @@ E. 使用 LBS 重新將姿勢接入 human model。
     這是其他的 baseline 無法做到的。
     
     ![mesh-reconstruction-with-arbitrary-resolution](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/mesh-reconstruction-with-arbitrary-resolution.png)
+    { style="width: 60%;"}
 
 {{< gallery >}}
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/03223_shortlong_tilt_twist_left.mp4" 
           loop="true" 
           muted="true" 
-          caption="Reconstruction of subject 03223 shortlong of BuFF dataset."
-          class="grid-w50" >}}
+          caption="Reconstruction of subject 03223 shortlong of BuFF dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00032_shortlong_hips.mp4" 
           loop="true" 
           muted="true" 
-          caption="Reconstruction of subject 00032 shortlong of BuFF dataset."
-          class="grid-w50" >}}
+          caption="Reconstruction of subject 00032 shortlong of BuFF dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00096_shortlong_hips.mp4" 
           loop="true" 
           muted="true" 
-          caption="Reconstruction of subject 00096 shortlong of BuFF dataset."
-          class="grid-w50" >}}
+          caption="Reconstruction of subject 00096 shortlong of BuFF dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/03223_shortshort_shoulders_mill.mp4" 
           loop="true" 
           muted="true" 
-          caption="Reconstruction of subject 03223 shortshort of BuFF dataset."
-          class="grid-w50" >}}
+          caption="Reconstruction of subject 03223 shortshort of BuFF dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00032_shortshort_shoulders_mill.mp4" 
           loop="true" 
           muted="true" 
-          caption="Reconstruction of subject 00032 shortshort of BuFF dataset."
-          class="grid-w50" >}}
+          caption="Reconstruction of subject 00032 shortshort of BuFF dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00096_shortshort_shoulders_mill.mp4" 
           loop="true" 
           muted="true" 
-          caption="Reconstruction of subject 00096 shortshort of BuFF dataset."
-          class="grid-w50" >}}
+          caption="Reconstruction of subject 00096 shortshort of BuFF dataset." >}}
+</div>
 {{< /gallery >}}
 
 ### Efficiency of Neural Surface Field
 
 ![table-2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/table-2.png)
+{ style="width: 60%;"}
 
 - 在這個實驗中，作者使用相同的網路與資料設計三種變體：
     - Volumetric
@@ -404,6 +412,7 @@ E. 使用 LBS 重新將姿勢接入 human model。
 本篇的方法能將泛化神經網路與特定主體的特徵解耦，因此可以使用少量的資料，快速學習新的特定主體的特徵。（10 張深度影像，訓練 10 分鐘）
 
 ![table-3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/table-3.png)
+{ style="width: 60%;"}
 
 在 Tab.3 中呈現，訓練完整的網路需要約 10 小時。
 
@@ -412,6 +421,7 @@ E. 使用 LBS 重新將姿勢接入 human model。
 而其他的方法並沒有這種能力。
 
 ![figure-6](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-6.png)
+{ style="width: 60%;"}
 
 Fig.6 展示了重建結果。
 
@@ -422,41 +432,48 @@ Fig.6 展示了重建結果。
 作者在 BuFF 資料集上訓練模型，然後使用 AIST 資料集的姿勢做人體動畫。
 
 {{< gallery >}}
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/03223_shortlong.mp4" 
           loop="true" 
           muted="true" 
-          caption="Animation of subject 03223 shortlong on AIST dataset."
-          class="grid-w50" >}}
+          caption="Animation of subject 03223 shortlong on AIST dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00032_shortlong.mp4" 
           loop="true" 
           muted="true" 
-          caption="Animation of subject 00032 shortlong on AIST dataset."
-          class="grid-w50" >}}
+          caption="Animation of subject 00032 shortlong on AIST dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00096_shortlong.mp4" 
           loop="true" 
           muted="true" 
-          caption="Animation of subject 00096 shortlong on AIST dataset."
-          class="grid-w50" >}}
+          caption="Animation of subject 00096 shortlong on AIST dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/03223_shortshort.mp4" 
           loop="true" 
           muted="true" 
-          caption="Animation of subject 03223 shortshort on AIST dataset."
-          class="grid-w50" >}}
+          caption="Animation of subject 03223 shortshort on AIST dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00032_shortshort.mp4" 
           loop="true" 
           muted="true" 
-          caption="Animation of subject 00032 shortshort on AIST dataset."
-          class="grid-w50" >}}
+          caption="Animation of subject 00032 shortshort on AIST dataset." >}}
+</div>
+<div class="grid-w50">
 {{< video src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/00096_shortshort.mp4" 
           loop="true" 
           muted="true" 
-          caption="Animation of subject 00096 shortshort on AIST dataset."
-          class="grid-w50" >}}
+          caption="Animation of subject 00096 shortshort on AIST dataset." >}}
+</div>
 {{< /gallery >}}
 
 ### Results on Real Data
 
 ![figure-8](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-8.png)
+{ style="width: 60%;"}
 
 本篇的方法在真實資料集也比以往的方法有更好的表面結構。
 
@@ -467,6 +484,7 @@ Fig.6 展示了重建結果。
 Baseline 的方法並沒有這樣的能力。
 
 ![figure-9](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-9.png)
+{ style="width: 60%;"}
 
 Fig.9 展示本篇 textured 3D avatar 的範例。
 
