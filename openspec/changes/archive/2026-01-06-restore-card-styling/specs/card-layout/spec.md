@@ -1,21 +1,6 @@
-# card-layout Specification
+# Spec Delta: card-layout
 
-## Purpose
-TBD - created by archiving change restore-native-cards. Update Purpose after archive.
-## Requirements
-### Requirement: Article Card Link Structure
-The article card MUST use a Stretched Link pattern instead of a wrapper Anchor tag to make the entire card clickable.
-
-#### Scenario: Clicking the card background
--   **Given** a user is on a list page (e.g., Homepage, Posts).
--   **When** the user clicks on the whitespace or background of an article card.
--   **Then** the browser navigates to the article detail page.
-
-#### Scenario: HTML Validity
--   **Given** the rendered HTML of a list page.
--   **When** inspected.
--   **Then** the article card `div` or `article` tag MUST NOT be enclosed in an `<a>` tag.
--   **And** the article title `<a>` tag MUST contain classes (e.g., `before:inset-0`) that expand its click area.
+## ADDED Requirements
 
 ### Requirement: Card Visual Enhancement
 Article cards MUST provide visual enhancements including glassmorphism background, shadows, and hover effects to improve user experience while maintaining Blowfish native HTML structure.
@@ -107,4 +92,3 @@ All deviations from the original custom styling MUST be documented to enable inf
 - **WHEN** documenting style differences
 - **THEN** the file MUST clearly identify these aspects (e.g., if `article-card-hover` class hook is unavailable)
 - **AND** it MUST explain the technical constraints preventing restoration
-

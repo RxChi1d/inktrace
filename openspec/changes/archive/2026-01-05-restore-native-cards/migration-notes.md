@@ -82,3 +82,4 @@
   - 回到 Blowfish 原生卡片：**無背景色、無 hover 背景變色**。
   - 邊框改回原生規格：`rounded-lg`、`border-neutral-300 dark:border-neutral-600`（視覺上比原自訂圓角更小、邊框色更深）。
 - **後續行動**: 若要保留原自訂外觀，需以純 CSS 方式重新加入，或等待上游提供可選樣式。
+- **狀態更新**: 已建立 `openspec/changes/restore-card-styling/` 進行視覺樣式恢復（包含第二層 hover 疊加與原始 RGBA 還原）。
