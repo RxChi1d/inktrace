@@ -1,30 +1,6 @@
-# taxonomy-display Specification
+# Taxonomy Display Specification (Delta)
 
-## Purpose
-TBD - created by archiving change restore-native-cards. Update Purpose after archive.
-## Requirements
-### Requirement: Custom Visibility Parameters Removal
-The system SHALL NOT support `showCategories` and `showTags` configuration parameters.
-
-#### Scenario: Configuration Cleanup
--   **Given** the `config/_default/params.toml` file.
--   **When** examined.
--   **Then** `showCategories` and `showTags` keys MUST be absent.
-
-### Requirement: Taxonomy Badge Links
-Taxonomy badges MUST be rendered as standard HTML Anchor tags (`<a>`).
-
-#### Scenario: Badge Interactivity
--   **Given** a taxonomy badge on an article card.
--   **When** inspected.
--   **Then** it MUST be an `<a>` tag with an `href` attribute pointing to the taxonomy term page.
--   **And** it MUST NOT use `onclick` JavaScript handlers for navigation.
-
-#### Scenario: Click Behavior
--   **Given** a taxonomy badge.
--   **When** clicked.
--   **Then** the browser navigates to the taxonomy term page.
--   **And** the click MUST NOT trigger the parent card's article link (z-index handling).
+## ADDED Requirements
 
 ### Requirement: Category Badge 顏色區分
 Category badges SHALL use green color scheme to distinguish from Tag badges.
@@ -79,4 +55,3 @@ All unused project-level overrides and dead code MUST be removed.
 - **WHEN** 移除專案層級 badge.html
 - **THEN** 相關的自訂 CSS class (`.badge-custom`, `.badge-inner`, `.badge-category`, `.badge-tag`) 被移除
 - **AND** `assets/css/custom/global.css` 中的未使用樣式被清理
-

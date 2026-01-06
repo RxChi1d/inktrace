@@ -11,20 +11,3 @@
   min-width: 260px;
 }
 
-/* Default badge colors if no specific type is matched, or for other badges */
-.badge-custom:not(.badge-category):not(.badge-tag) {
-  --badge-border-color: rgba(var(--color-primary-400), 1);
-  --badge-text-color: rgba(var(--color-primary-700), 1);
-}
-.dark .badge-custom:not(.badge-category):not(.badge-tag) {
-  --badge-border-color: rgba(var(--color-primary-600), 1);
-  --badge-text-color: rgba(var(--color-primary-400), 1);
-}
-
-/* General badge styling using the CSS variables */
-.badge-custom .badge-inner {
-  border-width: 1px; /* Ensure border is applied */
-  border-style: solid; /* Ensure border is applied */
-  border-color: var(--badge-border-color);
-  color: var(--badge-text-color);
-}
