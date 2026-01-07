@@ -2,9 +2,9 @@
 title: "Immich 繁體中文地理資料技術解析 (三)：Wikidata 智慧翻譯引擎"
 slug: "immich-geodata-tech-03-translation"
 date: 2025-11-30T10:15:00+08:00
-lastmod: 2025-12-29T16:03:17+08:00
+lastmod: 2026-01-07T14:02:36+08:00
 tags: ["immich", "wikidata", "sparql", "knowledge-graph"]
-categories: ["Engineering"]
+categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 4
 draft: true

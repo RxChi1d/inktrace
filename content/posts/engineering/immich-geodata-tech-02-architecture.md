@@ -2,9 +2,9 @@
 title: "Immich 繁體中文地理資料技術解析 (二)：國家處理器架構與實作"
 slug: "immich-geodata-tech-02-handler-architecture"
 date: 2025-12-11T16:00:00+08:00
-lastmod: 2025-12-30T14:34:35+08:00
+lastmod: 2026-01-07T14:02:36+08:00
 tags: ["immich", "software-architecture", "etl", "design-pattern"]
-categories: ["Engineering"]
+categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 3
 draft: true

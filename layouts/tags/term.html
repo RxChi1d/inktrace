@@ -25,7 +25,7 @@
       <path stroke-linecap="round" stroke-linejoin="round"
             d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5" />
     </svg>
-    {{ (i18n .Data.Term) | default .Title }}
+    {{ .Title }}
   </h1>
   <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
     {{ partial "article-meta/term.html" (dict "context" . "scope" "single") }}

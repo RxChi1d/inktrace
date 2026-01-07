@@ -2,9 +2,9 @@
 title: "Immich 繁體中文地理資料技術解析 (四)：臺灣地理資料在地化實踐"
 slug: "immich-geodata-tech-04-taiwan"
 date: 2025-11-30T10:30:00+08:00
-lastmod: 2025-12-29T16:03:17+08:00
+lastmod: 2026-01-07T14:02:36+08:00
 tags: ["immich", "gis", "taiwan", "open-data"]
-categories: ["Engineering"]
+categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 5
 draft: true

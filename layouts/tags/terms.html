@@ -29,7 +29,7 @@
         <path stroke-linecap="round" stroke-linejoin="round"
               d="M6 6h.008v.008H6V6Z" />
       </svg>
-      {{ (i18n .Name) | default .Name }}
+      {{ .Title }}
     </h1>
     <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
       {{ partial "article-meta/taxonomy.html" (dict "context" . "scope" "single") }}
@@ -49,7 +49,7 @@
   <section class="flex flex-wrap gap-4 mt-4 tags-list">
     {{ range .Data.Terms }}
       <a href="{{ .Page.RelPermalink }}" class="inline-flex items-center rounded-lg border border-sky-400/40 px-4 py-2 hover:bg-sky-500/10 transition">
-        <span class="tag-title text-sky-300 font-medium">{{ (i18n (.Page.Title | lower)) | default .Page.Title }}</span>
+        <span class="tag-title text-sky-300 font-medium">{{ .Page.Title }}</span>
         <span class="tag-count ml-1 text-sm text-neutral-400">{{ .Count }}</span>
       </a>
     {{ end }}
