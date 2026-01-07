@@ -47,6 +47,12 @@ echo "$staged_output" | while IFS= read -r raw_escaped_file_path; do
     continue
   fi
 
+  # Skip taxonomy content to avoid noisy metadata updates
+  if [[ "$file_path" == content/categories/* || "$file_path" == content/tags/* ]]; then
+    echo "Skipping taxonomy content file: $file_path"
+    continue
+  fi
+
   # 1. Add date if missing
   if ! grep -q '^date:' "$file_path"; then
     if grep -q '^slug:' "$file_path"; then
