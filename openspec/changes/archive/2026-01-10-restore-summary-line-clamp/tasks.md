@@ -1,0 +1,22 @@
+## 1. Implementation
+- [x] 1.1 透過 `gh pr diff 2714 -R nunocoracao/blowfish` 確認需套用的程式碼差異（忽略多語系文件）。
+- [x] 1.2 建立 `layouts/partials/article-link/` 目錄，並以 `cp` 從 `themes/blowfish/layouts/partials/article-link/` 複製以下檔案：
+  - `card.html`
+  - `card-related.html`
+  - `simple.html`
+  - `_shortcode.html`
+- [x] 1.3 依 PR #2714 修改上述 partial：
+  - `article` 增加 `article-link--*` class。
+  - Summary 區塊新增 `article-link__summary` class。
+  - `card.html` / `card-related.html` Summary 套用 `line-clamp-5`。
+  - `simple.html` Summary 套用 `line-clamp-3`。
+  - `_shortcode.html` Summary 依 `compactSummary` 決定是否套用 `line-clamp-3`。
+- [x] 1.4 新增或更新專案層級 CSS 檔案，補上 `.line-clamp-5`（避免改動 `themes/blowfish/` 編譯檔）。
+- [x] 1.5 更新 `BLOWFISH-OVERRIDES.md`，加入本次新增覆蓋模板、來源 Commit Hash、覆蓋原因、功能與必要性，並標註對齊 PR #2714。
+- [x] 1.6 更新 `MIGRATION_STATUS.md`，將 Summary Line Clamp 從「等待上游更新」移至「已完成」，並加註「暫時覆蓋，等待上游更新後回收」。
+- [x] 1.7 基礎驗證：清空既有 `public/` 後，以 Hugo 產生最新 HTML（輸出至 `public/`），確保渲染結果對應本次開發內容。
+- [x] 1.8 使用本地 `hugo server` 與瀏覽器驗證（建議含 light/dark、zh-TW/en），並透過 Chrome DevTools 進行進階檢查。（`hugo server` 已在另一個終端啟動，可直接使用 Chrome DevTools）：
+  - Card list（`article-link/card.html`）摘要為 5 行內截斷。
+  - Related card（`card-related.html`）摘要為 5 行內截斷。
+  - Simple list（`simple.html`）摘要為 3 行內截斷。
+  - Shortcode list（`_shortcode.html`）摘要在 `compactSummary=true` 時為 3 行內截斷。

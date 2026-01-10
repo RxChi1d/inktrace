@@ -1,0 +1,12 @@
+/*
+Line clamp utilities to complement Blowfish theme.
+Based on PR #2714: https://github.com/nunocoracao/blowfish/pull/2714
+Note: Blowfish natively includes .line-clamp-3; this file adds .line-clamp-5.
+*/
+
+.line-clamp-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
