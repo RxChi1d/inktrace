@@ -36,4 +36,4 @@ venv/
 .idea/
 
 temp-immich/
-specs/
+/specs/

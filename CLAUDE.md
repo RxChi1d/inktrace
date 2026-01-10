@@ -72,6 +72,28 @@ assets/css/custom/
 - 所有自訂樣式必須放在專案層級的 `assets/css/custom/` 下
 - 避免在 `custom/` 目錄外放置其他 CSS 檔案（會被自動掃描）
 
+## Taxonomy 管理規範
+
+為確保多語言分類 (Taxonomy) 顯示正確，本專案採用 Hugo 原生內容機制管理 Taxonomy 標題。
+
+### 單一真實來源 (SSOT)
+
+- `data/taxonomy/zh-TW.yaml`: 繁體中文翻譯
+- `data/taxonomy/en.yaml`: 英文翻譯
+
+### 內容生成
+
+透過 `scripts/generate-taxonomy-index.sh` 自動產生 `content/{categories,tags}/<term>/_index.<lang>.md`。此腳本確保：
+1. 每個 Term 都有對應的 `_index` 檔案
+2. Front Matter 中的 `title` 與 SSOT 保持同步
+
+### 驗證機制
+
+`script/validate-taxonomy-terms.sh` 會在 commit 前檢查：
+1. Term 必須為全小寫 kebab-case
+2. Term 必須存在於 SSOT 中
+3. SSOT 必須包含完整的 zh-TW 與 en 翻譯
+
 ## Blowfish 主題功能查閱準則
 
 為確保準確掌握 Blowfish 主題的原生功能支援，避免重複造輪子：
@@ -171,3 +193,7 @@ assets/css/custom/
 | 互動式選擇 | `fzf` | 手動篩選 |
 | 處理 JSON | `jq` | `python -m json.tool` |
 | 處理 YAML/XML | `yq` | 手動解析 |
+
+## Blowfish 覆蓋模板提醒
+- 本專案有覆蓋 Blowfish 原生模板，清單見 `BLOWFISH-OVERRIDES.md`。
+- 更新 Blowfish 主題版本時，必須比對上述清單並確認覆蓋檔案是否需要同步更新。

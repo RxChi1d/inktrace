@@ -1,0 +1,21 @@
+## 1. Implementation
+- [x] 1.1 確認修正策略與範圍（icon 色彩、tags inline 排版、selector 汙染、容器寬度限制）。
+- [x] 1.2 移除 `layouts/tags/` 與 `layouts/categories/` 自訂模板，回歸 Blowfish 原生模板路徑。
+- [x] 1.3 從 Blowfish 原生模板複製 `themes/blowfish/layouts/_default/terms.html` 至 `layouts/_default/terms.html`，僅在最外層容器加入 taxonomy hook（例如 `data-taxonomy`）。
+- [x] 1.4 從 Blowfish 原生模板複製 `themes/blowfish/layouts/_default/term.html` 至 `layouts/_default/term.html`，僅在最外層容器加入 taxonomy hook（例如 `data-taxonomy`）。
+- [x] 1.5 從 Blowfish 原生模板複製 `themes/blowfish/layouts/partials/term-link/text.html` 至 `layouts/partials/term-link/text.html`，並套用以下調整：
+  - 移除 tags item 的寬度 class（`w-full`, `sm:w-1/2`, `md:w-1/3`…）以恢復 inline tag cloud。
+  - Categories icon 改用 inline SVG（可繼承主題顏色）。
+  - 保留 Categories 的 Post/Posts 單複數邏輯與原生結構。
+- [x] 1.6 收斂 CSS selector 範圍（鎖定 `section.flex.flex-wrap`），避免 term 頁文章列表受到影響。
+- [x] 1.7 修正 tags 容器寬度限制（覆寫 `max-w-prose` / `-mx-2` 影響），恢復原設計的排列寬度。
+- [x] 1.8 調整 `assets/css/custom/tags.css` 與 `assets/css/custom/categories.css`，以原生結構與 hook 為主達成既有視覺。
+- [x] 1.9 建立專案根目錄 `BLOWFISH-OVERRIDES.md`，記錄本次覆蓋的模板清單、來源版本 (Source Commit Hash)、覆蓋原因、功能、必要性。
+- [x] 1.10 更新 `CLAUDE.md` 新增提醒章節，指出需在 Blowfish 升級時檢查覆蓋模板與 `BLOWFISH-OVERRIDES.md`。
+- [x] 1.11 微調 categories 卡片內 icon 與文字間距，避免 icon 過於貼近文字。
+- [x] 1.12 以本地 `hugo server` 搭配 Chrome DevTools 進行驗證，確保 tags/categories 在 zh-TW 與 en 介面樣式、功能一致：
+    - [x] Tags 列表頁 (Terms) 是否為 inline tag cloud，間距與寬度一致
+    - [x] Categories 列表頁 icon 色彩是否隨深/淺色切換
+    - [x] 單一 Tag/Category 頁 (Term) 文章卡片樣式未被汙染
+    - [x] Categories 的 Post/Posts 單複數顯示邏輯正確
+    - [x] 手機版 RWD 顯示確認

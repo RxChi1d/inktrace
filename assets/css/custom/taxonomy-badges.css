@@ -1,0 +1,27 @@
+/*
+  Taxonomy Badge Colors
+  Distinguish Categories (Green) from Tags (Blue) using attribute selectors.
+  Relies on Blowfish native badge structure: span.flex.cursor-pointer > span
+*/
+
+/* Category Badges (Green) */
+a[href*="/categories/"] span.flex.cursor-pointer > span {
+  border-color: #22c55e; /* green-500 */
+  color: #15803d;        /* green-700 */
+}
+
+.dark a[href*="/categories/"] span.flex.cursor-pointer > span {
+  border-color: #4ade80; /* green-400 */
+  color: #86efac;        /* green-300 */
+}
+
+/* Tag Badges (Blue) */
+a[href*="/tags/"] span.flex.cursor-pointer > span {
+  border-color: #0ea5e9; /* sky-500 */
+  color: #0369a1;        /* sky-700 */
+}
+
+.dark a[href*="/tags/"] span.flex.cursor-pointer > span {
+  border-color: #38bdf8; /* sky-400 */
+  color: #7dd3fc;        /* sky-300 */
+}

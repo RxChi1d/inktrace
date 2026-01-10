@@ -4,25 +4,6 @@ Tags: 標籤
 Posts: 文章
 Home: 主頁
 
-# Categories
-linux-technical: Linux 技術
-paper-survey: 論文筆記
-container-platform: 容器化平台
-
-# Tags
-nerf: NeRF
-neus: NeuS
-3dgs: 3DGS
-human-reconstruction: 人體重建
-debian-ubuntu: Debian/Ubuntu
-package: 套件
-docker: Docker
-grafana: Grafana
-immich: Immich
-nginx-proxy-manager: Nginx Proxy Manager
-monitor: 監控
-nginx: Nginx
-
 # Admonition (override to keep English titles)
 admonition:
   abstract: abstract

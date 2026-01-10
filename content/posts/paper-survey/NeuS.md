@@ -2,8 +2,8 @@
 title: "論文筆記 - NeuS: Learning Neural Implicit Surfaces by Volume Rendering for Multi-view Reconstruction"
 slug: "neus"
 date: 2024-01-16T20:48:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
-tags: ["NeuS"]
+lastmod: 2026-01-07T14:02:36+08:00
+tags: ["neus"]
 categories: ["paper-survey"]
 math: true
 ---

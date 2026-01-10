@@ -3,22 +3,3 @@ Categories: Categories
 Tags: Tags
 Posts: Posts
 Home: Home
-
-# Categories
-linux-technical: Linux Technical
-paper-survey: Paper Survey
-container-platform: Container Platform
-
-# Tags
-nerf: NeRF
-neus: NeuS
-3dgs: 3DGS
-human-reconstruction: Human Reconstruction
-debian-ubuntu: Debian/Ubuntu
-package: Package
-docker: Docker
-grafana: Grafana
-immich: Immich
-nginx-proxy-manager: Nginx Proxy Manager
-monitor: Monitor
-nginx: Nginx
