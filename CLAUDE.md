@@ -193,3 +193,7 @@ assets/css/custom/
 | 互動式選擇 | `fzf` | 手動篩選 |
 | 處理 JSON | `jq` | `python -m json.tool` |
 | 處理 YAML/XML | `yq` | 手動解析 |
+
+## Blowfish 覆蓋模板提醒
+- 本專案有覆蓋 Blowfish 原生模板，清單見 `BLOWFISH-OVERRIDES.md`。
+- 更新 Blowfish 主題版本時，必須比對上述清單並確認覆蓋檔案是否需要同步更新。
