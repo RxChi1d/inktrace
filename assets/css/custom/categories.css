@@ -1,9 +1,11 @@
-/* ===== Categories Terms Page ===== */
+/* ===== Categories Terms Page - System Glass ===== */
 
+/* Grid Layout with Mobile Optimization */
 [data-taxonomy="categories"] section.flex.flex-wrap {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
+  /* Default Desktop: ~260px wide columns */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--gap-taxonomy);
   padding: 0.5rem 0;
   max-width: 100%;
   margin-left: 0;
@@ -11,38 +13,56 @@
   overflow: visible;
 }
 
+/* Mobile: Single column or tighter grid */
+@media (max-width: 640px) {
+  [data-taxonomy="categories"] section.flex.flex-wrap {
+    grid-template-columns: 1fr; /* Full width cards on mobile */
+  }
+}
+
+/* Base Card Styling - System Glass Texture */
 [data-taxonomy="categories"] section.flex.flex-wrap article {
   width: 100%;
   margin: 0;
   padding: 0;
   overflow: visible;
   border-radius: 0.75rem;
+
+  /* Glass Background */
   background-color: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* High-light Border (System Look) */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .dark [data-taxonomy="categories"] section.flex.flex-wrap article {
-  background-color: rgba(26, 32, 44, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: rgba(30, 30, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Hover State - System Selection Metaphor */
 [data-taxonomy="categories"] section.flex.flex-wrap article:hover {
+  /* Brightness lift + subtle cool tint */
   background-color: rgba(255, 255, 255, 0.85);
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.8); /* Inner highlight */
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .dark [data-taxonomy="categories"] section.flex.flex-wrap article:hover {
-  background-color: rgba(45, 55, 72, 0.85);
+  background-color: rgba(45, 55, 75, 0.7); /* Slight blue-shift gray */
+  border-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.25);
 }
 
+/* Typography & Layout */
 [data-taxonomy="categories"] section.flex.flex-wrap article > h2 {
   margin: 0;
 }
@@ -68,6 +88,7 @@
   align-items: center;
 }
 
+/* Header Icon - Neutral Gray & Opacity */
 [data-taxonomy="categories"] h1::before {
   content: "";
   display: inline-block;
@@ -75,11 +96,16 @@
   height: 1.5rem;
   margin-right: 0.75rem;
   flex-shrink: 0;
-  background-color: #737373;
+
+  /* Neutral System Gray - Matching Text */
+  background-color: currentColor;
+  opacity: 0.85; /* Slight transparency for depth */
+
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .dark [data-taxonomy="categories"] h1::before {
-  background-color: #a3a3a3;
+  background-color: currentColor;
+  opacity: 0.9;
 }
