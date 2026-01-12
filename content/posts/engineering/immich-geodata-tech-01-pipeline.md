@@ -2,10 +2,10 @@
 title: "Immich 繁體中文地理資料技術解析 (一)：Pipeline 六階段實作"
 slug: "immich-geodata-tech-01-pipeline"
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2025-12-30T14:34:35+08:00
+lastmod: 2026-01-07T14:02:36+08:00
 description: "詳解 immich-geodata-zh-tw 專案的六階段資料處理管線：從下載 GeoNames 原始資料、資料增強、翻譯到最終打包的完整技術實作，讓你的 Immich 相簿擁有精準的繁體中文地名標註。"
 tags: ["immich", "geodata", "geonames", "reverse-geocoding", "python", "polars", "data-pipeline"]
-categories: ["Engineering"]
+categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 2
 ---

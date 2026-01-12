@@ -1,0 +1,44 @@
+/*
+Card visual enhancements for Blowfish native article cards.
+Applies glassmorphism effect to improve visual hierarchy.
+
+Selector: article.overflow-hidden.rounded-lg.border
+Targets: Blowfish's native card component structure
+
+Design Notes:
+- Uses RGBA instead of opacity to maintain text contrast
+- backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103+)
+- Preserves Blowfish's native border-radius and structure
+- Hover state provides tactile feedback without overlay layers
+*/
+
+article.overflow-hidden.rounded-lg.border {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.65);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode inherits backdrop-filter from light mode */
+.dark article.overflow-hidden.rounded-lg.border {
+  background-color: rgba(26, 32, 44, 0.7);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover state - Subtle lift effect */
+article.overflow-hidden.rounded-lg.border:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark article.overflow-hidden.rounded-lg.border:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}

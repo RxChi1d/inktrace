@@ -2,9 +2,9 @@
 title: "Immich 繁體中文地理資料技術解析 (五)：東亞地區擴展策略——日本與南韓"
 slug: "immich-geodata-tech-05-east-asia"
 date: 2025-11-30T11:00:00+08:00
-lastmod: 2025-12-29T16:03:17+08:00
+lastmod: 2026-01-07T14:02:36+08:00
 tags: ["immich", "gis", "japan", "korea", "localization"]
-categories: ["Engineering"]
+categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 6
 draft: true

@@ -1,0 +1,18 @@
+/* ===== Responsive Spacing System ===== */
+/* Mobile-first spacing for taxonomy pages */
+
+:root {
+  --gap-taxonomy: 0.5rem;  /* 8px for mobile */
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gap-taxonomy: 0.75rem;  /* 12px for tablets */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gap-taxonomy: 1rem;  /* 16px for desktop */
+  }
+}

@@ -78,8 +78,6 @@ showReadingTime = true
 showRelatedContent = true
 showTableOfContents = true
 showTaxonomies = true # Show all taxonomies (categories & tags)
-showCategories = false # Show categories (only if showTaxonomies = false)
-showTags = false # Show tags (only if showTaxonomies = false)
 showWordCount = true
 # sharingLinks = [ "linkedin", "twitter", "bluesky", "mastodon", "reddit", "pinterest", "facebook", "email", "whatsapp", "telegram"]
 showZenMode = false
@@ -100,7 +98,6 @@ showLikes = false
 showSummary = true
 showTableOfContents = false
 showViews = false
-summaryLineClamp = 3 # 0 means no line limit
 
 [sitemap]
 excludedKinds = ["taxonomy", "term"]

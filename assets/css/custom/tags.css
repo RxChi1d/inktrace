@@ -1,95 +1,161 @@
-/* === Tag theme tokens === */
-:root {
-  --tag-accent-h: 198;
-  --tag-accent-s: 93%;
-  --tag-accent-l: 53%;          /* Light‑mode Hue/Sat/Light */
-  --tag-accent-bg-light: 0.10;  /* BG opacity for light mode */
+/*
+Tags taxonomy styling for inline tag cloud layout.
+Uses data-taxonomy="tags" attribute (added in layouts/_default/term(s).html)
+for precise targeting without polluting Blowfish's native class system.
+*/
+
+/* ===== Tags Terms Page - Soft Purple Pill Style ===== */
+
+/* Container: responsive flex with generous spacing */
+[data-taxonomy="tags"] section.flex.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* Default Desktop: 1rem */
+  padding: 0.5rem 0;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  overflow: visible;
 }
 
-[data-theme="dark"] {
-  --tag-accent-l: 60%;          /* Brighter text/border in dark mode */
-  --tag-accent-bg-light: 0.18;  /* Stronger BG tint in dark mode */
+/* Mobile: Tighter gap for better space utilization */
+@media (max-width: 640px) {
+  [data-taxonomy="tags"] section.flex.flex-wrap {
+    gap: 0.5rem;
+  }
 }
 
-/* Base Tag styling */
-section.flex.flex-wrap.gap-4.mt-4 > a {
+/*
+Tag pill styling with soft purple theme
+Using RGBA for background to maintain contrast with backdrop-filter
+*/
+[data-taxonomy="tags"] article {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.85rem; /* 稍微增加內邊距 */
-  border-radius: 0.75rem; /* 更柔和的圓角 */
-  background-color: rgba(255, 255, 255, 0.65); /* 輕微增加不透明度 */
-  backdrop-filter: blur(10px); /* 增強模糊效果 */
-  border: 1px solid rgba(0, 0, 0, 0.1); /* 調整為帶有少量灰階的邊框以增加對比度 */
-  color: #1a202c; /* 稍暗的文字顏色，增加對比度 (類似 gray-900) */
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px; /* Full pill shape */
+
+  /* Soft purple tint */
+  background-color: rgba(79, 70, 229, 0.06);
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  color: #4F46E5; /* Indigo 600 */
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* 更平滑的過渡 */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 細微陰影 */
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-/* Base Tag styling (Dark mode) */
-.dark section.flex.flex-wrap.gap-4.mt-4 > a {
-  background-color: rgba(26, 32, 44, 0.7); /* 更深邃精緻的背景 (類似帶透明度的 gray-800) */
-  border: 1px solid rgba(255, 255, 255, 0.15); /* 深色模式下更細微的邊框 */
-  color: #e2e8f0; /* 更亮的文字顏色 (類似 gray-200) */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 深色模式陰影 */
+/* Dark mode with violet tint */
+.dark [data-taxonomy="tags"] article {
+  background-color: rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  color: #c4b5fd; /* Violet 300 */
+  box-shadow: none;
 }
 
-/* Tag Hover effect */
-section.flex.flex-wrap.gap-4.mt-4 > a:hover {
-  background-color: rgba(255, 255, 255, 0.85); /* 懸停時更亮 */
-  transform: translateY(-3px); /* 輕微增加上移幅度 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 懸停時增強陰影 */
-  border-color: rgba(0, 0, 0, 0.15); /* 懸停時邊框顏色也調整 */
+/* Hover State - Lift and intensify */
+[data-taxonomy="tags"] article:hover {
+  transform: translateY(-2px);
+  background-color: rgba(79, 70, 229, 0.12);
+  border-color: rgba(79, 70, 229, 0.4);
+  box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.15);
 }
 
-/* Tag Hover effect (Dark mode) */
-.dark section.flex.flex-wrap.gap-4.mt-4 > a:hover {
-  background-color: rgba(45, 55, 72, 0.85); /* 精緻的深色懸停背景 (類似帶透明度的 gray-700) */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 懸停時增強深色陰影 */
-  border-color: rgba(255, 255, 255, 0.25);
+.dark [data-taxonomy="tags"] article:hover {
+  background-color: rgba(167, 139, 250, 0.2);
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 4px 12px -2px rgba(139, 92, 246, 0.2);
 }
 
-/* Badge styling */
-section.flex.flex-wrap.gap-4.mt-4 > a .tag-count {
-  margin-left: 0.6rem;
-  padding: 0.15rem 0.5rem;
-  background-color: rgba(0, 0, 0, 0.08); /* 稍微更明顯的背景 */
-  border-radius: 0.375rem; /* 與主體一致的柔和圓角 */
-  font-size: 0.7rem; /* 略微縮小字體以優化層級 */
-  font-weight: 600;
-  color: inherit; /* 繼承父元素 <a> 的顏色 */
-  transition: background-color 0.3s ease;
+/* Typography & Content Layout - Simplified selectors */
+[data-taxonomy="tags"] article h2 {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  line-height: 1;
 }
 
-/* hashtag 圖示：維持辨識；稍微拉高透明度以呼應主色 */
-.tags-list > a::before {
+[data-taxonomy="tags"] article h2 a {
+  color: inherit;
+  font-size: 0.95rem;
+  text-decoration: none !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Hashtag prefix for visual consistency */
+[data-taxonomy="tags"] article h2 a::before {
   content: "#";
-  margin-right: 0.45rem;
-  font-weight: 700;
-  opacity: 0.65;
-  pointer-events: none;
+  margin-right: 0.3rem;
+  font-weight: 400;
+  opacity: 0.6;
+  font-size: 0.9em;
 }
 
-/* Specific .tags-list Tag styling (Light mode) */
-section.flex.flex-wrap.gap-4.mt-4.tags-list > a {
-  border-color: #4F46E5; /* indigo-600 */
-  color: #4F46E5;
-  background-color: rgba(79, 70, 229, 0.15);
-  font-size: 1rem;
+/* Count badge - Integrated styling */
+[data-taxonomy="tags"] article h2 span.text-neutral-400 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  min-width: 1.25rem;
+
+  /* Subtle background for integration */
+  background-color: rgba(79, 70, 229, 0.08);
+  color: inherit;
+
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+
+  transition: background-color 0.2s ease;
 }
 
-/* Specific .tags-list Tag styling (Dark mode) */
-.dark section.flex.flex-wrap.gap-4.mt-4.tags-list > a {
-  border-color: #18f4f7;
-  color: #18f4f7;
-  background-color: rgba(24, 244, 247, 0.24);
-  font-size: 1rem;
+.dark [data-taxonomy="tags"] article h2 span.text-neutral-400 {
+  background-color: rgba(167, 139, 250, 0.15);
 }
 
-/* Specific .tags-list Badge styling */
-section.flex.flex-wrap.gap-4.mt-4.tags-list > a .tag-count {
-  background-color: color-mix(in srgb, hsl(var(--tag-accent-h) var(--tag-accent-s) var(--tag-accent-l)) 25%, transparent);
+/* Hide the middot separator (not needed in pill layout) */
+[data-taxonomy="tags"] article h2 span.text-primary-500 {
+  display: none;
 }
 
+/* ===== Tags Term Single Page (header icon) ===== */
+[data-taxonomy="tags"] h1 {
+  display: flex;
+  align-items: center;
+}
+
+/*
+Header Icon using currentColor for theme adaptability
+Hash symbol SVG embedded as data URI
+*/
+[data-taxonomy="tags"] h1::before {
+  content: "";
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+
+  /* Use currentColor to inherit text color */
+  background-color: currentColor;
+  opacity: 0.8;
+
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5' /%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5' /%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.dark [data-taxonomy="tags"] h1::before {
+  opacity: 0.9;
+}

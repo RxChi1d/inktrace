@@ -1,63 +1,124 @@
-.category-list {
+/*
+Categories taxonomy styling for terms list and term pages.
+Uses data-taxonomy="categories" attribute (added in layouts/_default/term(s).html)
+for precise targeting without polluting Blowfish's native class system.
+*/
+
+/* ===== Categories Terms Page - System Glass ===== */
+
+/* Grid Layout with Mobile Optimization */
+[data-taxonomy="categories"] section.flex.flex-wrap {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  padding: 0.5rem 0; /* 保留上下 padding 給陰影空間 */
-}
-.category-item{
-  text-decoration:none;
-  border-radius:0.75rem;   /* 更柔和的圓角 */
-  background-color: rgba(255, 255, 255, 0.65); /* 淺色模式毛玻璃背景色 */
-  backdrop-filter: blur(10px); /* 毛玻璃效果 */
-  border: 1px solid rgba(0, 0, 0, 0.1); /* 邊框 */
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* 過渡效果 */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 陰影 */
-}
-.dark .category-item {
-  background-color: rgba(26, 32, 44, 0.7); /* 深色模式毛玻璃背景色 */
-  border: 1px solid rgba(255, 255, 255, 0.15); /* 深色模式邊框 */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 深色模式陰影 */
-}
-.category-item:hover{
-  background-color: rgba(255, 255, 255, 0.85); /* 淺色模式懸停背景 */
-  transform: translateY(-3px); /* 懸停上移效果 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 懸停陰影 */
-  border-color: rgba(0, 0, 0, 0.15); /* 懸停邊框顏色 */
-}
-.dark .category-item:hover {
-  background-color: rgba(45, 55, 72, 0.85); /* 深色模式懸停背景 */
-  transform: translateY(-3px); /* 懸停上移效果 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 深色模式懸停陰影 */
-  border-color: rgba(255, 255, 255, 0.25); /* 深色模式懸停邊框顏色 */
-}
-.folder-icon{
-  flex-shrink:0;
-  margin-right:.75rem;
-  width: 1.25rem; /* 強制設定寬度，對應 Tailwind w-5 */
-  height: 1.25rem; /* 強制設定高度，對應 Tailwind h-5 */
-  display: inline-block; /* 確保 icon 不會破壞 flex 佈局 */
-}
-.category-item .title{
-  font-weight:600;
-  white-space: nowrap; /* 防止標題換行 */
-}
-.category-item .count{
-  margin-left:.5rem;
-  font-size: 0.9em; /* 相對於父元素調整字體大小 */
-  opacity: 0.8;     /* 讓計數稍微不那麼突出 */
-  white-space: nowrap; /* 防止計數換行 */
+  /* Default Desktop: ~260px wide columns */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--gap-taxonomy);
+  padding: 0.5rem 0;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  overflow: visible;
 }
 
-.size-6 {
-  width: 1em;   /* 24px 對應 1.5rem */
-  height: 1em;
+/* Mobile: Single column for optimal readability */
+@media (max-width: 640px) {
+  [data-taxonomy="categories"] section.flex.flex-wrap {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* ===== Single-item shrink and center ===== */
-.category-item:only-child {
-  width: 100%;         /* 用於配合 max-width 生效 */
-  max-width: 30rem;    /* 當只有一個項目時，限制寬度 */
-  justify-self: start; /* 在 grid 容器中靠左對齊 */
-}
-/* ====================================== */
+/*
+Base Card Styling - Glass morphism effect
+Using RGBA instead of opacity to maintain text contrast.
+backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103+)
+*/
+[data-taxonomy="categories"] article {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border-radius: 0.75rem;
 
+  /* Glass background with blur */
+  background-color: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Subtle border for definition */
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Dark mode inherits backdrop-filter from light mode */
+.dark [data-taxonomy="categories"] article {
+  background-color: rgba(30, 30, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover State - Lift and brighten effect */
+[data-taxonomy="categories"] article:hover {
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.dark [data-taxonomy="categories"] article:hover {
+  background-color: rgba(45, 55, 75, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Typography & Layout - Simplified selectors */
+[data-taxonomy="categories"] article h2 {
+  margin: 0;
+}
+
+[data-taxonomy="categories"] article h2 a {
+  text-decoration: none !important;
+}
+
+/* Category icon spacing */
+[data-taxonomy="categories"] article h2 svg {
+  margin-inline-end: 1rem;
+}
+
+/* Single-item centering optimization */
+[data-taxonomy="categories"] article:only-child {
+  width: 100%;
+  max-width: 30rem;
+  justify-self: start;
+}
+
+/* ===== Categories Term Single Page (header icon) ===== */
+[data-taxonomy="categories"] h1 {
+  display: flex;
+  align-items: center;
+}
+
+/*
+Header Icon using currentColor for theme adaptability
+SVG data URI embedded for performance (no HTTP request)
+*/
+[data-taxonomy="categories"] h1::before {
+  content: "";
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+
+  /* Use currentColor to inherit text color */
+  background-color: currentColor;
+  opacity: 0.85;
+
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.dark [data-taxonomy="categories"] h1::before {
+  opacity: 0.9;
+}
