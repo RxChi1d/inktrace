@@ -1,10 +1,15 @@
 /*
 Card visual enhancements for Blowfish native article cards.
+Applies glassmorphism effect to improve visual hierarchy.
+
 Selector: article.overflow-hidden.rounded-lg.border
-Notes:
-- Keeps native border width/radius/color (see style-differences.md)
-- Uses original RGBA colors for visual fidelity
-- Restores hover feedback via background-color override (no overlay layer)
+Targets: Blowfish's native card component structure
+
+Design Notes:
+- Uses RGBA instead of opacity to maintain text contrast
+- backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103+)
+- Preserves Blowfish's native border-radius and structure
+- Hover state provides tactile feedback without overlay layers
 */
 
 article.overflow-hidden.rounded-lg.border {
@@ -18,12 +23,14 @@ article.overflow-hidden.rounded-lg.border {
   transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
+/* Dark mode inherits backdrop-filter from light mode */
 .dark article.overflow-hidden.rounded-lg.border {
   background-color: rgba(26, 32, 44, 0.7);
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Hover state - Subtle lift effect */
 article.overflow-hidden.rounded-lg.border:hover {
   background-color: rgba(0, 0, 0, 0.03);
   border-color: rgba(0, 0, 0, 0.15);
@@ -34,9 +41,4 @@ article.overflow-hidden.rounded-lg.border:hover {
   background-color: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.25);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Remove trailing spacer in all article cards. */
-article.overflow-hidden.rounded-lg.border > div.px-6.pt-4.pb-2 {
-  padding: 0;
 }

@@ -1,7 +1,13 @@
 /*
-  Taxonomy Badge Colors
-  Distinguish Categories (Green) from Tags (Blue) using attribute selectors.
-  Relies on Blowfish native badge structure: span.flex.cursor-pointer > span
+Taxonomy Badge Colors
+Distinguish Categories (Green) from Tags (Blue) using href attribute selectors.
+Relies on Blowfish native badge structure: span.flex.cursor-pointer > span
+
+Selection Strategy:
+- Uses `a[href*="/categories/"]` and `a[href*="/tags/"]` to differentiate badges
+- Assumes all /categories/ and /tags/ links are taxonomy links (no external links)
+- Alternative: Could use data attributes, but href selector is simpler and reliable
+  for this use case where taxonomy URLs follow Hugo's standard pattern
 */
 
 /* Category Badges (Green) */

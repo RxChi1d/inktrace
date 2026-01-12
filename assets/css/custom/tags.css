@@ -1,4 +1,10 @@
-/* ===== Tags Terms Page - Soft Purple Refined ===== */
+/*
+Tags taxonomy styling for inline tag cloud layout.
+Uses data-taxonomy="tags" attribute (added in layouts/_default/term(s).html)
+for precise targeting without polluting Blowfish's native class system.
+*/
+
+/* ===== Tags Terms Page - Soft Purple Pill Style ===== */
 
 /* Container: responsive flex with generous spacing */
 [data-taxonomy="tags"] section.flex.flex-wrap {
@@ -12,21 +18,25 @@
   overflow: visible;
 }
 
+/* Mobile: Tighter gap for better space utilization */
 @media (max-width: 640px) {
   [data-taxonomy="tags"] section.flex.flex-wrap {
-    gap: 0.5rem; /* Mobile: Tighter packing */
+    gap: 0.5rem;
   }
 }
 
-/* Tag pill styling */
-[data-taxonomy="tags"] section.flex.flex-wrap article {
+/*
+Tag pill styling with soft purple theme
+Using RGBA for background to maintain contrast with backdrop-filter
+*/
+[data-taxonomy="tags"] article {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  border-radius: 9999px; /* Full pill */
+  border-radius: 9999px; /* Full pill shape */
 
-  /* Base Colors - Soft Purple Tint */
+  /* Soft purple tint */
   background-color: rgba(79, 70, 229, 0.06);
   border: 1px solid rgba(79, 70, 229, 0.15);
   color: #4F46E5; /* Indigo 600 */
@@ -42,36 +52,37 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-.dark [data-taxonomy="tags"] section.flex.flex-wrap article {
-  background-color: rgba(167, 139, 250, 0.1); /* Soft Violet Tint */
+/* Dark mode with violet tint */
+.dark [data-taxonomy="tags"] article {
+  background-color: rgba(167, 139, 250, 0.1);
   border: 1px solid rgba(167, 139, 250, 0.2);
   color: #c4b5fd; /* Violet 300 */
   box-shadow: none;
 }
 
-/* Hover State */
-[data-taxonomy="tags"] section.flex.flex-wrap article:hover {
+/* Hover State - Lift and intensify */
+[data-taxonomy="tags"] article:hover {
   transform: translateY(-2px);
   background-color: rgba(79, 70, 229, 0.12);
   border-color: rgba(79, 70, 229, 0.4);
   box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.15);
 }
 
-.dark [data-taxonomy="tags"] section.flex.flex-wrap article:hover {
+.dark [data-taxonomy="tags"] article:hover {
   background-color: rgba(167, 139, 250, 0.2);
   border-color: rgba(167, 139, 250, 0.5);
   box-shadow: 0 4px 12px -2px rgba(139, 92, 246, 0.2);
 }
 
-/* Typography & Content Layout */
-[data-taxonomy="tags"] section.flex.flex-wrap article > h2 {
+/* Typography & Content Layout - Simplified selectors */
+[data-taxonomy="tags"] article h2 {
   display: flex;
   align-items: center;
   margin: 0;
   line-height: 1;
 }
 
-[data-taxonomy="tags"] section.flex.flex-wrap article > h2 > a {
+[data-taxonomy="tags"] article h2 a {
   color: inherit;
   font-size: 0.95rem;
   text-decoration: none !important;
@@ -79,8 +90,8 @@
   align-items: center;
 }
 
-/* Hashtag prefix - Subtle */
-[data-taxonomy="tags"] section.flex.flex-wrap article > h2 > a::before {
+/* Hashtag prefix for visual consistency */
+[data-taxonomy="tags"] article h2 a::before {
   content: "#";
   margin-right: 0.3rem;
   font-weight: 400;
@@ -88,8 +99,8 @@
   font-size: 0.9em;
 }
 
-/* Count badge - Integrated Look */
-[data-taxonomy="tags"] section.flex.flex-wrap article > h2 > span.text-neutral-400 {
+/* Count badge - Integrated styling */
+[data-taxonomy="tags"] article h2 span.text-neutral-400 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +109,7 @@
   padding: 0.1rem 0.4rem;
   min-width: 1.25rem;
 
-  /* Lower opacity background for better integration */
+  /* Subtle background for integration */
   background-color: rgba(79, 70, 229, 0.08);
   color: inherit;
 
@@ -110,13 +121,12 @@
   transition: background-color 0.2s ease;
 }
 
-.dark [data-taxonomy="tags"] section.flex.flex-wrap article > h2 > span.text-neutral-400 {
+.dark [data-taxonomy="tags"] article h2 span.text-neutral-400 {
   background-color: rgba(167, 139, 250, 0.15);
-  color: inherit;
 }
 
-/* Hide the middot separator */
-[data-taxonomy="tags"] section.flex.flex-wrap article > h2 > span.text-primary-500 {
+/* Hide the middot separator (not needed in pill layout) */
+[data-taxonomy="tags"] article h2 span.text-primary-500 {
   display: none;
 }
 
@@ -126,6 +136,10 @@
   align-items: center;
 }
 
+/*
+Header Icon using currentColor for theme adaptability
+Hash symbol SVG embedded as data URI
+*/
 [data-taxonomy="tags"] h1::before {
   content: "";
   display: inline-block;
@@ -134,19 +148,14 @@
   margin-right: 0.75rem;
   flex-shrink: 0;
 
-  /* Use currentColor to match title text exactly */
+  /* Use currentColor to inherit text color */
   background-color: currentColor;
-  opacity: 0.8; /* Slight opacity for visual hierarchy */
+  opacity: 0.8;
 
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5' /%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5' /%3E%3C/svg%3E") center / contain no-repeat;
 }
 
-.dark [data-taxonomy="tags"] h1 {
-  /* Inherit default color */
-}
-
 .dark [data-taxonomy="tags"] h1::before {
-  background-color: currentColor; /* Matches text in dark mode too */
   opacity: 0.9;
 }

@@ -1,3 +1,12 @@
+{{/*
+  Override reason: Differentiate categories and tags display styles
+  Base: themes/blowfish/layouts/partials/term-link/text.html (f9eb1d4e)
+  Modifications:
+    1. Categories: card-like layout with folder icon and arrow
+    2. Tags: inline tag cloud layout
+    3. Preserve Post/Posts singular/plural for better UX
+  Necessity: Blowfish native template forces uniform width which breaks tag cloud flow
+*/}}
 {{ $isCategory := eq .Page.Parent.Data.Plural "categories" }}
 <article>
   {{ if $isCategory }}

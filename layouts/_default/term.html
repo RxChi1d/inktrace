@@ -1,3 +1,10 @@
+{{/*
+  Override reason: Add data-taxonomy attribute for CSS targeting
+  Base: themes/blowfish/layouts/_default/term.html (f9eb1d4e)
+  Modification: Wrap entire content in div with data-taxonomy="{{ .Data.Plural }}"
+  Necessity: Enables precise CSS selectors to differentiate categories vs tags styling
+            without polluting article list styles or relying on fragile selectors
+*/}}
 {{ define "main" }}
   <div data-taxonomy="{{ .Data.Plural }}">
   {{ .Scratch.Set "scope" "term" }}

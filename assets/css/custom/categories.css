@@ -1,3 +1,9 @@
+/*
+Categories taxonomy styling for terms list and term pages.
+Uses data-taxonomy="categories" attribute (added in layouts/_default/term(s).html)
+for precise targeting without polluting Blowfish's native class system.
+*/
+
 /* ===== Categories Terms Page - System Glass ===== */
 
 /* Grid Layout with Mobile Optimization */
@@ -13,70 +19,75 @@
   overflow: visible;
 }
 
-/* Mobile: Single column or tighter grid */
+/* Mobile: Single column for optimal readability */
 @media (max-width: 640px) {
   [data-taxonomy="categories"] section.flex.flex-wrap {
-    grid-template-columns: 1fr; /* Full width cards on mobile */
+    grid-template-columns: 1fr;
   }
 }
 
-/* Base Card Styling - System Glass Texture */
-[data-taxonomy="categories"] section.flex.flex-wrap article {
+/*
+Base Card Styling - Glass morphism effect
+Using RGBA instead of opacity to maintain text contrast.
+backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103+)
+*/
+[data-taxonomy="categories"] article {
   width: 100%;
   margin: 0;
   padding: 0;
   overflow: visible;
   border-radius: 0.75rem;
 
-  /* Glass Background */
+  /* Glass background with blur */
   background-color: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
-  /* High-light Border (System Look) */
+  /* Subtle border for definition */
   border: 1px solid rgba(255, 255, 255, 0.6);
 
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-.dark [data-taxonomy="categories"] section.flex.flex-wrap article {
+/* Dark mode inherits backdrop-filter from light mode */
+.dark [data-taxonomy="categories"] article {
   background-color: rgba(30, 30, 40, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover State - System Selection Metaphor */
-[data-taxonomy="categories"] section.flex.flex-wrap article:hover {
-  /* Brightness lift + subtle cool tint */
+/* Hover State - Lift and brighten effect */
+[data-taxonomy="categories"] article:hover {
   background-color: rgba(255, 255, 255, 0.85);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.8); /* Inner highlight */
+              inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.9);
 }
 
-.dark [data-taxonomy="categories"] section.flex.flex-wrap article:hover {
-  background-color: rgba(45, 55, 75, 0.7); /* Slight blue-shift gray */
+.dark [data-taxonomy="categories"] article:hover {
+  background-color: rgba(45, 55, 75, 0.7);
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Typography & Layout */
-[data-taxonomy="categories"] section.flex.flex-wrap article > h2 {
+/* Typography & Layout - Simplified selectors */
+[data-taxonomy="categories"] article h2 {
   margin: 0;
 }
 
-[data-taxonomy="categories"] section.flex.flex-wrap article > h2 > a {
+[data-taxonomy="categories"] article h2 a {
   text-decoration: none !important;
 }
 
-[data-taxonomy="categories"] section.flex.flex-wrap article > h2 > a > span > svg {
+/* Category icon spacing */
+[data-taxonomy="categories"] article h2 svg {
   margin-inline-end: 1rem;
 }
 
-/* Single-item shrink and center */
-[data-taxonomy="categories"] section.flex.flex-wrap article:only-child {
+/* Single-item centering optimization */
+[data-taxonomy="categories"] article:only-child {
   width: 100%;
   max-width: 30rem;
   justify-self: start;
@@ -88,7 +99,10 @@
   align-items: center;
 }
 
-/* Header Icon - Neutral Gray & Opacity */
+/*
+Header Icon using currentColor for theme adaptability
+SVG data URI embedded for performance (no HTTP request)
+*/
 [data-taxonomy="categories"] h1::before {
   content: "";
   display: inline-block;
@@ -97,15 +111,14 @@
   margin-right: 0.75rem;
   flex-shrink: 0;
 
-  /* Neutral System Gray - Matching Text */
+  /* Use currentColor to inherit text color */
   background-color: currentColor;
-  opacity: 0.85; /* Slight transparency for depth */
+  opacity: 0.85;
 
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .dark [data-taxonomy="categories"] h1::before {
-  background-color: currentColor;
   opacity: 0.9;
 }

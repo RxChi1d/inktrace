@@ -1,11 +1,20 @@
-{{/* Used by
-  1. article shortcode
+{{/*
+  Used by
+    1. article shortcode
 
   The four variants of article-link are very similar. Despite appearances, as of df859f:
   - _shortcode.html uses $page := $target, while the others use $page := .Page
   - card-related.html does not have the hideFeatureImage option, while the others do
 
   $page is added intentionally to prevent small differences inside
+
+  Override reason: Add summary line clamp functionality
+  Base: themes/blowfish/layouts/partials/article-link/_shortcode.html (f9eb1d4e)
+  Modifications:
+    1. Added "article-link--shortcode" class to <article> for CSS targeting
+    2. Added "article-link__summary" class with conditional line-clamp-3 to summary block
+  Related: Blowfish PR #2714 (https://github.com/nunocoracao/blowfish/pull/2714)
+  Note: This override can be removed after PR #2714 is merged and deployed
 */}}
 {{ $target := .target }}
 {{ $shortcodeShowSummary := .showSummary }}

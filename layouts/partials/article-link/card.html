@@ -1,7 +1,16 @@
-{{/* Used by
-  1. list.html and term.html (when the cardView option is enabled)
-  2. Recent articles template (when the cardView option is enabled)
-  3. Shortcode list.html
+{{/*
+  Used by
+    1. list.html and term.html (when the cardView option is enabled)
+    2. Recent articles template (when the cardView option is enabled)
+    3. Shortcode list.html
+
+  Override reason: Add summary line clamp functionality
+  Base: themes/blowfish/layouts/partials/article-link/card.html (f9eb1d4e)
+  Modifications:
+    1. Added "article-link--card" class to <article> for CSS targeting
+    2. Added "article-link__summary" class with line-clamp-5 to summary block
+  Related: Blowfish PR #2714 (https://github.com/nunocoracao/blowfish/pull/2714)
+  Note: This override can be removed after PR #2714 is merged and deployed
 */}}
 {{ $disableImageOptimization := site.Store.Get "disableImageOptimization" }}
 
@@ -100,5 +109,4 @@
       </div>
     {{ end }}
   </div>
-  <div class="px-6 pt-4 pb-2"></div>
 </article>
