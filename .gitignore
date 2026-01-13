@@ -37,3 +37,6 @@ venv/
 
 temp-immich/
 /specs/
+
+# Worktrees
+.worktrees/
