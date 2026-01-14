@@ -2,7 +2,13 @@
 .custom-profile-left {
   margin-left: 0;
   margin-right: 0;
+  order: 1;
 }
+
+.custom-profile-right {
+  order: 2;
+}
+
 /* Ensure header behaves normally on mobile */
 .custom-profile-left > header {
   position: static;
@@ -29,6 +35,7 @@
     justify-content: center; /* vertical centering within the row */
     align-items: flex-end;   /* stick content to the right edge */
     padding-left: 0; /* no extra inner gap on the left column */
+    order: 1;
   }
 
   /* Right-align header without taking it out of the normal flow */
@@ -41,6 +48,7 @@
     /* allow natural height; container controls equal height */
     /* remove inner padding-based spacing; gap on container controls distance */
     padding-right: 0;
+    order: 2;
   }
 }
 
