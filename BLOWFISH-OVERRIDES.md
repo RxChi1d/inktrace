@@ -11,6 +11,8 @@ layouts/
 │  ├─ term.html
 │  └─ terms.html
 └─ partials/
+   ├─ home/
+   │  └─ custom.html
    └─ term-link/
       └─ text.html
 ```
@@ -40,3 +42,13 @@ layouts/
 - 覆蓋原因：需要移除 tags item 的強制寬度 class、加入 categories inline SVG icon，並保留 Post/Posts 單複數。
 - 功能說明：維持原生 `<article><h2><a>` 結構，僅做最小調整以還原自訂視覺。
 - 必要性：達成 tags inline tag cloud、categories card icon 可隨主題切換，以及 Post/Posts 語意正確。
+
+### 4. `layouts/partials/home/custom.html`
+- 參考來源：
+  - `themes/blowfish/layouts/partials/home/profile.html`
+  - `themes/blowfish/layouts/partials/home/hero.html`
+  - `themes/blowfish/layouts/partials/home/page.html`
+- 來源 Commit Hash：`9f2045746e83af34b9ead2aef38c8eafa10b592b`
+- 覆蓋原因：需要自訂首頁「雙欄」結構（左側作者區塊、右側部落格標題區塊）。
+- 功能說明：以自訂雙欄版型呈現作者與網站標題，保留 `recent-articles` 區塊，並對齊 Blowfish 的語意與圖片處理方式。
+- 必要性：確保首頁版面符合雙欄設計需求，並可在 Blowfish 更新時對照相關 home 模板變更。
