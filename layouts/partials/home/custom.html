@@ -4,7 +4,7 @@
     h-full
   {{ end }} w-full flex flex-col items-center text-center mt-20 mb-12">
   {{/* Author Profile Section */}}
-  <div class="custom-profile-left flex flex-col items-center text-center md:items-end md:text-right">
+  <section class="custom-profile-left flex flex-col items-center text-center md:items-end md:text-right" aria-labelledby="homepage-author-name">
     <header class="relative px-1 py-1 flex flex-col items-center md:items-end mb-3">
     {{ with .Site.Params.Author.image }}
       {{ $authorImage := "" }}
@@ -14,40 +14,49 @@
         {{ $authorImage = resources.Get . }}
       {{ end }}
       {{ if $authorImage }}
-        {{ if not $disableImageOptimization }}
-          {{ $authorImage = $authorImage.Fill (print "288x288 q" ( $.Site.Params.Author.imagequality | default "96" )) }}
+        {{ $final := $authorImage }}
+        {{ $squareImage := $authorImage }}
+        {{ if not (or $disableImageOptimization (eq $authorImage.MediaType.SubType "svg")) }}
+          {{ $final = $authorImage.Fill (print "288x288 q" ( $.Site.Params.Author.imagequality | default "96" )) }}
+          {{ $shortSide := int (math.Min $authorImage.Width $authorImage.Height) }}
+          {{ $squareImage = $authorImage.Crop (printf "%dx%d" $shortSide $shortSide ) }}
         {{ end }}
-        <img class="mb-2 rounded-full h-36 w-36" width="144" height="144" alt="{{ $.Site.Params.Author.name | default " Author" }}"
-          src="{{ $authorImage.RelPermalink }}" />
+        <figure class="m-0">
+          <img class="mb-2 rounded-full h-36 w-36" width="144" height="144" alt="{{ $.Site.Params.Author.name | default "Author" }}"
+            src="{{ $final.RelPermalink }}" data-zoom-src="{{ $squareImage.RelPermalink }}">
+        </figure>
       {{ end }}
     {{ end }}
-    <h1 class="text-4xl font-extrabold md:text-right"> <!-- text-center is default from parent, add md:text-right -->
+    <h2 id="homepage-author-name" class="text-4xl font-extrabold">
       {{ .Site.Params.Author.name | default .Site.Title }}
-    </h1>
-    {{ with .Site.Params.Author.headline }}
-    <h2 class="text-xl text-neutral-500 dark:text-neutral-400 md:text-right"> <!-- text-center is default, add md:text-right -->
-      {{ . | markdownify }}
     </h2>
-    {{ end }}
-    <div class="mt-1 text-2xl"> <!-- Social links, usually centered or aligned with text -->
-      {{ partialCached "author-links.html" . }}
-    </div>
-  </header>
-  <section class="prose dark:prose-invert w-full md:text-right">{{ .Content }}</section> <!-- Content of author also to the right -->
-  </div>
-
-  {{/* Blog Title and Description Section */}}
-  <div class="custom-profile-right flex flex-col items-center text-center md:items-start md:text-left mt-8 md:mt-0">
-    <h1 class="text-4xl font-extrabold md:text-left"> <!-- text-center is default, add md:text-left -->
-      {{ strings.TrimSuffix "｜RxChi1d" .Site.Title }}
-    </h1>
-    {{ with .Site.Params.description }}
-    <p class="text-xl text-neutral-500 dark:text-neutral-400 mt-4 md:text-left"> <!-- text-center is default, add md:text-left -->
+    {{ with .Site.Params.Author.headline }}
+    <p class="text-xl text-neutral-500 dark:text-neutral-400">
       {{ . | markdownify }}
     </p>
     {{ end }}
-  </div>
+    <nav class="mt-1 text-2xl" aria-label="Social links">
+      {{ partialCached "author-links.html" . }}
+    </nav>
+  </header>
+  <section class="prose dark:prose-invert w-full">{{ .Content }}</section>
+  </section>
+
+  {{/* Blog Title and Description Section */}}
+  <section class="custom-profile-right flex flex-col items-center text-center md:items-start md:text-left mt-8 md:mt-0">
+    <header>
+      <h1 class="text-4xl font-extrabold">
+        {{ strings.TrimSuffix "｜RxChi1d" .Site.Title }}
+      </h1>
+      {{ with .Site.Params.description }}
+      <p class="text-xl text-neutral-500 dark:text-neutral-400 mt-4">
+        {{ . | markdownify }}
+      </p>
+      {{ end }}
+    </header>
+  </section>
 </article>
+{{/* recent-articles/main.html already includes a h2 title */}}
 <section>
   {{ partial "recent-articles/main.html" . }}
 </section>
