@@ -10,6 +10,8 @@ layouts/
 ├─ _default/
 │  ├─ term.html
 │  └─ terms.html
+├─ posts/
+│  └─ list.html
 └─ partials/
    ├─ home/
    │  └─ custom.html
@@ -52,3 +54,19 @@ layouts/
 - 覆蓋原因：需要自訂首頁「雙欄」結構（左側作者區塊、右側部落格標題區塊）。
 - 功能說明：以自訂雙欄版型呈現作者與網站標題，保留 `recent-articles` 區塊，並對齊 Blowfish 的語意與圖片處理方式。
 - 必要性：確保首頁版面符合雙欄設計需求，並可在 Blowfish 更新時對照相關 home 模板變更。
+
+### 5. `layouts/posts/list.html`
+- 原始來源：`themes/blowfish/layouts/_default/list.html`
+- 來源 Commit Hash：`9f2045746e83af34b9ead2aef38c8eafa10b592b`
+- 覆蓋原因：為 posts section 實作 timeline 視覺效果，提供 Git graph 風格的文章列表展示。
+- 功能說明：
+  - 保持 Blowfish 的核心功能（分頁、groupByYear、cardView 等參數）
+  - 在非卡片視圖模式下，使用語意化的 `<ol>` 和 `<li>` 元素建構 timeline
+  - 包含年份標記（amber 色點）和文章項目（藍色點）
+  - 使用 `<time>` 元素與 datetime 屬性確保語意正確和 SEO 友好
+  - 裝飾性元素使用 `aria-hidden="true"` 提升可訪問性
+- 配合檔案：`assets/css/custom/posts.css` 提供 timeline 樣式
+- 必要性：
+  - 實現特定的視覺設計需求（timeline layout）
+  - 保持語意 HTML 和可訪問性標準
+  - 在 Blowfish 更新時需要對照 `_default/list.html` 的變更
