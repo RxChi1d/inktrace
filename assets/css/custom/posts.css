@@ -1,269 +1,249 @@
-/* Timeline 主要區塊 */
-.timeline-archive {
+/* ========================================
+   Posts List Page - Timeline Styles
+calc()   ======================================== */
+
+/* -----------------------------------------
+   CSS Custom Properties
+   ----------------------------------------- */
+.timeline-container {
+  /* Colors */
+  --timeline-line-color: rgba(94, 129, 172, 0.45);
+  --timeline-dot-bg: #2563eb;
+  --timeline-dot-ring: #eff6ff;
+  --timeline-dot-outer-ring: rgba(37, 99, 235, 0.35);
+  --timeline-dot-glow: rgba(37, 99, 235, 0.25);
+  --timeline-year-dot-bg: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+  --timeline-year-dot-glow: rgba(249, 115, 22, 0.35);
+  --timeline-year-line-color: rgba(94, 129, 172, 0.25);
+
+  /* Sizes */
+  --timeline-date-col: 5rem;
+  --timeline-dot-col: 2.2rem;
+  --timeline-gap: 0.7rem;
+  --timeline-line-width: 3px;
+  --timeline-dot-size: 0.95rem;
+  --timeline-dot-ring-width: 2px;
+  --timeline-dot-outer-ring-width: 4px;
+  --timeline-year-dot-size: 1.15rem;
+
+  /* Animation */
+  --timeline-animation-duration: 0.45s;
+  --timeline-animation-delay-step: 0.04s;
+  --timeline-fade-offset: 20px;
+}
+
+.dark .timeline-container {
+  --timeline-line-color: rgba(96, 165, 250, 0.35);
+  --timeline-dot-bg: #60a5fa;
+  --timeline-dot-ring: #0f172a;
+  --timeline-dot-outer-ring: rgba(96, 165, 250, 0.3);
+  --timeline-dot-glow: rgba(96, 165, 250, 0.3);
+  --timeline-year-dot-bg: linear-gradient(135deg, #fbbf24 0%, #fb923c 100%);
+  --timeline-year-dot-glow: rgba(251, 146, 60, 0.4);
+  --timeline-year-line-color: rgba(96, 165, 250, 0.25);
+}
+
+/* -----------------------------------------
+   Timeline Container
+   ----------------------------------------- */
+.timeline-container {
   position: relative;
-  --timeline-date-width: 5rem;
-  --timeline-center-width: 2.4rem;
-  --timeline-line-width: 0.25rem;
-  --timeline-dot-size: 1.1rem;
-  --timeline-year-dot-size: 1.5rem;
-  --timeline-gap: 0.75rem;
-  /* 移除 max-width 和 margin: 0 auto; */
-  padding: 2rem 0;
+  list-style: none;
+  padding-inline-start: 0;
+  margin-block: 0;
 }
 
-/* Header 內容容器，用於控制標題區塊的左右留白 */
-.header-content-container {
-  /* 移除 max-width 和 margin: 0 auto; */
-  padding: 0 0 2rem 0; /* 底部增加一些間距 */
-}
-
-/* 時間軸線條容器 */
-.timeline-list {
-  position: relative;
-  margin-left: 0;
-  padding-left: 0;
-}
-
-/* 時間軸線條 */
-.timeline-list::before {
-  content: "";
+/* Vertical line */
+.timeline-container::before {
+  content: '';
   position: absolute;
-  left: calc(
-    var(--timeline-date-width)
-    + var(--timeline-gap)
-    + (var(--timeline-center-width) / 2)
-    - (var(--timeline-line-width) / 2)
-  );
+  left: calc(var(--timeline-date-col) + var(--timeline-gap) + var(--timeline-dot-col) / 2 - var(--timeline-line-width) / 2);
   top: 0;
   bottom: 0;
   width: var(--timeline-line-width);
-  background: #e5e7eb;
-  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(148 163 184 / 0.5) 0%,
+    var(--timeline-line-color) 15%,
+    var(--timeline-line-color) 85%,
+    rgb(148 163 184 / 0.5) 100%
+  );
+  border-radius: calc(var(--timeline-line-width) / 2);
 }
 
-/* 年份行 */
-.timeline-year-row {
+/* -----------------------------------------
+   Timeline Item
+   ----------------------------------------- */
+.timeline-item,
+.timeline-year {
   display: grid;
-  grid-template-columns: var(--timeline-date-width) var(--timeline-center-width) minmax(0, 1fr);
+  grid-template-columns: var(--timeline-date-col) var(--timeline-dot-col) 1fr;
   column-gap: var(--timeline-gap);
-  align-items: center;
-  min-height: 1.1rem;
   position: relative;
-  margin-top: 2.0rem;
-  margin-bottom: 2.0rem; /* 調整年份行上下間距 */
 }
 
-/* 文章項目行 */
 .timeline-item {
-  display: grid;
-  grid-template-columns: var(--timeline-date-width) var(--timeline-center-width) minmax(0, 1fr);
-  column-gap: var(--timeline-gap);
-  align-items: center; /* 確保垂直置中 */
-  position: relative;
-  margin-top: 1.0rem;
-  margin-bottom: 1.0rem; /* 調整文章項目上下間距 */
-  min-height: 2.5rem;
+  align-items: start;
+  margin-bottom: 1.25rem;
+  animation: timeline-fade-in var(--timeline-animation-duration) ease-out backwards;
+  animation-delay: calc(var(--timeline-index, 1) * var(--timeline-animation-delay-step));
 }
 
-/* 日期和年份文字 */
-.timeline-date {
-  grid-column: 1;
-  min-width: var(--timeline-date-width);
-  text-align: right;
-  font-size: 1rem;
-  color: #4a4a4a;
-  margin-top: 0;
-  font-family: 'Menlo', 'Consolas', monospace;
-  justify-self: end;
-  padding-right: 0.25rem;
-}
-
-/* 針對同時有 timeline-date 和 timeline-year class 的元素設定樣式 */
-.timeline-date.timeline-year {
-  font-size: 1.5rem; /* 調整字體大小，比日期大 */
-  font-weight: bold; /* 加粗字體 */
-  color: #4a4a4a;
-  background: none; /* 移除白色背景 */
-  z-index: 2;
-  text-align: right;
-  min-width: var(--timeline-date-width); /* 與 timeline-date 寬度一致 */
-  margin-top: 0; /* 移除 margin-top */
-  justify-self: end;
-  padding-right: 0.25rem;
-}
-
-/* 圓點中心容器 */
-.timeline-center {
-  position: relative;
-  grid-column: 2;
-  width: var(--timeline-center-width);
-  min-width: var(--timeline-center-width);
-  display: flex;
-  flex-direction: column;
+/* -----------------------------------------
+   Year Marker
+   ----------------------------------------- */
+.timeline-year {
   align-items: center;
-  justify-content: center;
-  z-index: 2;
-  min-height: 1.1rem;
+  margin-top: 2.2rem;
+  margin-bottom: 2rem;
+  animation: timeline-fade-in 0.7s ease-out backwards;
 }
 
-/* 一般圓點 */
-.timeline-dot {
+.timeline-year:first-child {
+  margin-top: 0;
+}
+
+/* Year marker decorative line */
+.timeline-year::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--timeline-year-line-color) 10%,
+    var(--timeline-year-line-color) 90%,
+    transparent 100%
+  );
+}
+
+/* -----------------------------------------
+   Timeline Dots
+   ----------------------------------------- */
+.timeline-dot,
+.timeline-year-dot {
+  border-radius: 50%;
   position: relative;
+  z-index: 10;
+  box-shadow:
+    0 0 0 var(--timeline-dot-ring-width) var(--timeline-dot-ring),
+    0 0 0 var(--timeline-dot-outer-ring-width) var(--timeline-dot-outer-ring),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-dot {
   width: var(--timeline-dot-size);
   height: var(--timeline-dot-size);
-  border-radius: 50%;
-  background: #60a5fa; /* 實心圓顏色 */
-  /* 移除 border 和 box-shadow */
-  z-index: 3;
-  margin: 0;
+  background: var(--timeline-dot-bg);
+  box-shadow:
+    0 0 0 var(--timeline-dot-ring-width) var(--timeline-dot-ring),
+    0 0 0 var(--timeline-dot-outer-ring-width) var(--timeline-dot-outer-ring),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px var(--timeline-dot-glow);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 保留 HTML 結構但隱藏舊有線段元素 */
-.timeline-line {
-  display: none;
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 0 var(--timeline-dot-ring-width) var(--timeline-dot-ring),
+    0 0 0 var(--timeline-dot-outer-ring-width) var(--timeline-dot-outer-ring),
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 4px 12px var(--timeline-dot-glow),
+    0 0 14px var(--timeline-dot-glow);
 }
 
-/* 年份圓點 */
 .timeline-year-dot {
-  width: var(--timeline-year-dot-size); /* 調整年份圓點大小 */
-  height: var(--timeline-year-dot-size); /* 調整年份圓點大小 */
-  border-radius: 50%;
-  border-color: #f59e42;
-  background: #fffbe6;
-  border: 4px solid #f59e42; /* 加回邊框樣式 */
-  box-shadow: 0 0 0 2px #e5e7eb; /* 加回陰影樣式 */
-  position: relative;
-  z-index: 3;
-  margin: 0;
+  width: var(--timeline-year-dot-size);
+  height: var(--timeline-year-dot-size);
+  background: var(--timeline-year-dot-bg);
+  box-shadow:
+    0 0 0 var(--timeline-dot-ring-width) var(--timeline-dot-ring),
+    0 0 0 var(--timeline-dot-outer-ring-width) var(--timeline-dot-outer-ring),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px var(--timeline-year-dot-glow);
 }
 
-/* 文章內容區塊 */
-.timeline-content {
-  grid-column: 3;
-  flex: 1;
-  padding-top: 0;
-  margin-left: 0;
-  min-width: 0; /* 確保在 flex 容器中正確收縮 */
+/* -----------------------------------------
+   Typography
+   ----------------------------------------- */
+.timeline-item time,
+.timeline-year time {
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Courier New', monospace;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-/* 文章標題 */
-.timeline-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #22223b;
-  text-decoration: none;
-  transition: color 0.2s;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 限制為兩行 */
-  -webkit-box-orient: vertical;
-  max-width: 100%;
+.timeline-item time {
+  font-size: 1rem;
 }
 
-/* 文章標題 hover 效果 */
-.timeline-title:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-/* 響應式樣式 */
-@media (max-width: 600px) {
-  .timeline-archive {
-    --timeline-date-width: clamp(3.6rem, 28vw, 4.2rem);
-    --timeline-center-width: 1.8rem;
-    --timeline-dot-size: 0.85rem;
-    --timeline-year-dot-size: 1.2rem;
-    --timeline-gap: 0.5rem;
-    padding-left: 0.35rem;
-    padding-right: 0.35rem;
+/* -----------------------------------------
+   Animation Keyframes
+   ----------------------------------------- */
+@keyframes timeline-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--timeline-fade-offset, 20px));
   }
-  .timeline-page {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding-left: 0.35rem;
-    padding-right: 0.35rem;
-  }
-  .timeline-date {
-    min-width: var(--timeline-date-width);
-    font-size: 0.95rem;
-    padding-right: 0.2rem;
-  }
-  .timeline-content {
-    min-width: 0; /* 確保在 flex 容器中正確收縮 */
-  }
-  .timeline-year-row {
-    min-height: 1.1rem;
-  }
-  /* 針對同時有 timeline-date 和 timeline-year class 的元素設定響應式樣式 */
-  .timeline-date.timeline-year {
-    min-width: var(--timeline-date-width);
-    padding-right: 0.2rem;
-    font-size: 1.4rem; /* 調整響應式字體大小 */
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Dark Mode Styles */
-.dark .timeline-date,
-.dark .timeline-date.timeline-year {
-  color: #eeeeee; /* 調整日期和年份文字顏色 */
-}
+/* -----------------------------------------
+   Responsive Design
+   ----------------------------------------- */
+@media (max-width: 640px) {
+  .timeline-container {
+    --timeline-date-col: 3.5rem;
+    --timeline-dot-col: 1.9rem;
+    --timeline-gap: 0.6rem;
+    --timeline-line-width: 2px;
+    --timeline-dot-size: 0.75rem;
+    --timeline-dot-ring-width: 2px;
+    --timeline-dot-outer-ring-width: 3px;
+    --timeline-year-dot-size: 0.95rem;
+    --timeline-fade-offset: 10px;
+  }
 
-.dark .timeline-list::before {
-  background: #cdcdcd; /* 調整時間軸線條顏色 */
-}
+  .timeline-item time {
+    font-size: 0.85rem;
+  }
 
-.dark .timeline-dot {
-  background: #93c5fd; /* 實心圓顏色 */
-  /* 移除 border-color 和 box-shadow */
-}
-
-.dark .timeline-year-dot {
-  width: var(--timeline-year-dot-size); /* 調整年份圓點大小 */
-  height: var(--timeline-year-dot-size); /* 調整年份圓點大小 */
-  border-radius: 50%;
-  border-color: #f59e42; /* 保持年份圓點邊框顏色 */
-  background: #cdcdcd; /* 調整年份圓點背景色 */
-  border: 4px solid #f59e42; /* 加回邊框樣式 */
-  box-shadow: 0 0 0 2px #444; /* 加回陰影樣式 */
-}
-
-.dark .timeline-title {
-  color: #eeeeee; /* 調整文章標題文字顏色 */
-}
-
-.dark .timeline-title:hover {
-  color: #93c5fd; /* 調整文章標題 hover 顏色 */
+  .timeline-year time {
+    font-size: 1.35rem;
+  }
 }
 
 /* ========================================
-   Article Single Page - TOC Spacing Fix
+   Article Single Page - TOC Spacing
    ======================================== */
-
-/* Add responsive gap to the main flex container in single article layout */
 article section.flex {
-  gap: 0; /* Default for mobile (vertical stacking) */
+  gap: 0;
 }
 
-/* Desktop layout: add horizontal gap between content and TOC */
 @media (min-width: 1024px) {
   article section.flex {
     gap: clamp(2rem, 3vw, 3.5rem);
   }
 }
 
-/* Override TOC negative margins with proper spacing */
 .toc-right {
   margin-inline-start: 0 !important;
   padding-inline-start: 0 !important;
 }
 
-/* Adjust TOC inner container spacing */
 .toc-right > div {
   padding-inline-start: 1.5rem;
   padding-inline-end: 0.5rem;
 }
 
-/* Adjust TOC minimum width for better responsive behavior */
 @media (min-width: 1024px) and (max-width: 1279px) {
   .toc-right > div {
     min-width: 220px;
