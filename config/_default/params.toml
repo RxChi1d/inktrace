@@ -40,7 +40,7 @@ showScrollToTop = true
 showThemeAttribution = true
 
 [homepage]
-layout = "custom" # valid options: page, profile, hero, card, background, custom
+layout = "background" # valid options: page, profile, hero, card, background, custom
 homepageImage = "img/background.svg" # used in: hero, and card
 cardView = false
 cardViewScreenWidth = false
