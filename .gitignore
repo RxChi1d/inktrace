@@ -15,6 +15,8 @@ TODO.md
 .codex/
 .claude/
 .gemini/
+.opencode/
+.shared/
 
 # Node.js build artifacts
 node_modules/
