@@ -2,6 +2,8 @@
 !.codex/
 !.claude/
 !.gemini/
+!.opencode/
+!.shared/
 
 !temp-immich/
 !specs/
