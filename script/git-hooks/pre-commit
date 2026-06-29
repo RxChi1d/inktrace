@@ -2,6 +2,8 @@
 # pre-commit hook
 # Orchestrates validation and update scripts
 
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Step 1: Validate taxonomy terms

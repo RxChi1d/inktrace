@@ -39,3 +39,8 @@ tags:
   wikidata: "Wikidata"
   sparql: "SPARQL"
   knowledge-graph: "知識圖譜"
+  tts: "TTS"
+  fish-speech: "Fish Speech"
+  gpu: "GPU"
+  self-hosted: "Self-Hosted"
+  hermes-agent: "Hermes Agent"
