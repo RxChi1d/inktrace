@@ -26,23 +26,8 @@
         </div>
       </div>
 
-      {{/* Page view tracking script */}}
-      {{ $translations := .AllTranslations }}
-      {{ with .File }}
-        {{ $path := .Path }}
-        {{ range $translations }}
-          {{ $lang := print "." .Lang ".md" }}
-          {{ $path = replace $path $lang ".md" }}
-        {{ end }}
-        {{ $jsPage := resources.Get "js/page.js" }}
-        {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
-        <script
-          type="text/javascript"
-          src="{{ $jsPage.RelPermalink }}"
-          integrity="{{ $jsPage.Data.Integrity }}"
-          data-oid="views_{{ $path }}"
-          data-oid-likes="likes_{{ $path }}"></script>
-      {{ end }}
+      {{/* Page view/like tracking is loaded globally via the theme's vendor.html
+           (Firebase moved out of js/page.js in Blowfish v2.98.0). */}}
     </header>
 
     {{/* Description content */}}

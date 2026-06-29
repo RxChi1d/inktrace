@@ -30,8 +30,14 @@ for precise targeting without polluting Blowfish's native class system.
 Base Card Styling - Glass morphism effect
 Using RGBA instead of opacity to maintain text contrast.
 backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103+)
+
+Scoped to `section.flex.flex-wrap` (the terms listing grid) so these styles do
+not bleed onto the article-link cards on a category term page, which live in a
+`section.space-y-10` container. Without this scope, `margin: 0` here would
+override Blowfish/Tailwind v4's zero-specificity `space-y-*` (wrapped in
+`:where()`) and collapse the gap between article cards.
 */
-[data-taxonomy="categories"] article {
+[data-taxonomy="categories"] section.flex.flex-wrap article {
   width: 100%;
   margin: 0;
   padding: 0;
@@ -51,14 +57,14 @@ backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103
 }
 
 /* Dark mode inherits backdrop-filter from light mode */
-.dark [data-taxonomy="categories"] article {
+.dark [data-taxonomy="categories"] section.flex.flex-wrap article {
   background-color: rgba(30, 30, 40, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Hover State - Lift and brighten effect */
-[data-taxonomy="categories"] article:hover {
+[data-taxonomy="categories"] section.flex.flex-wrap article:hover {
   background-color: rgba(255, 255, 255, 0.85);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
               inset 0 0 0 1px rgba(255, 255, 255, 0.8);
@@ -66,28 +72,28 @@ backdrop-filter supported in modern browsers (Safari 9+, Chrome 76+, Firefox 103
   border-color: rgba(255, 255, 255, 0.9);
 }
 
-.dark [data-taxonomy="categories"] article:hover {
+.dark [data-taxonomy="categories"] section.flex.flex-wrap article:hover {
   background-color: rgba(45, 55, 75, 0.7);
   border-color: rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Typography & Layout - Simplified selectors */
-[data-taxonomy="categories"] article h2 {
+[data-taxonomy="categories"] section.flex.flex-wrap article h2 {
   margin: 0;
 }
 
-[data-taxonomy="categories"] article h2 a {
+[data-taxonomy="categories"] section.flex.flex-wrap article h2 a {
   text-decoration: none !important;
 }
 
 /* Category icon spacing */
-[data-taxonomy="categories"] article h2 svg {
+[data-taxonomy="categories"] section.flex.flex-wrap article h2 svg {
   margin-inline-end: 1rem;
 }
 
 /* Single-item centering optimization */
-[data-taxonomy="categories"] article:only-child {
+[data-taxonomy="categories"] section.flex.flex-wrap article:only-child {
   width: 100%;
   max-width: 30rem;
   justify-self: start;

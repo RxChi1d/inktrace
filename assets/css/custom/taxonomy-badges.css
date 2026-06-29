@@ -8,6 +8,11 @@ Selection Strategy:
 - Assumes all /categories/ and /tags/ links are taxonomy links (no external links)
 - Alternative: Could use data attributes, but href selector is simpler and reliable
   for this use case where taxonomy URLs follow Hugo's standard pattern
+
+Upstream Relationship:
+- Depends on Blowfish's native badge DOM structure `span.flex.cursor-pointer > span`.
+- Pinned against Blowfish submodule commit 9f2045746e83af34b9ead2aef38c8eafa10b592b.
+- See BLOWFISH-OVERRIDES.md section 6; re-verify this structure on theme upgrades.
 */
 
 /* Category Badges (Green) */

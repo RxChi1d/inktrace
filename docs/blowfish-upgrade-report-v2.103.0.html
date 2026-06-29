@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blowfish 主題升級分析報告 v2.97.0 → v2.103.0</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #d29922;
+  --orange: #db6d28;
+  --purple: #bc8cff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--accent); }
+h2 { font-size: 1.5rem; margin: 2.5rem 0 1rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+h3 { font-size: 1.15rem; margin: 1.5rem 0 0.75rem; color: var(--text); }
+p { margin-bottom: 0.75rem; }
+.subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.summary-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.summary-card .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.summary-card .value { font-size: 1.8rem; font-weight: 700; margin: 0.25rem 0; }
+.summary-card .detail { font-size: 0.8rem; color: var(--text-muted); }
+.value.green { color: var(--green); }
+.value.red { color: var(--red); }
+.value.yellow { color: var(--yellow); }
+.value.orange { color: var(--orange); }
+
+.risk-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.risk-high { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid rgba(248,81,73,0.4); }
+.risk-medium { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.4); }
+.risk-low { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.4); }
+
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+th, td { padding: 0.6rem 0.75rem; text-align: left; border: 1px solid var(--border); }
+th { background: var(--card); color: var(--text-muted); font-weight: 600; }
+td code { background: rgba(110,118,129,0.15); padding: 1px 5px; border-radius: 4px; font-size: 0.85rem; }
+
+.file-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.file-block-header {
+  padding: 0.75rem 1rem;
+  background: rgba(88,166,255,0.08);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.file-block-body { padding: 1rem; }
+.file-block-body pre {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0.5rem 0;
+}
+.addition { background: rgba(63,185,80,0.08); }
+.deletion { background: rgba(248,81,73,0.08); }
+
+.step-list { counter-reset: step; list-style: none; padding: 0; }
+.step-list li {
+  counter-increment: step;
+  position: relative;
+  padding: 1rem 1rem 1rem 3.5rem;
+  margin: 0.5rem 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.step-list li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.toc { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+.toc h3 { margin: 0 0 0.75rem; font-size: 0.95rem; color: var(--text-muted); }
+.toc ul { list-style: none; padding: 0; }
+.toc li { margin: 0.35rem 0; }
+.toc a { color: var(--accent); text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+
+.note { background: rgba(88,166,255,0.08); border-left: 3px solid var(--accent); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; font-size: 0.9rem; }
+.warning { background: rgba(210,153,34,0.08); border-left-color: var(--yellow); }
+.danger { background: rgba(248,81,73,0.08); border-left-color: var(--red); }
+.success { background: rgba(63,185,80,0.08); border-left-color: var(--green); }
+
+.change-category { margin: 1.5rem 0; }
+.change-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+}
+.change-item:last-child { border-bottom: none; }
+.change-icon { flex-shrink: 0; width: 1.5rem; text-align: center; }
+
+@media (max-width: 700px) {
+  body { padding: 1rem; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h1>🐡 Blowfish 主題升級分析報告</h1>
+<p class="subtitle">
+  <strong>v2.97.0</strong> → <strong>v2.103.0</strong> &nbsp;|&nbsp;
+  分析日期：2026-06-29 &nbsp;|&nbsp;
+  Commits 差距：329 &nbsp;|&nbsp;
+  時間跨度：2026-01-12 → 2026-05-13
+</p>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="label">目前版本</div>
+    <div class="value">v2.97.0</div>
+    <div class="detail">commit 9f204574</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">目標版本</div>
+    <div class="value">v2.103.0</div>
+    <div class="detail">2026-05-13 發佈</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">受影響覆蓋檔</div>
+    <div class="value orange">4 個</div>
+    <div class="detail">需人工處理</div>
+  </div>
+  <div class="summary-card">
+    <div class="label">整體風險</div>
+    <div class="value yellow">中</div>
+    <div class="detail">可控，有明確修復路徑</div>
+  </div>
+</div>
+
+<div class="toc">
+<h3>📋 目錄</h3>
+<ul>
+<li><a href="#overview">1. 升級概覽</a></li>
+<li><a href="#breaking">2. 破壞性變更（Breaking Changes）</a></li>
+<li><a href="#overrides">3. 覆蓋檔案相容性分析</a></li>
+<li><a href="#config">4. 配置檔需修改項目</a></li>
+<li><a href="#features">5. 重要新功能</a></li>
+<li><a href="#plan">6. 升級步驟計畫</a></li>
+<li><a href="#rollback">7. 回滾計畫</a></li>
+<li><a href="#checklist">8. 升級前檢查清單</a></li>
+</ul>
+</div>
+
+<!-- 1. 升級概覽 -->
+<h2 id="overview">1. 升級概覽</h2>
+
+<p>本次升級從 Blowfish <strong>v2.97.0</strong>（2026-01-12）跨越 6 個 minor 版本至 <strong>v2.103.0</strong>（2026-05-13），共 329 個 commits。主要變更集中在：</p>
+
+<table>
+<tr><th>類別</th><th>影響</th><th>風險</th></tr>
+<tr><td>Firebase / page.js 移除</td><td>模板不再引用 page.js，Firebase 移至條件式載入</td><td><span class="risk-badge risk-high">高</span></td></tr>
+<tr><td>site.Data → hugo.Data</td><td>Hugo v0.158+ 棄用 site.Data</td><td><span class="risk-badge risk-medium">中</span></td></tr>
+<tr><td>jQuery 移除</td><td>不再內建 jQuery 依賴</td><td><span class="risk-badge risk-low">低</span></td></tr>
+<tr><td>Email 混淆</td><td>reply-by-email 改用 JS 動態組合</td><td><span class="risk-badge risk-medium">中</span></td></tr>
+<tr><td>Language API</td><td>LanguageCode → Locale, LanguageName → Name</td><td><span class="risk-badge risk-medium">中</span></td></tr>
+<tr><td>i18n 新增 reply_to</td><td>zh-TW 需有此 key</td><td><span class="risk-badge risk-low">低</span></td></tr>
+</table>
+
+<div class="note danger">
+<strong>⚠️ 關鍵發現：</strong>您的 <code>layouts/_default/single.html</code> 覆蓋檔案仍包含 <code>page.js</code> 引用（第 107–113 行），升級後會導致 build 失敗（<code>resources.Get "js/page.js"</code> 返回 nil）。必須先修正此檔案才能升級。
+</div>
+
+<!-- 2. 破壞性變更 -->
+<h2 id="breaking">2. 破壞性變更（Breaking Changes）</h2>
+
+<div class="change-category">
+<h3>2.1 <code>assets/js/page.js</code> 已刪除</h3>
+<p>Commit <code>0e9a151c</code>（refactor: gather firebase templates）將 page.js 從 Blowfish 模板中移除。Firebase 相關功能現在透過 <code>vendor.html</code> 條件式載入（僅當 <code>site.Params.firebase.apiKey</code> 存在時）。</p>
+
+<div class="change-item">
+  <div class="change-icon">❌</div>
+  <div>所有模板中的 <code>resources.Get "js/page.js"</code> 呼叫會失敗</div>
+</div>
+<div class="change-item">
+  <div class="change-icon">✅</div>
+  <div>您的 <code>params.toml</code> 中 <code>firebase = {}</code>（空物件），所以 Firebase 功能不會被載入 — 不影響實際功能</div>
+</div>
+<div class="change-item">
+  <div class="change-icon">⚠️</div>
+  <div>但 <code>single.html</code> 覆蓋檔中的 <code>resources.Get</code> 仍會導致 build panic</div>
+</div>
+</div>
+
+<div class="change-category">
+<h3>2.2 <code>site.Data</code> → <code>hugo.Data</code></h3>
+<p>Hugo v0.158.0 棄用 <code>site.Data</code>，改採 <code>hugo.Data</code>。Blowfish 已在 v2.98+ 全面更新。</p>
+
+<div class="change-item">
+  <div class="change-icon">✅</div>
+  <div>您的覆蓋檔案中<strong>沒有</strong>使用 <code>site.Data</code>（您的 <code>single.html</code> 使用 <code>.Site.Data.authors</code> 但這是舊版 Blowfish 的 <code>SingleAuthor</code> block，已被新版改寫）</div>
+</div>
+<div class="change-item">
+  <div class="change-icon">⚠️</div>
+  <div>您的 <code>single.html</code> 覆蓋檔中的 <code>SingleAuthor</code> block 使用 <code>site.Data.authors</code> 和 <code>site.Language.Lang</code> — 新版已改用 <code>hugo.Data.authors</code> 和 <code>site.Language.Name</code></div>
+</div>
+</div>
+
+<div class="change-category">
+<h3>2.3 <code>site.LanguageCode</code> → <code>site.Language.Locale</code></h3>
+<p>Commit <code>350458a3</code> 和 <code>1eb3d8da</code> 修正了 LanguageCode 的棄用。</p>
+<div class="change-item">
+  <div class="change-icon">⚠️</div>
+  <div>您的 <code>config/_default/languages.*.toml</code> 仍使用 <code>languageCode</code> 和 <code>languageName</code> — 需改為 <code>locale</code> 和 <code>label</code></div>
+</div>
+</div>
+
+<div class="change-category">
+<h3>2.4 jQuery 移除</h3>
+<p>Commit <code>68cf60bd</code>（Merge PR #2754）移除 jQuery 依賴。</p>
+<div class="change-item">
+  <div class="change-icon">✅</div>
+  <div>您的自訂 JS 不依賴 jQuery（已確認 <code>assets/js/</code> 無 jQuery 引用）</div>
+</div>
+</div>
+
+<div class="change-category">
+<h3>2.5 Email 混淆（Email Obfuscation）</h3>
+<p>Commit <code>55f2f228</code>（feat: email obfuscation #2711）將 reply-by-email 連結改為 JS 動態組合。新增 <code>js/email.js</code>。</p>
+<div class="change-item">
+  <div class="change-icon">⚠️</div>
+  <div>您的 <code>single.html</code> 覆蓋檔有舊版 inline mailto 連結 — 新版改用 <code>data-email</code> + base64 編碼</div>
+</div>
+<div class="change-item">
+  <div class="change-icon">ℹ️</div>
+  <div>因為您的 <code>params.toml</code> 中 <code>replyByEmail = false</code>，此變更不影響目前功能</div>
+</div>
+</div>
+
+<!-- 3. 覆蓋檔案相容性分析 -->
+<h2 id="overrides">3. 覆蓋檔案相容性分析</h2>
+
+<p>根據 <code>BLOWFISH-OVERRIDES.md</code> 和實際 <code>layouts/</code> 目錄，以下是所有覆蓋檔案的相容性分析：</p>
+
+<!-- File 1: single.html -->
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/_default/single.html</span>
+  <span class="risk-badge risk-high">高風險 — 必修</span>
+</div>
+<div class="file-block-body">
+<p><strong>問題 1：page.js 引用（第 107–113 行）</strong></p>
+<pre class="deletion">{{ $jsPage := resources.Get "js/page.js" }}
+{{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint "sha512" }}
+&lt;script type="text/javascript" src="{{ $jsPage.RelPermalink }}"
+  integrity="{{ $jsPage.Data.Integrity }}"
+  data-oid="views_{{ $path }}" data-oid-likes="likes_{{ $path }}"&gt;&lt;/script&gt;</pre>
+<p><strong>問題 2：SingleAuthor block 使用棄用的 API</strong></p>
+<pre class="deletion">{{ $authorsData := .Site.Data.authors }}
+{{ $currentLang := $.Site.Language.Lang }}</pre>
+<p>新版 Blowfish 已改為：</p>
+<pre class="addition">{{ $authorsData := hugo.Data.authors }}
+{{ $currentLang := site.Language.Name }}</pre>
+<p><strong>問題 3：reply-by-email 使用舊版 inline mailto</strong></p>
+<pre class="deletion">&lt;a target="_blank" href="mailto:{{ .Site.Params.Author.email }}?subject=..."&gt;
+  Reply by Email
+&lt;/a&gt;</pre>
+<p>新版改用 JS 動態組合（透過 <code>js/email.js</code>）：</p>
+<pre class="addition">{{ $replySubject := i18n "article.reply_to" (dict "Title" .Title) | default (printf "Reply to %s" .Title) }}
+&lt;a class="email-link" href="#"
+   data-email="{{ site.Params.Author.email | base64Encode }}"
+   data-subject="{{ replace $replySubject "\"" "'" }}"&gt;
+  {{ i18n "article.reply_by_email" | default "Reply by Email" }}
+&lt;/a&gt;
+&lt;noscript&gt;
+  &lt;span&gt;... (require JavaScript)&lt;/span&gt;
+&lt;/noscript&gt;</pre>
+</div>
+</div>
+
+<!-- File 2: term.html -->
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/_default/term.html</span>
+  <span class="risk-badge risk-high">高風險 — 必修</span>
+</div>
+<div class="file-block-body">
+<p><strong>問題：page.js 引用</strong>（與 single.html 相同模式）</p>
+<p>新版 Blowfish 已刪除此段。您的覆蓋檔需同步移除。</p>
+<div class="note success">
+<strong>好消息：</strong>您的 <code>term.html</code> 覆蓋只加了 <code>data-taxonomy</code> hook，結構簡單。移除 page.js 區塊後即可相容。
+</div>
+</div>
+</div>
+
+<!-- File 3: terms.html -->
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/_default/terms.html</span>
+  <span class="risk-badge risk-high">高風險 — 必修</span>
+</div>
+<div class="file-block-body">
+<p><strong>問題 1：page.js 引用</strong> — 需移除</p>
+<p><strong>問題 2：scope 值已變更</strong></p>
+<pre class="deletion">{{ .Scratch.Set "scope" "list" }}</pre>
+<p>新版 Blowfish 改為：</p>
+<pre class="addition">{{ .Scratch.Set "scope" "terms" }}</pre>
+<div class="note">
+<strong>注意：</strong>如果您的 CSS 或 JS 有依賴 <code>scope = "list"</code> 的邏輯，需確認 <code>"terms"</code> 是否相容。若不相符，可改回 <code>"list"</code> 但需確認不影響其他模板。
+</div>
+</div>
+</div>
+
+<!-- File 4: posts/list.html -->
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/posts/list.html</span>
+  <span class="risk-badge risk-high">高風險 — 必修</span>
+</div>
+<div class="file-block-body">
+<p><strong>問題：page.js 引用</strong> — 需移除</p>
+<div class="note success">
+<strong>好消息：</strong>您的 <code>posts/list.html</code> 是 timeline 視覺效果的自訂版本，結構與原生 <code>_default/list.html</code> 差異較大。只需移除 page.js 區塊即可。
+</div>
+</div>
+</div>
+
+<!-- File 5: term-link/text.html -->
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/partials/term-link/text.html</span>
+  <span class="risk-badge risk-low">低風險 — 相容</span>
+</div>
+<div class="file-block-body">
+<p>v2.97.0 → v2.103.0 之間此檔案<strong>無變更</strong>（diff 為空）。您的覆蓋版本保持相容。</p>
+</div>
+</div>
+
+<!-- File 6: home/custom.html -->
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/partials/home/custom.html</span>
+  <span class="risk-badge risk-low">低風險 — 相容</span>
+</div>
+<div class="file-block-body">
+<p>您的 <code>custom.html</code> 是獨立實作（雙欄結構），不依賴 <code>hero.html</code> 或 <code>profile.html</code> 的內部實作。新版 Blowfish 的 home 模板改了 hero 的 email 連結邏輯，但您的自訂首頁不使用這些 partials。</p>
+<div class="note">
+<strong>注意：</strong>新版 <code>hero.html</code> 將 <code>prose-invert</code> 改為 <code>dark:prose-invert</code>（當 <code>disableHeroImageFilter</code> 時）。如果您的 <code>custom.html</code> 有引用 <code>hero.html</code> 需注意。
+</div>
+</div>
+</div>
+
+<!-- Extra files not in BLOWFISH-OVERRIDES.md -->
+<h3>額外自訂檔案（不在 BLOWFISH-OVERRIDES.md 中）</h3>
+
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 layouts/partials/math.html / toc.html / extend-head*.html</span>
+  <span class="risk-badge risk-low">低風險 — 相容</span>
+</div>
+<div class="file-block-body>
+<p>這些是完全獨立的自訂 partials，不依賴 Blowfish 內部實作。升級不受影響。</p>
+</div>
+</div>
+
+<!-- 4. 配置檔需修改項目 -->
+<h2 id="config">4. 配置檔需修改項目</h2>
+
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 config/_default/languages.zh-tw.toml / languages.en.toml</span>
+  <span class="risk-badge risk-medium">中風險 — 建議修改</span>
+</div>
+<div class="file-block-body">
+<p><strong>目前：</strong></p>
+<pre>languageCode = "zh-tw"
+languageName = "繁體中文"</pre>
+<p><strong>應改為：</strong></p>
+<pre class="addition">locale = "zh-tw"
+label = "繁體中文"</pre>
+<div class="note warning">
+<strong>注意：</strong>Hugo v0.158+ 棄用 <code>languageCode</code> 和 <code>languageName</code>。不改會導致 deprecation warnings，但<strong>不會</strong>導致 build 失敗（Hugo 仍有向後相容）。
+</div>
+</div>
+</div>
+
+<div class="file-block">
+<div class="file-block-header">
+  <span>📄 i18n/zh-TW.yaml（如存在）</span>
+  <span class="risk-badge risk-low">低風險 — 建議修改</span>
+</div>
+<div class="file-block-body>
+<p>新版 Blowfish 的 <code>single.html</code> 使用 <code>i18n "article.reply_to"</code>。zh-TW 已有此 key（<code>"回覆 {{ .Title }}"</code>）。</p>
+<div class="note success">
+<strong>已確認：</strong>Blowfish 上游 i18n/zh-TW.yaml 已包含 <code>reply_to</code> key。若您有自訂 i18n 覆蓋，請確認包含此 key。
+</div>
+</div>
+</div>
+
+<!-- 5. 重要新功能 -->
+<h2 id="features">5. 重要新功能（供您參考）</h2>
+
+<table>
+<tr><th>功能</th><th>版本</th><th>說明</th><th>對您的影響</tr>
+<tr><td>Email obfuscation</td><td>v2.99.0</td><td>reply-by-email 改用 base64 + JS 動態組合，防止爬蟲</td><td>無（replyByEmail = false）</td></tr>
+<tr><td>SEO meta description order</td><td>v2.103.0</td><td>可自訂 description 優先級順序</td><td>可選優化</td></tr>
+<tr><td>hreflang 自動生成</td><td>v2.103.0</td><td>head.html 自動加入 alternate hreflang links</td><td>✅ 正面影響</td></tr>
+<tr><td>Accordion shortcode</td><td>v2.103.0</td><td>新增 &lt;accordion&gt; shortcode</td><td>可用</td></tr>
+<tr><td>Ansible shortcode</td><td>v2.103.0</td><td>新增 &lt;ansible&gt; shortcode</td><td>可用</td></tr>
+<tr><td>Carousel 改進</td><td>v2.103.0</td><td>Carousel shortcode 功能增強</td><td>如有用到可評估</td></tr>
+<tr><td>Fuse.js v7</td><td>v2.102.0</td><td>搜尋函式庫升級到 v7.x</td><td>✅ 搜尋功能改善</td></tr>
+<tr><td>Tailwind CSS v4.3</td><td>v2.103.0</td><td>CSS 框架升級</td><td>✅ 效能改善</td></tr>
+</table>
+
+<!-- 6. 升級步驟計畫 -->
+<h2 id="plan">6. 升級步驟計畫</h2>
+
+<ol class="step-list">
+<li>
+  <strong>建立升級分支</strong><br>
+  <code>git checkout -b feat/upgrade-blowfish-v2.103.0</code>
+</li>
+<li>
+  <strong>更新 Blowfish submodule 到 v2.103.0</strong><br>
+  <code>cd themes/blowfish && git fetch --tags && git checkout v2.103.0</code>
+</li>
+<li>
+  <strong>修正 <code>layouts/_default/single.html</code></strong><br>
+  <ul style="margin-top:0.5rem; padding-left:1.25rem;">
+    <li>移除 page.js script 注入區塊（第 100–113 行）</li>
+    <li>更新 SingleAuthor block：<code>site.Data.authors</code> → <code>hugo.Data.authors</code></li>
+    <li>更新 <code>$.Site.Language.Lang</code> → <code>site.Language.Name</code></li>
+    <li>（可選）reply-by-email 改用新版 email obfuscation 模式</li>
+  </ul>
+</li>
+<li>
+  <strong>修正 <code>layouts/_default/term.html</code></strong><br>
+  移除 page.js script 注入區塊
+</li>
+<li>
+  <strong>修正 <code>layouts/_default/terms.html</code></strong><br>
+  <ul style="margin-top:0.5rem; padding-left:1.25rem;">
+    <li>移除 page.js script 注入區塊</li>
+    <li>更新 <code>scope = "list"</code> → <code>scope = "terms"</code>（或保留 "list" 如果 CSS 依賴）</li>
+  </ul>
+</li>
+<li>
+  <strong>修正 <code>layouts/posts/list.html</code></strong><br>
+  移除 page.js script 注入區塊
+</li>
+<li>
+  <strong>更新語言設定檔</strong><br>
+  <code>languages.zh-tw.toml</code> 和 <code>languages.en.toml</code>：<br>
+  <code>languageCode</code> → <code>locale</code>，<code>languageName</code> → <code>label</code>
+</li>
+<li>
+  <strong>本地 Build 驗證</strong><br>
+  <code>hugo --gc --minify</code> — 確認無 errors/warnings<br>
+  <code>hugo server -D</code> — 視覺化驗證所有頁面
+</li>
+<li>
+  <strong>內容驗證</strong><br>
+  檢查：首頁、文章頁、分類頁、標籤頁、作者頁、404 頁面
+</li>
+<li>
+  <strong>Commit 並推送</strong><br>
+  <code>git add -A && git commit -m "feat(theme): upgrade blowfish to v2.103.0"</code>
+</li>
+<li>
+  <strong>部署驗證</strong><br>
+  透過 Cloudflare Pages 自動部署，確認線上版本正常
+</li>
+</ol>
+
+<!-- 7. 回滾計畫 -->
+<h2 id="rollback">7. 回滾計畫</h2>
+
+<div class="note success">
+<strong>安全網：</strong>因為所有修改都在 feature branch 進行，且 Blowfish 是 submodule，回滾非常簡單：
+</div>
+
+<pre># 方法 1：退回 submodule
+cd themes/blowfish && git checkout v2.97.0
+cd .. && git add themes/blowfish && git commit -m "revert: rollback blowfish to v2.97.0"
+
+# 方法 2：捨棄整個分支
+git checkout main
+git branch -D feat/upgrade-blowfish-v2.103.0</pre>
+
+<!-- 8. 升級前檢查清單 -->
+<h2 id="checklist">8. 升級前檢查清單</h2>
+
+<table>
+<tr><th>✅</th><th>項目</th><th>狀態</th></tr>
+<tr><td>☐</td><td>確認目前 main branch 無未提交的修改</td><td>待執行</td></tr>
+<tr><td>☐</td><td>建立 feature branch <code>feat/upgrade-blowfish-v2.103.0</code></td><td>待執行</td></tr>
+<tr><td>☐</td><td>備份目前可運作的 <code>layouts/</code> 覆蓋檔案</td><td>待執行</td></tr>
+<tr><td>☐</td><td>準備好 Hugo 環境（目前 v0.163.3 via brew）</td><td>✅ 已就位</td></tr>
+<tr><td>☐</td><td>確認 CI/CD 使用 <code>hugo-version: 'latest'</code></td><td>✅ 相容</td></tr>
+<tr><td>☐</td><td>通知自己：升級後需清除瀏覽器 cache（Tailwind v4.3 CSS hash 會變）</td><td>待執行</td></tr>
+</table>
+
+<div class="note">
+<strong>預估時間：</strong>30–60 分鐘（含修正 + build 驗證 + 視覺化檢查）<br>
+<strong>建議時機：</strong>選擇一個不需要發新文章的時間窗口進行
+</div>
+
+<hr style="border-color: var(--border); margin: 2.5rem 0;">
+
+<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center;">
+  報告產生時間：2026-06-29 &nbsp;|&nbsp;
+  分析工具：Claude Code (Opus) + 手動驗證 &nbsp;|&nbsp;
+  Blowfish 分析範圍：v2.97.0 (9f204574) → v2.103.0 (e9699d8c)
+</p>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 disabled = false
-languageCode = "en"
-languageName = "English"
+locale = "en"
+label = "English"
 title = "InkTrace｜RxChi1d"
 weight = 2
 

@@ -70,3 +70,33 @@ layouts/
   - 實現特定的視覺設計需求（timeline layout）
   - 保持語意 HTML 和可訪問性標準
   - 在 Blowfish 更新時需要對照 `_default/list.html` 的變更
+
+### 6. `assets/css/custom/taxonomy-badges.css`
+- 參考來源：Blowfish 原生 badge 結構 `span.flex.cursor-pointer > span`
+- 來源 Commit Hash：`9f2045746e83af34b9ead2aef38c8eafa10b592b`
+- 覆蓋原因：需要區分 Categories（綠色）與 Tags（藍色）badge 顏色，但不修改主題模板。
+- 功能說明：
+  - 透過 `a[href*="/categories/"]` 與 `a[href*="/tags/"]` href 屬性選擇器鎖定不同 taxonomy badge
+  - 依附 Blowfish 原生 badge DOM 結構 `span.flex.cursor-pointer > span`
+  - 提供 light/dark 模式對應的邊框與文字配色
+- 必要性：
+  - 以純 CSS 達成 taxonomy badge 視覺差異化，避免覆蓋主題模板
+  - 由於依附主題原生 badge DOM 結構，Blowfish 更新時需確認該 DOM 結構（`span.flex.cursor-pointer > span`）是否變動
+
+---
+
+## 升級遺漏檢查（v2.97.0 → v2.103.0）
+
+### 已修復但當時未偵測到的問題
+
+#### `layouts/partials/toc.html` — jQuery 依賴（已刪除）
+- **問題**：本地覆寫 `layouts/partials/toc.html` 使用 jQuery 實作 scroll-spy，但 Blowfish v2.97.0 起已完全移除 jQuery
+- **影響**：`$ is not defined` JS 錯誤 → TOC 滾動高亮失效
+- **修復方式**：刪除本地覆寫，改用 Blowfish 內建 `smartTOC`（vanilla JS）
+- **教訓**：升級時除了檢查主題模板 API 變更，還需檢查本地覆寫是否依賴已被移除的函式庫（jQuery、特定 CSS class 等）
+
+### 未來升級注意事項
+
+1. **本地覆寫相容性檢查**：每次升級 Blowfish 後，應逐一檢查 `layouts/` 下所有本地覆寫檔案，確認沒有使用已被移除的函式庫或 API
+2. **jQuery**：Blowfish v2.97.0+ 已完全移除 jQuery，任何本地模板/腳本不應再依賴 `$` 或 `jQuery`
+3. **功能重疊檢查**：如果 Blowfish 新版本已內建本地覆寫的功能（如 smartTOC），應優先使用內建版本以減少維護成本

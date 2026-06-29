@@ -7,7 +7,7 @@
 */}}
 {{ define "main" }}
   <div data-taxonomy="{{ .Data.Plural }}">
-  {{ .Scratch.Set "scope" "list" }}
+  {{ .Scratch.Set "scope" "terms" }}
   {{ $showHero := .Params.showHero | default site.Params.taxonomy.showHero | default false }}
   {{ if $showHero }}
     {{ $heroStyle := print "hero/" site.Params.taxonomy.heroStyle ".html" }}
@@ -34,14 +34,8 @@
         {{ .Content }}
       </div>
     </section>
-    {{ $jsPage := resources.Get "js/page.js" }}
-    {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
-    <script
-      type="text/javascript"
-      src="{{ $jsPage.RelPermalink }}"
-      integrity="{{ $jsPage.Data.Integrity }}"
-      data-oid="views_taxonomy_{{ .Data.Plural }}"
-      data-oid-likes="likes_taxonomy_{{ .Data.Plural }}"></script>
+    {{/* Page view/like tracking is loaded globally via the theme's vendor.html
+         (Firebase moved out of js/page.js in Blowfish v2.98.0). */}}
   {{ end }}
 
   {{ if site.Params.taxonomy.cardView }}

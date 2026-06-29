@@ -1,6 +1,6 @@
 disabled = false
-languageCode = "zh-tw"
-languageName = "繁體中文"
+locale = "zh-tw"
+label = "繁體中文"
 title = "筆墨碎語｜RxChi1d"
 weight = 1
 

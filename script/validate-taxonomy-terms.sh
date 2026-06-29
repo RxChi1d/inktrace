@@ -133,7 +133,7 @@ validate_terms() {
         lowercase_term=$(echo "$term" | tr '[:upper:]' '[:lower:]')
         if [ "$term" != "$lowercase_term" ]; then
             echo -e "${RED}✗${NC} $file: $taxonomy '$term' is not lowercase"
-            ((errors++))
+            errors=$((errors + 1))
             continue
         fi
 
@@ -152,7 +152,7 @@ validate_terms() {
                     echo -e "${RED}✗${NC} $file: $taxonomy '$term' not found in SSOT"
                     ;;
             esac
-            ((errors++))
+            errors=$((errors + 1))
         fi
     done
 
@@ -171,12 +171,12 @@ validate_file() {
 
     # Validate categories
     if ! validate_terms "$file" "category" "$categories"; then
-        ((total_errors += $?))
+        total_errors=$((total_errors + $?))
     fi
 
     # Validate tags
     if ! validate_terms "$file" "tag" "$tags"; then
-        ((total_errors += $?))
+        total_errors=$((total_errors + $?))
     fi
 
     return $total_errors
@@ -190,12 +190,12 @@ while IFS= read -r file; do
     [ -z "$file" ] && continue
     [ ! -f "$file" ] && continue
 
-    ((file_count++))
+    file_count=$((file_count + 1))
 
     if validate_file "$file"; then
         echo -e "${GREEN}✓${NC} $file"
     else
-        ((total_errors++))
+        total_errors=$((total_errors + 1))
     fi
 done <<< "$staged_files"
 

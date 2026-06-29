@@ -34,14 +34,8 @@
       <div class="min-w-0 min-h-0 max-w-prose">
         {{ .Content }}
       </div>
-      {{ $jsPage := resources.Get "js/page.js" }}
-      {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
-      <script
-        type="text/javascript"
-        src="{{ $jsPage.RelPermalink }}"
-        integrity="{{ $jsPage.Data.Integrity }}"
-        data-oid="views_term_{{ .Data.Term }}"
-        data-oid-likes="likes_term_{{ .Data.Term }}"></script>
+      {{/* Page view/like tracking is loaded globally via the theme's vendor.html
+           (Firebase moved out of js/page.js in Blowfish v2.98.0). */}}
     {{ end }}
   </section>
 
