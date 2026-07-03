@@ -66,7 +66,7 @@ jobs:
         # 僅當快取未命中且主題目錄下存在 package.json/lock檔時才執行 npm ci
         if: steps.cache-theme-node-modules.outputs.cache-hit != 'true' && (hashFiles('themes/blowfish/package-lock.json') != '' || hashFiles('themes/blowfish/npm-shrinkwrap.json') != '' || hashFiles('themes/blowfish/package.json') != '')
         working-directory: ./themes/blowfish
-        run: npm ci --prefer-offline --no-audit --progress=false
+        run: npm install --prefer-offline --no-audit --progress=false
       - name: Cache Restore
         id: cache-restore
         uses: actions/cache/restore@v4
