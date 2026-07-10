@@ -2,8 +2,9 @@
 title: "使用 Fish Speech S2-Pro 架設本地 TTS 服務"
 slug: "fish-speech-local-tts"
 date: 2026-06-30T00:28:34+08:00
+lastmod: 2026-07-11T02:07:20+08:00
 tags: ["tts", "fish-speech", "gpu", "self-hosted", "hermes-agent"]
-categories: ["engineering"]
+categories: ["ai-technical"]
 description: "在 RTX 3090 上以 Fish Speech S2-Pro 架設本地 TTS 服務，含顯存調校、固定聲音與 Hermes Agent 接入的完整教學。"
 ---
 

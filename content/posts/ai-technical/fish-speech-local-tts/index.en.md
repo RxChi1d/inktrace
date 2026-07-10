@@ -3,7 +3,7 @@ title: "Self-Hosting Fish Speech S2-Pro: A Local TTS Service Guide"
 slug: "fish-speech-local-tts"
 date: 2026-06-30T00:28:34+08:00
 tags: ["tts", "fish-speech", "gpu", "self-hosted", "hermes-agent"]
-categories: ["engineering"]
+categories: ["ai-technical"]
 description: "Deploy Fish Speech S2-Pro on an RTX 3090 for a fully local TTS service — VRAM tuning, voice pinning, and Hermes Agent integration."
 ---
 
