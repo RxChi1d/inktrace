@@ -28,3 +28,61 @@
 {{- end -}}
 
 {{/* Add additional custom head elements below this line */}}
+
+{{/*
+  Chart.js theme sync — Blowfish's built-in chart shortcode never re-styles
+  charts when the light/dark toggle flips, so axis/legend text keeps its
+  build-time colour and turns unreadable. Watch <html> for the `dark` class
+  and restyle every live Chart instance on change (and once after load).
+*/}}
+<script>
+// Chart.js theme sync for Blowfish chart shortcodes.
+//
+// Blowfish's own chart.js only themes dataset colours (via CSS vars) and never
+// updates chart text / gridlines on the light↔dark toggle. We fill that gap,
+// following the theme's convention of reading colour from --color-neutral-*
+// so charts track the active colorScheme. Those vars don't invert between
+// light/dark (the theme swaps shades instead), so we pick the shade per mode:
+// neutral-800 (dark text) in light, neutral-200 (light text) in dark.
+(function () {
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // Single source of truth for the two chart colours, both theme-aware and both
+  // read from --color-neutral-* so they track the active colorScheme. Charts
+  // reference these as SCRIPTABLE colours (color: () => window.chartTextColor())
+  // because scale ticks / axis titles / gridlines each resolve their OWN hard
+  // Chart.js default once (#666, rgba(0,0,0,0.1)) and ignore Chart.defaults —
+  // a scriptable is re-evaluated on every draw so it always reflects the theme.
+  window.chartTextColor = function () {
+    var dark = document.documentElement.classList.contains("dark");
+    return "rgb(" + cssVar(dark ? "--color-neutral-200" : "--color-neutral-800") + ")";
+  };
+  window.chartGridColor = function () {
+    var dark = document.documentElement.classList.contains("dark");
+    return "rgba(" + cssVar(dark ? "--color-neutral-400" : "--color-neutral-700") +
+      ", " + (dark ? 0.55 : 0.28) + ")";
+  };
+
+  // Plugin text (title/subtitle/legend) DOES read Chart.defaults.color, so the
+  // global covers those; scale ticks/axis-titles instead use the scriptable
+  // above (the global is ignored for them). We never mutate a live instance's
+  // nested options proxy — that triggers infinite setter recursion in Chart.js
+  // v4 and blanks the canvas; update() alone re-reads the global + scriptables.
+  function styleCharts() {
+    if (typeof Chart === "undefined") return;
+    Chart.defaults.color = window.chartTextColor();
+    if (!Chart.instances) return;
+    Object.keys(Chart.instances).forEach(function (id) {
+      var c = Chart.instances[id];
+      try { c.update("none"); } catch (e) { /* keep going for the rest */ }
+    });
+  }
+  window.addEventListener("load", styleCharts);
+  new MutationObserver(styleCharts).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+})();
+</script>

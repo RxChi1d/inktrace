@@ -1,0 +1,14 @@
+/* Chart.js shortcode container: add a card background so chart lines/gridlines
+   stay legible against the page background (radial-dot pattern in dark mode). */
+.chart {
+  padding: 1.25rem 1.25rem 0.5rem;
+  margin: 1.25rem 0;
+  border-radius: 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+html.dark .chart {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.08);
+}

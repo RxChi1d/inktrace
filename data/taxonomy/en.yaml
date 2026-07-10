@@ -3,6 +3,7 @@ categories:
   paper-survey: "Paper Survey"
   container-platform: "Container Platform"
   engineering: "Engineering"
+  ai-technical: "AI Technical"
 
 tags:
   nerf: "NeRF"
@@ -44,3 +45,10 @@ tags:
   gpu: "GPU"
   self-hosted: "Self-Hosted"
   hermes-agent: "Hermes Agent"
+  llm: "LLM"
+  ornith: "Ornith"
+  qwen: "Qwen"
+  mtp: "MTP"
+  gguf: "GGUF"
+  llama-cpp: "llama.cpp"
+  cuda: "CUDA"

@@ -1,0 +1,153 @@
+/* Article table styling: Blowfish's prose default gives borders only (no fill,
+   no zebra), so wide data tables read flat. Add a header fill + zebra striping
+   for row/column separation. Theme-aware via --color-neutral-* (same convention
+   as charts.css); those vars don't invert between light/dark, so we pick the
+   shade per mode. Scoped to .prose table so only in-article tables are touched. */
+/* Text tables (markdown, no .data-table class) get the same full-width, framed,
+   rounded look as the data tables so every table in the article reads the same.
+   They wrap their content (no nowrap), so display:table needs no scroll wrapper —
+   columns just shrink on narrow screens; overflow:hidden rounds the corners. */
+.prose table:not(.data-table) {
+  display: table;
+  width: 100%;
+  margin: 1.5rem 0;
+  border: 1px solid rgb(var(--color-neutral-300));
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+html.dark .prose table:not(.data-table) {
+  border-color: rgb(var(--color-neutral-700));
+}
+
+/* prose's default cells are cramped; give every table more breathing room.
+   No nowrap — text-heavy tables (陷阱/解法) still need to wrap their sentences. */
+.prose th,
+.prose td {
+  padding: 0.6rem 1rem;
+}
+
+.prose thead {
+  background: rgb(var(--color-neutral-100));
+}
+
+/* Muted, slightly spaced header text — the clean data-table look of the mockup. */
+.prose thead th {
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: rgb(var(--color-neutral-600));
+}
+html.dark .prose thead th {
+  color: rgb(var(--color-neutral-300));
+}
+
+.prose tbody tr:nth-child(even) {
+  background: rgb(var(--color-neutral-50));
+}
+
+.prose tbody tr:hover {
+  background: rgba(var(--color-neutral-200), 0.6);
+}
+
+html.dark .prose thead {
+  background: rgb(var(--color-neutral-700));
+}
+
+html.dark .prose tbody tr:nth-child(even) {
+  background: rgb(var(--color-neutral-800));
+}
+
+html.dark .prose tbody tr:hover {
+  background: rgba(var(--color-neutral-700), 0.6);
+}
+
+/* Semantic status colours for data-table rows/cells. Defined here — not inline
+   in the markdown — so the HTML tables carry only intent classes (row-adopted /
+   row-fail / cell-win / cell-dim), keeping the same CSS-var-driven, theme-aware
+   separation Blowfish uses. Light mode picks darker saturated shades for contrast
+   on the light surface; dark mode uses the lighter pastels from the reference. */
+:root {
+  --table-adopted: 180, 83, 9;   /* amber-700 — adopted / chosen row */
+  --table-fail: 190, 45, 45;     /* red      — OOM / fell-back row    */
+  --table-win: 21, 128, 61;      /* green-700 — winning value         */
+}
+html.dark {
+  --table-adopted: 255, 180, 84;
+  --table-fail: 232, 105, 95;
+  --table-win: 127, 216, 143;
+}
+
+/* td background sits over the zebra tr background, so the tint always shows. */
+.prose tr.row-adopted td {
+  background: rgba(var(--table-adopted), 0.12);
+}
+.prose tr.row-adopted td:first-child {
+  color: rgb(var(--table-adopted));
+  font-weight: 600;
+}
+.prose tr.row-fail td {
+  background: rgba(var(--table-fail), 0.1);
+}
+.prose tr.row-fail td:first-child {
+  color: rgb(var(--table-fail));
+}
+.prose td.cell-win {
+  color: rgb(var(--table-win));
+  font-weight: 600;
+}
+.prose td.cell-dim {
+  color: rgb(var(--color-neutral-500));
+}
+
+/* ── Data tables ──────────────────────────────────────────────────────────────
+   Numeric tables get the reference's precise "data" look: monospace, values
+   right-aligned (first column stays left), a smaller header, and NO zebra — the
+   prose row-separator borders carry the rhythm instead, so only the semantic
+   rows get a tint. Applied via class="data-table"; text tables (方案 / 陷阱 /
+   參數) keep the default left-aligned, zebra styling. */
+.prose table.data-table {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.82rem;
+}
+.prose table.data-table th,
+.prose table.data-table td {
+  text-align: right;
+  white-space: nowrap;
+}
+.prose table.data-table th:first-child,
+.prose table.data-table td:first-child {
+  text-align: left;
+}
+.prose table.data-table thead th {
+  font-size: 0.72rem;
+}
+.prose table.data-table tbody tr:nth-child(even),
+html.dark .prose table.data-table tbody tr:nth-child(even) {
+  background: transparent;
+}
+
+/* Frame wrapper. Blowfish sets table{display:block; overflow:auto} for mobile
+   scroll, but display:block stops the columns filling the content width — the
+   block box is full width while the rows stay intrinsic, so the right side is
+   empty (looks narrow, no right border, only the left corners round). Wrap the
+   data table in .table-frame: the wrapper owns the border / radius / horizontal
+   scroll, and the table switches back to display:table + width:100% so columns
+   fill and every corner rounds. overflow-x:auto makes overflow-y compute to auto
+   too, which is what lets border-radius clip the header fill at the top corners. */
+.prose .table-frame {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid rgb(var(--color-neutral-300));
+  border-radius: 0.5rem;
+}
+html.dark .prose .table-frame {
+  border-color: rgb(var(--color-neutral-700));
+}
+.prose .table-frame > table.data-table {
+  display: table;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  overflow: visible;
+}
