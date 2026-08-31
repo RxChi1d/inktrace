@@ -58,7 +58,7 @@ cargo run --release -- extract --country TW \
 
 ### 一個 handler 實際負責什麼
 
-雖然各國差異很大，`extract` 內部其實是一條固定的管線，而各國專屬的處理器只需要在管線中的特定位置提供對應的資料處理邏輯只插在其中幾個點上：
+雖然各國差異很大，`extract` 內部其實是一條固定的管線，各國專屬的處理器只需要在管線中的特定位置提供對應的資料處理邏輯：
 
 - **`load_context`**：載入該國需要的對照表與快取。臺灣不需要，泰國與印尼要準備 Wikidata 查詢的環境。
 - **`apply_country_centroids`**：依該國指定的 `centroid_pipeline` 投影後計算中心點。臺灣走固定的 EPSG:3826，日韓走 dynamic UTM，泰國與印尼各自使用 Albers 投影。
