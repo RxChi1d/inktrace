@@ -52,3 +52,5 @@ tags:
   gguf: "GGUF"
   llama-cpp: "llama.cpp"
   cuda: "CUDA"
+  rust: "Rust"
+  data-quality: "資料品質"
