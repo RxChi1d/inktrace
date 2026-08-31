@@ -2,13 +2,12 @@
 title: "Immich 繁體中文地理資料技術解析（二）：資料處理流程"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-08-31T22:04:33+08:00
+lastmod: 2026-08-31T22:21:53+08:00
 description: "拆解 immich-geodata-zh-tw 的資料處理流程：extract 把各國官方圖資轉成中介 CSV，release 六階段併回 GeoNames 打包成 release.tar.gz，並用 dry-run 與 fixture 驗證。"
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 3
-draft: true
 ---
 
 [系列上一篇：反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)拆解了 Immich 怎麼讀地理資料：啟動時把幾個純文字檔匯入 PostgreSQL，照片上傳時用最近鄰查詢找出地名。既然換掉檔案就能換掉顯示結果，剩下的問題就落在那份「更好的檔案」本身。

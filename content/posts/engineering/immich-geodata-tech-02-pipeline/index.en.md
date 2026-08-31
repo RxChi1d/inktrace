@@ -2,13 +2,12 @@
 title: "Immich Traditional Chinese Geodata, Part 2: The Data Pipeline"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-08-31T22:18:14+08:00
+lastmod: 2026-08-31T22:21:53+08:00
 description: "A walkthrough of the immich-geodata-zh-tw pipeline: extract turns each country's official map data into an intermediate CSV, release merges it back into GeoNames across six stages and packs release.tar.gz, all verifiable with dry-run and fixture mode."
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 3
-draft: true
 ---
 
 [The previous post in this series, How Reverse Geocoding Works,](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/) took apart the way Immich reads geographic data: a handful of plain text files get imported into PostgreSQL at startup, and a nearest-neighbour query resolves a place name when a photo is uploaded. Since swapping the files is enough to swap what gets displayed, the remaining question is about those "better files" themselves.

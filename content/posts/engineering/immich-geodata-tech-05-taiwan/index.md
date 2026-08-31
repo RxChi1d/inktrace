@@ -2,13 +2,12 @@
 title: "Immich 繁體中文地理資料技術解析（五）：用官方圖資重建臺灣的行政區"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-08-31T22:04:33+08:00
+lastmod: 2026-08-31T22:21:53+08:00
 description: "用國土測繪中心村里界圖資重建 Immich 的臺灣行政區：7,986 個代表點、座標系轉換與欄位對應，以及為什麼這個 handler 幾乎不做名稱加工。"
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 6
-draft: true
 ---
 
 [前一篇：用 Wikidata 翻地名](/posts/engineering/immich-geodata-tech-04-translation/)談的是沒有官方圖資可用時，翻譯要付出多少代價來換取可信度。這篇是相反的情況：**臺灣有完整、免費、定期更新的官方圖資**，處理流程因此可以簡單到近乎乏味，而這正是它最好的地方。

@@ -2,13 +2,12 @@
 title: "Immich Traditional Chinese Geodata (4): Translating Place Names with Wikidata, and How It Fails Silently"
 slug: "immich-geodata-tech-04-translation"
 date: 2026-08-27T10:00:00+08:00
-lastmod: 2026-08-31T22:18:14+08:00
+lastmod: 2026-08-31T22:21:53+08:00
 description: "Six known failure modes when translating place names with Wikidata: errors never break the pipeline, they quietly emit a valid Chinese name pointing at the wrong place. With a real case of a safeguard causing the bug."
 tags: ["immich", "wikidata", "sparql", "knowledge-graph", "data-quality"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 5
-draft: true
 ---
 
 [The previous post, Five Regions, Five Strategies](/en/posts/engineering/immich-geodata-tech-03-strategies/), noted that place names written in non-Han scripts, as in Thailand and Indonesia, can only go down the translation route, and that the translation source this project settled on is Wikidata.

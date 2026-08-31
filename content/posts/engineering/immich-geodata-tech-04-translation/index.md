@@ -2,13 +2,12 @@
 title: "Immich 繁體中文地理資料技術解析（四）：用 Wikidata 翻地名，以及它如何安靜地出錯"
 slug: "immich-geodata-tech-04-translation"
 date: 2026-08-27T10:00:00+08:00
-lastmod: 2026-08-31T22:04:33+08:00
+lastmod: 2026-08-31T22:21:53+08:00
 description: "用 Wikidata 翻譯地名的六種已知失效形態：錯誤不會中斷流程，而是安靜地產出一個合法卻指向錯誤地點的中文名。含防護機制反噬的實際案例與驗證方法。"
 tags: ["immich", "wikidata", "sparql", "knowledge-graph", "data-quality"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 5
-draft: true
 ---
 
 [上一篇：五個地區，五種方案](/posts/engineering/immich-geodata-tech-03-strategies/)談到，泰國、印尼這類非漢字系統的地名只能走翻譯路線，而專案選擇的翻譯來源是 Wikidata。

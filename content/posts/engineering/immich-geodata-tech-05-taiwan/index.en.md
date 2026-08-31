@@ -2,13 +2,12 @@
 title: "Immich Traditional Chinese Geodata Deep Dive (5): Rebuilding Taiwan's Administrative Divisions from Official Map Data"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-08-31T22:18:14+08:00
+lastmod: 2026-08-31T22:21:53+08:00
 description: "Rebuilding Immich's Taiwanese administrative divisions from NLSC village boundary data: 7,986 representative points, coordinate system conversion, field mapping, and why this handler does almost no name processing at all."
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 6
-draft: true
 ---
 
 [The previous post, on translating place names with Wikidata](/en/posts/engineering/immich-geodata-tech-04-translation/), was about how much you have to pay for trustworthy translations when no official map data exists. This post is the opposite case: **Taiwan has complete, free, regularly updated official map data**, so the processing can be simple to the point of being boring, and that is the best thing about it.
