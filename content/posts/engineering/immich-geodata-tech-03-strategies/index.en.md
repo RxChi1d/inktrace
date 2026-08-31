@@ -2,13 +2,12 @@
 title: "Immich Traditional Chinese Geodata (3): Five Regions, Five Strategies"
 slug: "immich-geodata-tech-03-strategies"
 date: 2026-08-26T10:00:00+08:00
-lastmod: 2026-08-31T22:18:14+08:00
+lastmod: 2026-08-31T22:21:40+08:00
 description: "Japan keeps its native kanji names, South Korea uses official hanja, Thailand and Indonesia are translated with a fallback to the official original. Unpacking the single criterion behind all five place-name strategies in immich-geodata-zh-tw."
 tags: ["immich", "geodata", "localization", "gis"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
 series_order: 4
-draft: true
 ---
 
 The [first](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/) [two posts](/en/posts/engineering/immich-geodata-tech-02-pipeline/) covered the mechanism and the pipeline: Immich reads place names from `cities500.txt`, and that file is produced from national mapping data by `extract` and `release`. Technically, "how to swap the data" is a settled question. The genuinely hard part is something else: **what should a foreign place name look like so that it reads naturally to a Taiwanese user?**
@@ -71,6 +70,8 @@ Those administrative-category qualifiers almost never appear in everyday usage, 
 Provinces follow the same rule and always come out as "X道", so `경기도` becomes 京畿道 (Gyeonggi).
 
 The benefit of normalizing everything to "X市" and "X道" is consistency: all 16 first-level divisions look alike in the album location field, instead of alternating between 特別自治道 and 廣域市.
+
+The rule also explains a few outputs that look like the project is holding on to pre-reform names. Stripping the modifier from `강원특별자치도` gives 江原道 and `제주특별자치도` gives 濟州道, which happen to match what both provinces were called before their reclassification. That is a coincidence, not a deliberate choice to keep the old names. The one case that needs extra handling is `전북특별자치도`, where the Korean name already uses the contraction 전북 (全北). Applying the rule mechanically would produce 全北道, which is not a real name, so the mapping expands it to the full 全羅北道.
 
 The reason Wikidata's Chinese labels are not used directly is that the quality of that layer is not dependable. Real cases encountered include: Seoul's `관악구` coming out as 新林洞, a neighborhood inside the district; `송파구` turning into 蠶室站, a subway station inside the district; the Traditional Chinese label for `함평군` converting 咸 into 鹹; and the label for `여주시` still stuck on 驪州郡, the pre-promotion name. Switching to hanja notation as the source of truth eliminated all of these at once, with no manual correction table to maintain.
 
