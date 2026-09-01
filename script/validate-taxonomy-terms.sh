@@ -51,13 +51,22 @@ term_exists() {
     exists_zh_tw=$(yq eval ".${taxonomy}.${term}" "$DATA_DIR/zh-TW.yaml" 2>/dev/null)
     exists_en=$(yq eval ".${taxonomy}.${term}" "$DATA_DIR/en.yaml" 2>/dev/null)
 
+    local missing_zh_tw=0 missing_en=0
+    { [ "$exists_zh_tw" = "null" ] || [ -z "$exists_zh_tw" ]; } && missing_zh_tw=1
+    { [ "$exists_en" = "null" ] || [ -z "$exists_en" ]; } && missing_en=1
+
+    # Absent from both files: the term itself is unknown, not a missing translation
+    if [ $missing_zh_tw -eq 1 ] && [ $missing_en -eq 1 ]; then
+        return 3
+    fi
+
     # Check zh-TW translation
-    if [ "$exists_zh_tw" = "null" ] || [ -z "$exists_zh_tw" ]; then
+    if [ $missing_zh_tw -eq 1 ]; then
         return 1
     fi
 
     # Check en translation
-    if [ "$exists_en" = "null" ] || [ -z "$exists_en" ]; then
+    if [ $missing_en -eq 1 ]; then
         return 2
     fi
 
@@ -124,9 +133,9 @@ validate_terms() {
     IFS=',' read -ra term_array <<< "$terms_csv"
 
     for term in "${term_array[@]}"; do
-        # Remove quotes and whitespace using Bash parameter expansion
-        term="${term#"${term%%[![:space:]\"]*}"}"  # Remove leading whitespace and quotes
-        term="${term%"${term##*[![:space:]\"]*}"}"  # Remove trailing whitespace and quotes
+        # Strip surrounding quotes and whitespace (terms are kebab-case, no inner spaces)
+        term=$(echo "$term" | tr -d '"[:space:]')
+        [ -z "$term" ] && continue
 
         # Validate lowercase (kebab-case)
         local lowercase_term
@@ -138,9 +147,11 @@ validate_terms() {
         fi
 
         # Validate existence in SSOT
-        local error_code
-        if ! term_exists "$taxonomy" "$term"; then
-            error_code=$?
+        # NOTE: capture the status directly; inside `if ! cmd`, $? is the negated
+        # status (always 0) and the case below would always fall through to *)
+        local error_code=0
+        term_exists "$taxonomy" "$term" || error_code=$?
+        if [ "$error_code" -ne 0 ]; then
             case $error_code in
                 1)
                     echo -e "${RED}✗${NC} $file: $taxonomy '$term' missing zh-TW translation in SSOT"
@@ -170,14 +181,10 @@ validate_file() {
     tags=$(extract_taxonomy_field "$file" "tags")
 
     # Validate categories
-    if ! validate_terms "$file" "category" "$categories"; then
-        total_errors=$((total_errors + $?))
-    fi
+    validate_terms "$file" "categories" "$categories" || total_errors=$((total_errors + $?))
 
     # Validate tags
-    if ! validate_terms "$file" "tag" "$tags"; then
-        total_errors=$((total_errors + $?))
-    fi
+    validate_terms "$file" "tags" "$tags" || total_errors=$((total_errors + $?))
 
     return $total_errors
 }
