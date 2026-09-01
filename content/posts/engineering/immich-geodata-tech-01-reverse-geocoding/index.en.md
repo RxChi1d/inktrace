@@ -3,7 +3,7 @@ title: "Immich Traditional Chinese Geodata Deep Dive (1): How Reverse Geocoding 
 slug: "immich-geodata-tech-01-reverse-geocoding"
 aliases: ["/posts/engineering/immich-geodata-tech-01-pipeline/"]
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2026-08-31T22:18:14+08:00
+lastmod: 2026-09-01T10:16:47+08:00
 description: "A breakdown of Immich's offline reverse geocoding: which GeoNames files get imported at container startup, how earthdistance turns coordinates into place names with a nearest neighbor query, and why swapping those files is enough to make your library show accurate Traditional Chinese place names."
 tags: ["immich", "geodata", "geonames", "reverse-geocoding"]
 categories: ["engineering"]
@@ -133,7 +133,7 @@ Note that the comparison is on content equality, not on the file's modification 
 > [!NOTE] About `admin2Codes.txt`
 > `admin2Codes.txt` holds second-level administrative division data. This project does nothing to it and keeps the original file only to preserve the same file structure. That is sufficient in practice, because the place name fields Immich displays come from `cities500.txt` itself and never touch `admin2Codes.txt`.
 
-![GeoNames data file relationship diagram](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-reverse-geocoding/geonames-file-relationships.png "Relationships among the core GeoNames files: cities500.txt references the administrative division lookup tables through admin1_code and admin2_code")
+![GeoNames data file relationship diagram](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-reverse-geocoding/geonames-file-relationships.png "Relationships among the core GeoNames files: cities500.txt references the admin1 lookup table through admin1_code, while the country code maps to en.json")
 {style="width:80%;"}
 
 ## Country Names: Working Around an Immich Limitation
