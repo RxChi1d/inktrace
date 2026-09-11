@@ -2,7 +2,7 @@
 title: "Localized Place Names for Immich - immich-geodata-zh-tw Project Overview and Setup Guide"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2026-08-31T22:18:14+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "immich-geodata-zh-tw setup guide: add one entrypoint line to your Docker Compose file and Immich will show localized place names for Taiwan, Japan, South Korea, Thailand, and Indonesia. Manual and non-container deployment included."
 tags: ["docker", "immich"]
 categories: ["container-platform"]
@@ -57,7 +57,7 @@ For Taiwan, on top of the Chinese names, the project also fixes the incorrect co
 
 ## Before and after
 
-![Before and after comparison](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/comparison.png)
+![Before and after comparison](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126699756_comparison.png)
 {style="width:80%;"}
 
 Place names are more accurate, and Chinese search works far better too.
@@ -105,7 +105,7 @@ services:
 
 Using the official Immich [docker-compose.yml example](https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml), the complete file looks like this:
 
-![docker-compose.yml example](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/docker-compose-example.png "docker-compose.yml example")
+![docker-compose.yml example](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126705702_docker-compose-example.png "docker-compose.yml example")
 
 #### 2. Restart Immich
 
@@ -123,10 +123,10 @@ docker logs immich_server
 What to look for:
 1. Whether the `immich-geodata-zh-tw` execution and download messages appear.
   Output similar to the following means the script ran successfully:
-  ![Checking the immich-geodata-zh-tw script output](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/check-geodata-script.png "Checking the immich-geodata-zh-tw script output")
+  ![Checking the immich-geodata-zh-tw script output](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126689332_check-geodata-script.png "Checking the immich-geodata-zh-tw script output")
   If the script ends by printing `驗證通過` (verification passed), the data really was written to the locations Immich reads from, including the `en.json` file that determines how country names are displayed. This is a more reliable signal than searching the log for keywords.
 2. Whether Immich prints `10000 geodata records imported` after it starts, which means the data loaded successfully.
-  ![Checking the Immich geodata import result](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/check-geodata-import.png "Checking the Immich geodata import result")
+  ![Checking the Immich geodata import result](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126693336_check-geodata-import.png "Checking the Immich geodata import result")
 
 <a id="fix-import-failed"></a>
 > [!QUESTION] No import message?
@@ -211,11 +211,11 @@ After the data is imported you must **re-extract metadata** so that existing pho
 > If your Immich library has no photos yet, for example because you just deployed it, you can skip this step.
 
 1. **Log in to the Immich admin panel**
-  ![Logging in to the Immich admin panel](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-1.png "Logging in to the Immich admin panel")
+  ![Logging in to the Immich admin panel](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126701756_extract-metadata-step-1.png "Logging in to the Immich admin panel")
 2. Go to **Administration** → **Jobs**
-  ![Opening the Jobs page under Administration](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-2.png "Opening the Jobs page under Administration")
+  ![Opening the Jobs page under Administration](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126706582_extract-metadata-step-2.png "Opening the Jobs page under Administration")
 3. Find **Extract Metadata** and click **All**
-  ![Selecting Extract Metadata and clicking All](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-geodata-zh-tw/extract-metadata-step-3.png "Selecting Extract Metadata and clicking All")
+  ![Selecting Extract Metadata and clicking All](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126711655_extract-metadata-step-3.png "Selecting Extract Metadata and clicking All")
 
 Location data on existing photos will now be updated to the localized place names, and new uploads will use them directly.
 

@@ -3,7 +3,7 @@ title: "Immich 繁體中文地理資料技術解析（一）：反向地理編�
 slug: "immich-geodata-tech-01-reverse-geocoding"
 aliases: ["/posts/engineering/immich-geodata-tech-01-pipeline/"]
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2026-09-01T10:16:47+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "拆解 Immich 的離線反向地理編碼：容器啟動時匯入哪些 GeoNames 檔案、earthdistance 如何用最近鄰查詢從座標找出地名，以及為什麼替換這些檔案就能讓相簿顯示精準的繁體中文地名。"
 tags: ["immich", "geodata", "geonames", "reverse-geocoding"]
 categories: ["engineering"]
@@ -30,7 +30,7 @@ series_order: 2
 
 沒有比對邊界，沒有查詢外部服務，也沒有任何驗證步驟，就是找最近的點，然後把它的欄位抄下來。
 
-![Immich 反向地理編碼流程圖](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-reverse-geocoding/immich-reverse-geocoding-flow.png "Immich 的兩個階段：容器啟動時匯入資料，照片上傳時以最近鄰查詢取得地名")
+![Immich 反向地理編碼流程圖](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-01-reverse-geocoding/1789126737526_immich-reverse-geocoding-flow.png "Immich 的兩個階段：容器啟動時匯入資料，照片上傳時以最近鄰查詢取得地名")
 {style="width:80%;"}
 
 ### 查詢：從座標到地名
@@ -133,7 +133,7 @@ immich-geodata-zh-tw 利用這個特性，將 `en.json` 的內容替換為繁體
 > [!NOTE] 關於 `admin2Codes.txt`
 > `admin2Codes.txt` 是二級行政區資料。本專案不對它做任何處理，只保留原檔以維持相同的檔案結構。實務上這樣就足夠，因為 Immich 顯示的地名欄位來自 `cities500.txt` 本身，並不使用 `admin2Codes.txt` 這份檔案。
 
-![GeoNames 資料檔案關係圖](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-01-reverse-geocoding/geonames-file-relationships.png "GeoNames 核心檔案之間的關係：cities500.txt 透過 admin1_code 參照一級行政區對照表，國碼另外對應 en.json")
+![GeoNames 資料檔案關係圖](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-01-reverse-geocoding/1789126738565_geonames-file-relationships.png "GeoNames 核心檔案之間的關係：cities500.txt 透過 admin1_code 參照一級行政區對照表，國碼另外對應 en.json")
 {style="width:80%;"}
 
 ## 國家名稱：一個繞過 Immich 限制的做法

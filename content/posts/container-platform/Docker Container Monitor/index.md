@@ -2,7 +2,7 @@
 title: "Docker Container Monitor - 通過 Grafana 監視 Docker 容器的狀態"
 slug: "docker-container-monitor-deployment"
 date: 2025-04-26T00:00:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["docker", "grafana", "monitor"]
 categories: ["container-platform"]
 ---
@@ -183,26 +183,26 @@ docker network create grafana
     2. 選擇 `Prometheus`
     3. **Name 為 `prometheus` ，Connection 的 url 填入** `http://prometheus:9090` 。隨後點擊 `Save & test`。
         
-        ![CleanShot 2025-02-26 at 22.30.07.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-01.png)
+        ![CleanShot 2025-02-26 at 22.30.07.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126580191_image-01.png)
         
 3. 增新 Dashboard
     1. 進入 `Dashboards` ，點擊 `New` - `Import`
         
-        ![CleanShot 2025-02-22 at 19.56.02@2x.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-02.png)
+        ![CleanShot 2025-02-22 at 19.56.02@2x.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126590714_image-02.png)
         
     2. 上傳 NPM-Monitor 的 json
         
         使用 id `15120` 創建 dashboard。
         
-        ![CleanShot 2025-02-26 at 22.31.42.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-03.png)
+        ![CleanShot 2025-02-26 at 22.31.42.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126595786_image-03.png)
         
     3. 選擇對應的 prometheus Data Source
         
-        ![CleanShot 2025-02-26 at 22.32.17.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-04.png)
+        ![CleanShot 2025-02-26 at 22.32.17.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126679086_image-04.png)
         
 
 > [!QUESTION] Temperature panel 顯示 "No data"
 >
 > 預設 node-exporter 會通過 `/sys/class/thermal` 底下的 `thermal_zone*` 來獲取 cpu 溫度。但某些電腦並沒有相關的 sensor，因此 `/sys/class/thermal` 中不會有相關的檔案，因此在 dashboard 中 cpu 溫度相關的 panel 會沒有數據。
 >
-> ![CleanShot 2025-02-26 at 22.35.13.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-05.png)
+> ![CleanShot 2025-02-26 at 22.35.13.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126679135_image-05.png)

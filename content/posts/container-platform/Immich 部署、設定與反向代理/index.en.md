@@ -2,7 +2,7 @@
 title: "Immich Deployment, Configuration, and Reverse Proxy - The Best Open-Source Alternative to Google Photos"
 slug: "immich-deployment"
 date: 2025-11-23T00:00:00+08:00
-lastmod: 2025-11-29T22:26:07+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -257,7 +257,7 @@ For detailed information, refer to the official Immich documentation on [Searchi
 
     We can refer to the "Simplified Chinese" table for selection. If you have sufficient VRAM, you can directly choose the best-performing model `nllb-clip-large-siglip__v1`:
 
-    ![Simplified Chinese Performance Comparison Table for Models](https://cdn.rxchi1d.me/inktrace-files/container-platform/immich-deployment/model-cn-perf-compare.png)
+    ![Simplified Chinese Performance Comparison Table for Models](https://images.rxchi1d.me/file/inktrace/container-platform/immich-deployment/1789126681307_model-cn-perf-compare.png)
     _Simplified Chinese Performance Comparison Table for Models_
 
 2. **Configure the model:**

@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析（二）：資料處理流程"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-08-31T22:21:53+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "拆解 immich-geodata-zh-tw 的資料處理流程：extract 把各國官方圖資轉成中介 CSV，release 六階段併回 GeoNames 打包成 release.tar.gz，並用 dry-run 與 fixture 驗證。"
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
@@ -37,7 +37,7 @@ series_order: 3
 
 `release` 執行時會檢查 `meta_data/` 底下有沒有該國的中介 CSV，據此決定它走哪一條路。`extract` 的產物直接進版控，而官方圖資不常更新，所以發布時只要讀現成的 CSV，不必每次重跑各國的圖資處理。
 
-![immich-geodata-zh-tw 的資料處理流程：extract 把五個地區的官方圖資轉成中介 CSV，release 的六個階段將其併回 GeoNames 並打包成 release.tar.gz](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/release-pipeline-stages.png "兩條線：extract 產生中介 CSV，release 六階段併回 GeoNames 並打包")
+![immich-geodata-zh-tw 的資料處理流程：extract 把五個地區的官方圖資轉成中介 CSV，release 的六個階段將其併回 GeoNames 並打包成 release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126754796_release-pipeline-stages.png "兩條線：extract 產生中介 CSV，release 六階段併回 GeoNames 並打包")
 {style="width:90%;"}
 
 ## 第一條線：`extract`
@@ -65,7 +65,7 @@ cargo run --release -- extract --country TW \
 
 其餘部分，包含讀檔、解析 feature、排序、座標四捨五入、寫出統一欄位的 CSV，為所有國家共用。另外還有一個條件性的 `split_parts`（multipart 逐 part 拆列），目前只有印尼啟用。
 
-![extract 的內部管線：輸入圖資、讀檔解析 feature、load_context、split_parts、apply_country_centroids、rows_from_features、sort round write，最後輸出統一欄位的中介 CSV；其中 load_context、apply_country_centroids、rows_from_features 三個階段是各國專屬，split_parts 為條件性階段目前僅印尼啟用](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/extract-handler-architecture.png "灰色階段所有國家共用，珊瑚色階段是新增一個國家時要實作的部分")
+![extract 的內部管線：輸入圖資、讀檔解析 feature、load_context、split_parts、apply_country_centroids、rows_from_features、sort round write，最後輸出統一欄位的中介 CSV；其中 load_context、apply_country_centroids、rows_from_features 三個階段是各國專屬，split_parts 為條件性階段目前僅印尼啟用](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126746154_extract-handler-architecture.png "灰色階段所有國家共用，珊瑚色階段是新增一個國家時要實作的部分")
 {style="width:90%;"}
 
 至於「哪些國家有 handler」，則寫在 `Country` enum 裡。`Country::ALL` 是唯一的事實來源，CLI 的清單由它導出，新增國家時不需要、也不能另外同步一份。
@@ -114,7 +114,7 @@ cargo run --release -- release \
 
 為了做到這點，程式先算出目前資料中的**全域最大 ID**，再從最大值加一往後配發，`admin1CodesASCII.txt` 先取一段，`cities500.txt` 接著往下取。不寫死號碼區段的好處是，GeoNames 之後擴充資料時，新增的列也不會覆蓋到官方既有的點位。
 
-![geoname_id 配發示意：GeoNames 既有資料佔用到全域最大值，admin1CodesASCII 的新增列從最大值加一開始配發，cities500 的新增列接續其後，右側留白表示 GeoNames 之後擴充也不會撞號](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/geoname-id-allocation.png "新增列從當下的全域最大值往後配發，不寫死號碼區段")
+![geoname_id 配發示意：GeoNames 既有資料佔用到全域最大值，admin1CodesASCII 的新增列從最大值加一開始配發，cities500 的新增列接續其後，右側留白表示 GeoNames 之後擴充也不會撞號](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126745601_geoname-id-allocation.png "新增列從當下的全域最大值往後配發，不寫死號碼區段")
 {style="width:70%;"}
 
 輸出是 `cities500_optimized.txt` 與 `admin1CodesASCII_optimized.txt`。
@@ -147,7 +147,7 @@ cargo run --release -- release \
 
 全部落空的話就保留原文。冷門地點在 Immich 裡仍然可能顯示英文，這是刻意的。
 
-![translate 階段的決策流程：依序嘗試 LocationIQ 名稱、alternateNamesV2 篩出的中文、cities500 的 alternatenames 欄位，候選經 OpenCC 判定是否需要轉繁，再由國教院譯名裁決覆寫、補洞或保留既有，全部落空則保留原文](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/translate-decision-flow.png "三個候選來源、OpenCC 判定與國教院裁決的先後關係")
+![translate 階段的決策流程：依序嘗試 LocationIQ 名稱、alternateNamesV2 篩出的中文、cities500 的 alternatenames 欄位，候選經 OpenCC 判定是否需要轉繁，再由國教院譯名裁決覆寫、補洞或保留既有，全部落空則保留原文](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126762163_translate-decision-flow.png "三個候選來源、OpenCC 判定與國教院裁決的先後關係")
 {style="width:90%;"}
 
 輸出是 `cities500_translated.txt` 與 `admin1CodesASCII_translated.txt`。

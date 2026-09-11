@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata (4): Translating Place Names with Wikidata, and How It Fails Silently"
 slug: "immich-geodata-tech-04-translation"
 date: 2026-08-27T10:00:00+08:00
-lastmod: 2026-08-31T22:21:53+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "Six known failure modes when translating place names with Wikidata: errors never break the pipeline, they quietly emit a valid Chinese name pointing at the wrong place. With a real case of a safeguard causing the bug."
 tags: ["immich", "wikidata", "sparql", "knowledge-graph", "data-quality"]
 categories: ["engineering"]
@@ -58,7 +58,7 @@ The translated name is taken straight from the wrong entity. This is the hardest
 
 A real instance of the second kind: Seoul's `관악구` (Gwanak-gu, 冠嶽區) was once emitted as 新林洞 (Sillim-dong). Gwanak-gu really does contain Sillim-dong, and Sillim-dong's P131 chain really does contain Seoul, so the check passes cleanly. Nothing in the data looks wrong, unless somebody sits down and compares every single district name.
 
-![Three outcomes of Wikidata place-name translation: passing verification yields the correct name; finding nothing falls back to the original and shows up in the untranslated list; selecting the wrong entity yet passing verification yields an invisible mistranslation](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-04-translation/wikidata-failure-paths.png "Of the three paths, only the fallback to the original is a visible failure")
+![Three outcomes of Wikidata place-name translation: passing verification yields the correct name; finding nothing falls back to the original and shows up in the untranslated list; selecting the wrong entity yet passing verification yields an invisible mistranslation](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-04-translation/1789126763356_wikidata-failure-paths.png "Of the three paths, only the fallback to the original is a visible failure")
 {style="width:80%;"}
 
 ## Six Known Ways to Get It Wrong

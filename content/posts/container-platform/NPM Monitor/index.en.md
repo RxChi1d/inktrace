@@ -2,7 +2,7 @@
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - Monitoring NPM Proxy Status with Grafana"
 slug: "nginx-proxy-manager-monitor-deployment"
 date: 2025-11-23T13:31:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 ---
@@ -339,12 +339,12 @@ networks:
     2. Choose `Loki`
     3. **Set the Name to `loki` and the Connection URL to** `http://loki:3100`. Click `Save & test`.
 
-        ![CleanShot_2025-02-25_at_15.22.24](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-01.png)
+        ![CleanShot_2025-02-25_at_15.22.24](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126722976_image-01.png)
 
 3. Import the dashboard:
     1. Go to `Dashboards`, click `New` → `Import`
 
-        ![CleanShot_2025-02-22_at_19.56.022x](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-02.png)
+        ![CleanShot_2025-02-22_at_19.56.022x](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126720825_image-02.png)
 
 
     2. Upload the NPM Monitor JSON file:
@@ -353,12 +353,12 @@ networks:
 
     3. Select the corresponding Loki data source:
 
-        ![CleanShot_2025-02-25_at_15.26.18](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-03.png)
+        ![CleanShot_2025-02-25_at_15.26.18](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126722223_image-03.png)
 
 
 4. Customize labelFilter and regexFilter as needed:
 
-    ![CleanShot_2025-02-25_at_15.24.33](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-04.png)
+    ![CleanShot_2025-02-25_at_15.24.33](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126731595_image-04.png)
 
 
     The default regexFilter excludes data originating from the `192.168.50.0/24` subnet.

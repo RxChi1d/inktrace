@@ -2,7 +2,7 @@
 title: "Installing 7-Zip on Debian/Ubuntu"
 slug: "install-7zip-on-debian-ubuntu"
 date: 2025-11-23T14:05:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["debian-ubuntu", "package"]
 categories: ["linux-technical"]
 ---
@@ -19,7 +19,7 @@ A guide to installing the latest version of 7-Zip on Debian/Ubuntu. This resolve
 
     Visit the [official download page](https://www.7-zip.org/download.html) to find the latest version package and copy the download link.
 
-    ![Official Download Page](https://cdn.rxchi1d.me/inktrace-files/linux-technical/install-7zip-on-debian-ubuntu/image-01.png)
+    ![Official Download Page](https://images.rxchi1d.me/file/inktrace/linux-technical/install-7zip-on-debian-ubuntu/1789126780643_image-01.png)
     _Official Download Page_
 
     ```bash

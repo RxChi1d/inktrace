@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析（五）：用官方圖資重建臺灣的行政區"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-08-31T22:21:53+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "用國土測繪中心村里界圖資重建 Immich 的臺灣行政區：7,986 個代表點、座標系轉換與欄位對應，以及為什麼這個 handler 幾乎不做名稱加工。"
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
@@ -38,7 +38,7 @@ Immich 預設的 GeoNames 資料用在臺灣，會遇到三個問題：
 
 選村里界而不是鄉鎮界，是因為 Immich 用的是最近鄰查詢：**點位越密，被標到隔壁行政區的機率越低**。一個鄉鎮只給一個點，邊界附近的照片幾乎必然出錯；細到村里之後，同一個鄉鎮內散布數十個點，落點自然收斂。
 
-![點位密度對比：GeoNames 原始資料點位稀疏，照片被標到隔壁鄉鎮；改用 NLSC 村里界的 7,986 個代表點後，照片落在正確的鄉鎮市區](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-05-taiwan/point-density-comparison.png "點位密度決定最近鄰查詢會落在哪個行政區")
+![點位密度對比：GeoNames 原始資料點位稀疏，照片被標到隔壁鄉鎮；改用 NLSC 村里界的 7,986 個代表點後，照片落在正確的鄉鎮市區](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-05-taiwan/1789126774647_point-density-comparison.png "點位密度決定最近鄰查詢會落在哪個行政區")
 {style="width:80%;"}
 
 而村里界資料本身就帶有完整的上層名稱（縣市、鄉鎮市區、村里），所以行政區層級不需要另外拼裝。
@@ -62,7 +62,7 @@ Immich 預設的 GeoNames 資料用在臺灣，會遇到三個問題：
 
 離島、飛地這類 multipart 圖徵的處理值得一提：**臺灣採用合併後的面積加權中心點，一個村里恆為一列**。逐個 part 拆成多列的做法目前只在印尼啟用。印尼是群島國家，一個行政區可能散在數座島上，不拆會讓部分島嶼的定位嚴重偏移；臺灣的離島多半自成村里，沒有這個問題。
 
-![代表點取法對比：由三座島組成的行政區若合併成單一代表點，該點會落在島與島之間的海面上，照片因此被標到很遠的位置；改為每個 part 各自取代表點後，照片落在正確的島上](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-05-taiwan/centroid-multipart.png "群島地形下，合併代表點會落在海上；逐 part 拆列則每座島各有代表點")
+![代表點取法對比：由三座島組成的行政區若合併成單一代表點，該點會落在島與島之間的海面上，照片因此被標到很遠的位置；改為每個 part 各自取代表點後，照片落在正確的島上](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-05-taiwan/1789126770248_centroid-multipart.png "群島地形下，合併代表點會落在海上；逐 part 拆列則每座島各有代表點")
 {style="width:70%;"}
 
 ## NLSC 欄位對應到 GeoNames 行政區層級

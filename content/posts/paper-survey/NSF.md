@@ -2,7 +2,7 @@
 title: "論文筆記 - NSF: Neural Surface Fields for Human Modeling from Monocular Depth Scene Reconstruction"
 slug: "nsf"
 date: 2023-12-06T21:24:00+08:00
-lastmod: 2026-01-03T22:40:21+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 math: true
@@ -40,7 +40,7 @@ math: true
         - NSF 可以從單目深度影格中恢復詳細的形狀資訊。
         - 可以處理不同服裝的幾何形狀與紋理。
 
-![figure-1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-1.png)
+![figure-1](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127215599_figure-1.png)
 
 {{< youtube id="2C_ZQzD6vKQ" allowFullScreen="true" title="NSF 論文官方介紹影片" >}}
 
@@ -74,7 +74,7 @@ $$
 
 #### Overview
 
-![figure-3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-3.png)
+![figure-3](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127223632_figure-3.png)
 
 - Input
     - 單目深度點雲序列，$\mathcal{X}^s = \{ \mathbf{X}^s_1, \ldots, \mathbf{X}^s_{T_s} \}$。
@@ -168,7 +168,7 @@ E. 使用 LBS 重新將姿勢接入 human model。
         
         而 NSF 更加通用，並可以產生物體的連續場。他能將網格表面的連貫性與連接性結合。
         
-        ![figure-2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-2.png)
+        ![figure-2](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127226297_figure-2.png)
         
         Fig.2: 在箭頭右側可見， NSF 無需重新訓練即可使用任意解析度或拓樸查詢。
         
@@ -334,25 +334,25 @@ E. 使用 LBS 重新將姿勢接入 human model。
 
 ⽬標是恢復完整穿著衣服的⾝體模型。
 
-![table-1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/table-1.png)
+![table-1](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127269471_table-1.png)
 
 競爭⽅法 [6,13] 需為每個受試者訓練⼀個神經網絡，我們的⽅法是跨多個受試者進⾏訓練的，可以⽤更少的計算資源產⽣更可靠的重建。
 
 - 在 DuFF 資料及上比較 DSFN 與 PINA。
     
-    ![figure-4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-4.png)
+    ![figure-4](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127231633_figure-4.png)
     
 
 - 在 CAPE 資料及上評估其他的方法。
     
-    ![figure-5](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-5.png)
+    ![figure-5](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127240294_figure-5.png)
     
 
 - 可以以任意解析度重建⼀序列的連貫網格，⽽無需重新訓練。
     
     這是其他的 baseline 無法做到的。
     
-    ![mesh-reconstruction-with-arbitrary-resolution](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/mesh-reconstruction-with-arbitrary-resolution.png)
+    ![mesh-reconstruction-with-arbitrary-resolution](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127264186_mesh-reconstruction-with-arbitrary-resolution.png)
     { style="width: 60%;"}
 
 {{< gallery >}}
@@ -396,7 +396,7 @@ E. 使用 LBS 重新將姿勢接入 human model。
 
 ### Efficiency of Neural Surface Field
 
-![table-2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/table-2.png)
+![table-2](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127275520_table-2.png)
 { style="width: 60%;"}
 
 - 在這個實驗中，作者使用相同的網路與資料設計三種變體：
@@ -411,7 +411,7 @@ E. 使用 LBS 重新將姿勢接入 human model。
 
 本篇的方法能將泛化神經網路與特定主體的特徵解耦，因此可以使用少量的資料，快速學習新的特定主體的特徵。（10 張深度影像，訓練 10 分鐘）
 
-![table-3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/table-3.png)
+![table-3](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127275378_table-3.png)
 { style="width: 60%;"}
 
 在 Tab.3 中呈現，訓練完整的網路需要約 10 小時。
@@ -420,14 +420,14 @@ E. 使用 LBS 重新將姿勢接入 human model。
 
 而其他的方法並沒有這種能力。
 
-![figure-6](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-6.png)
+![figure-6](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127243376_figure-6.png)
 { style="width: 60%;"}
 
 Fig.6 展示了重建結果。
 
 ### Animating Learnt Avatars
 
-![figure-7](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-7.png)
+![figure-7](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127244023_figure-7.png)
 
 作者在 BuFF 資料集上訓練模型，然後使用 AIST 資料集的姿勢做人體動畫。
 
@@ -472,7 +472,7 @@ Fig.6 展示了重建結果。
 
 ### Results on Real Data
 
-![figure-8](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-8.png)
+![figure-8](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127251083_figure-8.png)
 { style="width: 60%;"}
 
 本篇的方法在真實資料集也比以往的方法有更好的表面結構。
@@ -483,7 +483,7 @@ Fig.6 展示了重建結果。
 
 Baseline 的方法並沒有這樣的能力。
 
-![figure-9](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NSF/figure-9.png)
+![figure-9](https://images.rxchi1d.me/file/inktrace/paper-survey/NSF/1789127255960_figure-9.png)
 { style="width: 60%;"}
 
 Fig.9 展示本篇 textured 3D avatar 的範例。

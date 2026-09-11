@@ -2,7 +2,7 @@
 title: "論文筆記 - MonoNeRF: Learning Generalizable NeRFs from Monocular Videos without Camera Poses"
 slug: "mononerf"
 date: 2024-01-06T18:46:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 math: true
@@ -34,13 +34,13 @@ MonoNeRF (ICML 2023) 這篇論文探索了一個重要的問題：如何在缺�
         - 相機姿態估計。
         - Novel View Synthesis
 
-![Figure 1: We learn a MonoNeRF from monocular videos that can be applied to depth estimation, novel view synthesis, and camera pose estimation.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/figure-1.png "Figure 1: We learn a MonoNeRF from monocular videos that can be applied to depth estimation, novel view synthesis, and camera pose estimation.")
+![Figure 1: We learn a MonoNeRF from monocular videos that can be applied to depth estimation, novel view synthesis, and camera pose estimation.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127150841_figure-1.png "Figure 1: We learn a MonoNeRF from monocular videos that can be applied to depth estimation, novel view synthesis, and camera pose estimation.")
 
 ## Methods
 
 ### Overview
 
-![Figure 2: Overview of proposed MonoNeRF. Given a short clip of video, the camera encoder and depth encoder disentangle it into depth maps, neural representations, and relative camera trajectory. The Multiplane NeRF is utilized as the decoder to generate the target images according to the estimated camera pose. During training, the model is supervised via the reconstruction loss between the input frames and the generated ones. During testing, three downstream tasks, *i.e.* camera pose estimation, depth estimation, and novel view synthesis can be achieved within a single model.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/figure-2.png "Figure 2: Overview of proposed MonoNeRF. Given a short clip of video, the camera encoder and depth encoder disentangle it into depth maps, neural representations, and relative camera trajectory. The Multiplane NeRF is utilized as the decoder to generate the target images according to the estimated camera pose. During training, the model is supervised via the reconstruction loss between the input frames and the generated ones. During testing, three downstream tasks, *i.e.* camera pose estimation, depth estimation, and novel view synthesis can be achieved within a single model.")
+![Figure 2: Overview of proposed MonoNeRF. Given a short clip of video, the camera encoder and depth encoder disentangle it into depth maps, neural representations, and relative camera trajectory. The Multiplane NeRF is utilized as the decoder to generate the target images according to the estimated camera pose. During training, the model is supervised via the reconstruction loss between the input frames and the generated ones. During testing, three downstream tasks, *i.e.* camera pose estimation, depth estimation, and novel view synthesis can be achieved within a single model.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127159302_figure-2.png "Figure 2: Overview of proposed MonoNeRF. Given a short clip of video, the camera encoder and depth encoder disentangle it into depth maps, neural representations, and relative camera trajectory. The Multiplane NeRF is utilized as the decoder to generate the target images according to the estimated camera pose. During training, the model is supervised via the reconstruction loss between the input frames and the generated ones. During testing, three downstream tasks, *i.e.* camera pose estimation, depth estimation, and novel view synthesis can be achieved within a single model.")
 
 1. 使用 Camera Encoder ，根據預測兩幀之間的相機姿態變化（旋轉與平移矩陣）。
 2. 使用 Depth Encoder，預測 monocular depth，同時中間的 feature 會被應用到 multi-plane 上，並以不同視差等級的平面結合。
@@ -54,7 +54,7 @@ MonoNeRF (ICML 2023) 這篇論文探索了一個重要的問題：如何在缺�
 
 ### Camera Pose Encoder
 
-![overview-1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/overview-1.png)
+![overview-1](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127169099_overview-1.png)
 
 目的：
 
@@ -82,7 +82,7 @@ $$
 
 ### Monocular Depth Encoder
 
-![overview-2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/overview-2.png)
+![overview-2](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127181029_overview-2.png)
 
 目的：
 
@@ -169,7 +169,7 @@ MPI 是由多個平面的 RGB-$\alpha$ 組成，這樣所產生的深度會是�
 
 與之不同，Multiplane NeRF 可以在任意深度預測 RGB-$\alpha$ image 以達成連續的 3D 場景表示。
 
-![Multiplane-NeRF-overview](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/Multiplane-NeRF-overview.png)
+![Multiplane-NeRF-overview](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127138762_Multiplane-NeRF-overview.png)
 _Overview of Multiplane NeRF_
 作者從 Depth Encoder 中提取中間特徵與 disparity level $d_i$ 結合作為輸入，並輸出 RGB images 與 density map。
 
@@ -322,13 +322,13 @@ NOTE: 對於 source image，只需要執行一次 depth encoder 提取 image fea
 
 - ScanNet
     
-    ![table_1](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-1.png)
+    ![table_1](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127177818_table-1.png)
 
     - 與 MVS—based 的方法相比，本篇方法無需任何的深度或相機姿態 ground-truth，就可以獲得不錯的效果。
     - 與 RGB-only 的方法相比，本篇可以超過以往的方法。
 - NYU Depth V2
     
-    ![table_2](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-2.png)
+    ![table_2](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127182052_table-2.png)
     
     - 與 depth supervision 的方法相比，本篇方法取得可比較的效果。
     - 因為 MINE 使用 camera pose，本篇效果比較差。
@@ -350,12 +350,12 @@ NOTE: 對於 source image，只需要執行一次 depth encoder 提取 image fea
     - COLMAP
     - VideoAE
 
-![table_3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-3.png)
+![table_3](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127194301_table-3.png)
 
 - 本篇方法明顯超越以往的方法。
 - RMSE 減少 80%。
 
-![figure_3](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/figure-3.png)
+![figure_3](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127159764_figure-3.png)
 
 ### Novel View Synthesis
 
@@ -366,33 +366,33 @@ NOTE: 對於 source image，只需要執行一次 depth encoder 提取 image fea
     - SSIM
     - Perceptual Similarity with VGG
 
-![table_4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-4.png)
+![table_4](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127191462_table-4.png)
 
 - 如同 camera pose estimation，本篇方法可以獲得可比較或超越的結果。
 - 對於有使用 camera pose 做監督的方法，本篇的方法會些微落後。
 - 對於其他沒有使用 camera pose 的方法，本篇可以獲得更好的效果。
 
-![figure_4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/figure-4.png)
+![figure_4](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127165379_figure-4.png)
 
 ### Ablation Study
 
 - Autu Scale Calibration
     
-    ![table_5](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-5.png)
+    ![table_5](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127196342_table-5.png)
     
 - Number of Planes
     
-    ![table_6](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-6.png)
+    ![table_6](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127207220_table-6.png)
     
 - Amount of Training Data
     
-    ![table_7](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-7.png)
+    ![table_7](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127208092_table-7.png)
     
     更多的 data 可以得到更好的效果。
     
 - Generalization Ability
     
-	![table_8](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoNeRF/table-8.png)
+	![table_8](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoNeRF/1789127216065_table-8.png)
     
     Pretrain 在 RealEstate10K，測試在 ScanNet。
     

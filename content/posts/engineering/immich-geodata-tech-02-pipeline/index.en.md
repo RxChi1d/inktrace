@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata, Part 2: The Data Pipeline"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-08-31T22:21:53+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "A walkthrough of the immich-geodata-zh-tw pipeline: extract turns each country's official map data into an intermediate CSV, release merges it back into GeoNames across six stages and packs release.tar.gz, all verifiable with dry-run and fixture mode."
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
@@ -37,7 +37,7 @@ Put differently, **more accurate data costs more processing**. Do nothing and yo
 
 When `release` runs, it checks whether `meta_data/` holds an intermediate CSV for a given country and picks its path accordingly. The output of `extract` is committed to version control, and official map data rarely changes, so a release only needs to read the CSVs that are already there instead of reprocessing every country's map data each time.
 
-![The immich-geodata-zh-tw pipeline: extract turns official map data from five regions into intermediate CSVs, and the six stages of release merge them back into GeoNames and pack release.tar.gz](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/release-pipeline-stages.png "Two tracks: extract produces intermediate CSVs, and release merges them back into GeoNames across six stages before packing")
+![The immich-geodata-zh-tw pipeline: extract turns official map data from five regions into intermediate CSVs, and the six stages of release merge them back into GeoNames and pack release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126754796_release-pipeline-stages.png "Two tracks: extract produces intermediate CSVs, and release merges them back into GeoNames across six stages before packing")
 {style="width:90%;"}
 
 ## Track One: `extract`
@@ -65,7 +65,7 @@ The countries differ a lot, but internally `extract` is a fixed pipeline, and ea
 
 Everything else is shared across all countries: reading the file, parsing features, sorting, rounding coordinates, and writing the CSV with its uniform columns. There is also one conditional stage, `split_parts`, which splits a multipart geometry into one row per part, and only Indonesia enables it today.
 
-![The internal extract pipeline: input map data, read and parse features, load_context, split_parts, apply_country_centroids, rows_from_features, then sort, round, and write, ending in an intermediate CSV with uniform columns. load_context, apply_country_centroids, and rows_from_features are country-specific, while split_parts is conditional and currently enabled only for Indonesia](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/extract-handler-architecture.png "Grey stages are shared by every country; coral stages are what you implement when adding a new one")
+![The internal extract pipeline: input map data, read and parse features, load_context, split_parts, apply_country_centroids, rows_from_features, then sort, round, and write, ending in an intermediate CSV with uniform columns. load_context, apply_country_centroids, and rows_from_features are country-specific, while split_parts is conditional and currently enabled only for Indonesia](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126746154_extract-handler-architecture.png "Grey stages are shared by every country; coral stages are what you implement when adding a new one")
 {style="width:90%;"}
 
 Which countries have a handler is recorded in the `Country` enum. `Country::ALL` is the single source of truth, the CLI list is derived from it, and adding a country neither requires nor permits keeping a second copy in sync.
@@ -114,7 +114,7 @@ In practice, Immich never validates a `geoname_id` and never stores one; it only
 
 To get that right, the program first computes the **global maximum ID** present in the data, then allocates from that maximum plus one onward: `admin1CodesASCII.txt` takes a block first, and `cities500.txt` continues from there. The benefit of not hard-coding a number range is that when GeoNames expands its data later, the new rows still will not overwrite any official existing points.
 
-![How geoname_id allocation works: existing GeoNames data occupies everything up to the global maximum, new admin1CodesASCII rows start at the maximum plus one, and new cities500 rows continue after them, with the blank space on the right showing that later GeoNames expansion will not collide](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/geoname-id-allocation.png "New rows are allocated upward from the current global maximum instead of from a hard-coded range")
+![How geoname_id allocation works: existing GeoNames data occupies everything up to the global maximum, new admin1CodesASCII rows start at the maximum plus one, and new cities500 rows continue after them, with the blank space on the right showing that later GeoNames expansion will not collide](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126745601_geoname-id-allocation.png "New rows are allocated upward from the current global maximum instead of from a hard-coded range")
 {style="width:70%;"}
 
 The output is `cities500_optimized.txt` and `admin1CodesASCII_optimized.txt`.
@@ -147,7 +147,7 @@ Once a candidate is in hand, **[the National Academy for Educational Research's 
 
 If every source misses, the original text stays. Obscure locations can still show up in English inside Immich, and that is deliberate.
 
-![The translate stage decision flow: try the LocationIQ name, then the Chinese entry filtered from alternateNamesV2, then the alternatenames column in cities500; run the candidate through OpenCC to decide whether Traditional conversion is needed; then let the National Academy for Educational Research glossary overwrite, fill a gap, or keep the existing name, falling back to the original text if everything misses](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-02-pipeline/translate-decision-flow.png "The order of the three candidate sources, the OpenCC check, and the glossary ruling")
+![The translate stage decision flow: try the LocationIQ name, then the Chinese entry filtered from alternateNamesV2, then the alternatenames column in cities500; run the candidate through OpenCC to decide whether Traditional conversion is needed; then let the National Academy for Educational Research glossary overwrite, fill a gap, or keep the existing name, falling back to the original text if everything misses](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126762163_translate-decision-flow.png "The order of the three candidate sources, the OpenCC check, and the glossary ruling")
 {style="width:90%;"}
 
 The output is `cities500_translated.txt` and `admin1CodesASCII_translated.txt`.

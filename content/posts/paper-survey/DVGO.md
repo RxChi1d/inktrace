@@ -2,7 +2,7 @@
 title: "論文筆記 - (DVGO) Direct Voxel Grid Optimization: Super-fast Convergence for Radiance Fields Reconstruction"
 slug: "dvgo"
 date: 2023-04-12T16:22:00+08:00
-lastmod: 2025-12-30T14:34:35+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 params: 
@@ -39,7 +39,7 @@ params:
     - 優點：  
         - 收斂速度快兩個量級 (10~20hr v.s. 15min on single 2080ti)。  
 
-            ![Figure 1. Super-fast convergence by our method.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/figure-1.png)
+            ![Figure 1. Super-fast convergence by our method.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126827035_figure-1.png)
             {style="width:70%;"}
         - 本篇方法不需要跨場景的預訓練。  
         - 網格解析度約為 $160^3$，而先前的方法約為 $512^3 \sim 1300^3$。  
@@ -141,7 +141,7 @@ params:
         | $b$ | the shift (hyperparameter) |
         - 使用 $\text{softplus}$ 而不是 $\text{ReLU}$ 對直接優化體素密度至關重要，因為當用 $\text{ReLU}$ 作為 density activation 時，體素被錯誤地設置為負值是不可彌補的。反之， $\text{softplus}$ 允許我們探索非常接近 0 的密度。
             
-            ![activation-function](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/activation-function.png "Activation function.")
+            ![activation-function](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126822574_activation-function.png "Activation function.")
             
             > - $\text{ReLU}(x) = \max (0, 1)$
             > - $\text{softplus}{x}=\log (1+\exp(x+\beta))$
@@ -159,12 +159,12 @@ params:
     - Post-activation 能夠以更少的網格單元產生清晰的邊界，其餘兩者只能產生平滑的結果。
         - Toy task for a 2D grid cell
 
-            ![Figure 3. A single grid cell with post-activation is capable of modeling sharp linear surfaces.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/figure-3.png)
+            ![Figure 3. A single grid cell with post-activation is capable of modeling sharp linear surfaces.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126825926_figure-3.png)
             {style="width:80%;"}
             
         - Toy example on image fitting
 
-            ![Figure 4. Toy example on image fitting.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/figure-4.png)
+            ![Figure 4. Toy example on image fitting.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126832642_figure-4.png)
             {style="width:80%;"}
 
 ### Fast and direct voxel grid optimization
@@ -331,15 +331,15 @@ params:
 
 - **Quantitative evaluation on the synthesized novel view**
 
-    ![Table 1. Quantitative comparisons for novel view synthesis.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/table-1.png)
+    ![Table 1. Quantitative comparisons for novel view synthesis.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126846056_table-1.png)
 - **Training time comparisons**
 
-    ![Table 2. Training time comparisons.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/table-2.png)
+    ![Table 2. Training time comparisons.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126848586_table-2.png)
 - **Rendering speed comparisons**
     提升測試時的渲染速度並非本文之關注重點，但仍然在 $800 \times 800$ 的圖像上，與 NeRF 相比實現約 $45\times$的提升 (0.64s v.s 29s)
 - **Qualitative comparison**
 
-    ![Figure 5. Qualitative comparisons on the challenging parts.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/figure-5.png)
+    ![Figure 5. Qualitative comparisons on the challenging parts.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126837928_figure-5.png)
 
 ### Ablation studies
 
@@ -347,11 +347,11 @@ params:
     - [第4節](#post-activated-density-voxel-grid)中表明，所提出的後激活三線插值能夠使離散的網格模擬出更清晰的表面。
     - 在現實世界捕獲的BlendedMVS和Tanks and Temples數據集中，我們的收穫較少。直觀的原因是，真實世界的數據引入了更多的不確定性（例如，不一致的光照，SfM誤差），這導致了多視角的不一致和更模糊的表面。因此，對於能夠對更清晰的表面進行建模的場景表示來說，其優勢就會減弱。我們推測，在未來的工作中解決不確定性可以增加擬議的後激活的收益。
     
-    ![Table 3. Effectiveness of the post-activation.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/table-3.png)
+    ![Table 3. Effectiveness of the post-activation.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126853081_table-3.png)
     
 - **Effectiveness of the imposed priors**
 
-    ![Table 4. Effectiveness of the imposed priors.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/DVGO/table-4.png)
+    ![Table 4. Effectiveness of the imposed priors.](https://images.rxchi1d.me/file/inktrace/paper-survey/DVGO/1789126856108_table-4.png)
     
 ## Conclusion
 
