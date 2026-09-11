@@ -18,7 +18,7 @@ rtl = false
 
 [params.author]
 email = "rchildlin@gmail.com"
-image = "https://cdn.rxchi1d.me/inktrace-files/profile/avatar.png"
+image = "https://images.rxchi1d.me/file/inktrace/profile/1789127476906_avatar.png"
 links = [
   {github = "https://github.com/rxchi1d"},
   {email = "mailto:rchildlin@gmail.com"},

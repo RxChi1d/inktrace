@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析（四）：用 Wikidata 翻地名，以及它如何安靜地出錯"
 slug: "immich-geodata-tech-04-translation"
 date: 2026-08-27T10:00:00+08:00
-lastmod: 2026-08-31T22:21:53+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "用 Wikidata 翻譯地名的六種已知失效形態：錯誤不會中斷流程，而是安靜地產出一個合法卻指向錯誤地點的中文名。含防護機制反噬的實際案例與驗證方法。"
 tags: ["immich", "wikidata", "sparql", "knowledge-graph", "data-quality"]
 categories: ["engineering"]
@@ -58,7 +58,7 @@ SELECT ?item ?itemLabel WHERE {
 
 第二種的實例：首爾的 `관악구`（冠嶽區）曾經被輸出成「新林洞」。冠嶽區裡確實有個新林洞，新林洞的 P131 鏈也確實包含首爾，驗證完全通過。從資料上看不出任何問題，除非有人真的去比對每一個區名。
 
-![Wikidata 地名翻譯的三種結果：驗證通過得到正確譯名、查不到則回退原文並出現在未翻譯清單、選到錯誤實體卻通過驗證則產出看不見的錯誤譯名](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-04-translation/wikidata-failure-paths.png "三條路徑中，只有回退原文是看得見的失敗")
+![Wikidata 地名翻譯的三種結果：驗證通過得到正確譯名、查不到則回退原文並出現在未翻譯清單、選到錯誤實體卻通過驗證則產出看不見的錯誤譯名](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-04-translation/1789126763356_wikidata-failure-paths.png "三條路徑中，只有回退原文是看得見的失敗")
 {style="width:80%;"}
 
 ## 六種已知的出錯方式

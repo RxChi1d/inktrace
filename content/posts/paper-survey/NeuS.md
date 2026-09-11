@@ -2,7 +2,7 @@
 title: "論文筆記 - NeuS: Learning Neural Implicit Surfaces by Volume Rendering for Multi-view Reconstruction"
 slug: "neus"
 date: 2024-01-16T20:48:00+08:00
-lastmod: 2026-01-07T14:02:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["neus"]
 categories: ["paper-survey"]
 math: true
@@ -31,7 +31,7 @@ math: true
             - 只學習 volume density field 無法提取出高品質的表面。
             - 儘管可以還原突然的深度變化，但在某些平面區域中包含明顯雜訊。
     
-    ![Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-1.png "Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality.")
+    ![Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality.](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127281424_figure-1.png "Figure 1: (a) Illustration of the surface rendering and volume rendering. (b) A toy example of bamboo planter, where there are occlusions on the top of the planter. Compared to the state-of-the-art methods, our approach can handle the occlusions and achieve better reconstruction quality.")
     
 - **Contribution**
     - 以 volume rendering 技術來學習隱式 SDF 表示。
@@ -46,7 +46,7 @@ math: true
 
 ### Overview
 
-![Overview](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/overview.png "Overview")
+![Overview](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127316452_overview.png "Overview")
 
 ### Rendering Procedure
 
@@ -140,7 +140,7 @@ $$
 
 這樣的計算方式是有 bias 的，如 Fig.2 (a) 所示，weight function 在到達表面之前就已達到局部最大值。
 
-![Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-2.png "Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF.")
+![Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF.](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127283993_figure-2.png "Figure 2: Illustration of (a) weight bias of naive solution, and (b) the weight function deﬁned in our solution, which is unbiased in the ﬁrst-order approximation of SDF.")
 
 #### Our Solution
 
@@ -238,7 +238,7 @@ $$
     
     當光線與多個表面相交，隨著 SDF 值增加， $-\frac{\mathrm{d}\Phi_s}{\mathrm{d}t}(f(\mathbf{p}(t)))$ 在線段上可能會變成負值，因此需要將其裁剪為零，以確保 $\rho$ 始終為非負數。(Fig.3)
     
-    ![Figure 3: Illustration of weight distribution in case of multiple surface intersection.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-3.png "Figure 3: Illustration of weight distribution in case of multiple surface intersection.")
+    ![Figure 3: Illustration of weight distribution in case of multiple surface intersection.](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127292918_figure-3.png "Figure 3: Illustration of weight distribution in case of multiple surface intersection.")
     
     不透明度密度函數會改寫成 Eq. \eqref{eq:10}：
     
@@ -393,11 +393,11 @@ $$
 - 有 mask 監督
 - 無 mask 監督
 
-![Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/table-1.png "Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。")
+![Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127325976_table-1.png "Tab.1 顯示 NeuS 在 DTU dataset 上，兩種設定都超越以往的方法。")
 
-![figure_4](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-4.png)
+![figure_4](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127298610_figure-4.png)
 
-![figure_5](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-5.png)
+![figure_5](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127303439_figure-5.png)
 
 Fig.4 和 Fig.5 展示兩種設定下的可視化結果。
 
@@ -409,7 +409,7 @@ Fig.4 和 Fig.5 展示兩種設定下的可視化結果。
 
 #### Ablation Study
 
-![Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-6.png "Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values.")
+![Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values.](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127310888_figure-6.png "Figure 6: Ablation studies. We show the qualitative results and report the quantitative metrics in Chamfer distance and MAE (mean absolute error) between the ground-truth and predicted SDF values.")
 
 (a) Naive Solution: 會給表面重建帶來 bias。
 
@@ -419,7 +419,7 @@ Fig.4 和 Fig.5 展示兩種設定下的可視化結果。
 
 #### Thin Structures
 
-![Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/NeuS/figure-8.png "Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface.")
+![Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface.](https://images.rxchi1d.me/file/inktrace/paper-survey/NeuS/1789127311258_figure-8.png "Figure 8:Comparison on scenes with thin structure objects. Left half is the depth map while right half is the reconstructed surface.")
 
 作者另外挑選了兩個具有挑戰性的薄物體。
 

@@ -2,7 +2,7 @@
 title: "Nginx Proxy Manager Monitor (NPM Monitor) - 通過 Grafana 監控 NPM 的代理狀態"
 slug: "nginx-proxy-manager-monitor-deployment"
 date: 2025-04-26T00:00:00+08:00
-lastmod: 2025-11-29T22:26:07+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["docker", "nginx-proxy-manager", "monitor"]
 categories: ["container-platform"]
 ---
@@ -339,12 +339,12 @@ networks:
     2. 選擇 `Loki`
     3. **Name 為 `loki` ，Connection 的 url 填入** `http://loki:3100` 。隨後點擊 `Save & test`。
         
-        ![CleanShot_2025-02-25_at_15.22.24](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-01.png)
+        ![CleanShot_2025-02-25_at_15.22.24](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126722976_image-01.png)
         
 3. 增新 Dashboard
     1. 進入 `Dashboards` ，點擊 `New` - `Import`
 
-        ![CleanShot_2025-02-22_at_19.56.022x](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-02.png)
+        ![CleanShot_2025-02-22_at_19.56.022x](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126720825_image-02.png)
 
         
     2. 上傳 NPM-Monitor 的 json
@@ -353,12 +353,12 @@ networks:
 
     3. 選擇對應的 loki Data Source
         
-        ![CleanShot_2025-02-25_at_15.26.18](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-03.png)
+        ![CleanShot_2025-02-25_at_15.26.18](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126722223_image-03.png)
 
         
 4. 按需求調整 labelFilter 與 regexFilter
     
-    ![CleanShot_2025-02-25_at_15.24.33](https://cdn.rxchi1d.me/inktrace-files/container-platform/nginx-proxy-manager-monitor-deployment/image-04.png)
+    ![CleanShot_2025-02-25_at_15.24.33](https://images.rxchi1d.me/file/inktrace/container-platform/nginx-proxy-manager-monitor-deployment/1789126731595_image-04.png)
 
     
     預設 regexFilter 用以排除來源為 `192.168.50.0/24` 之資料。

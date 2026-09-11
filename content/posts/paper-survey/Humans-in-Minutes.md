@@ -2,7 +2,7 @@
 title: "論文筆記 - (Humans in Minutes) Learning Neural Volumetric Representations of Dynamic Humans in Minutes"
 slug: "humans-in-minutes"
 date: 2023-10-19T10:01:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -19,7 +19,7 @@ params:
 
 ## Introduction
 
-![Figure 1. Convergence rate of training.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/figure-1.png)
+![Figure 1. Convergence rate of training.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127026256_figure-1.png)
 
 - **Topic**：Accelerate 3D human reconstruction。
 - **Previous works**：Neural Body, HumanNeRF, etc.
@@ -33,9 +33,9 @@ params:
 
 ### Overview
 
-![Figure 2. Overview of the proposed representation.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/figure-2.png "Figure 2. Overview of the proposed representation.")
+![Figure 2. Overview of the proposed representation.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127028364_figure-2.png "Figure 2. Overview of the proposed representation.")
 
-![Pipeline of this paper.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/pipeline.svg "Pipeline of this paper.")
+![Pipeline of this paper.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127047632_pipeline.svg "Pipeline of this paper.")
 
 - 本篇方法需要提供每個圖像的 human pose 與 foreground human mask。
 
@@ -175,7 +175,7 @@ params:
 
 ### Comparison
 
-![Table 1. Quantitative comparison.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/table-1.png "Table 1. Quantitative comparison.")
+![Table 1. Quantitative comparison.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127050004_table-1.png "Table 1. Quantitative comparison.")
 
 - **ZJU-MoCap**
     - 本篇方法僅需 5 mins 的訓練時間，而其他的方法需要大於 10 hrs 的時間，甚至 NHP 與 PixelNeRF 需要先 pretrain 10 hrs 再 finetune 1 hr。
@@ -183,7 +183,7 @@ params:
 - **MonoCap**
     - 本篇同樣表現出有競爭力的結果。
 
-![Figure 3. . Qualitative results of novel view synthesis on the ZJU-MoCap and MonoCap datasets.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/figure-3.png "Figure 3. . Qualitative results of novel view synthesis on the ZJU-MoCap and MonoCap datasets.")
+![Figure 3. . Qualitative results of novel view synthesis on the ZJU-MoCap and MonoCap datasets.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127035793_figure-3.png "Figure 3. . Qualitative results of novel view synthesis on the ZJU-MoCap and MonoCap datasets.")
 
 - **ZJU-MoCap**
     - Monocular 的設置下，Generalizable 的方法無法很好的渲染正確的人體形狀。
@@ -195,30 +195,30 @@ params:
 
 #### Ablation Studies on Proposed Components
 
-![Table 2. (a) Ablation studies on proposed components.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/table-2-a.png "Table 2. (a) Ablation studies on proposed components.")
+![Table 2. (a) Ablation studies on proposed components.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127052398_table-2-a.png "Table 2. (a) Ablation studies on proposed components.")
 
 - 當沒有 part-based human representation，效果顯著下降。
 - 當 $\text{MLP}_{\text{res}}$ 改以經過 hash encode 的 $(\text{x}, t)$ 作為輸入，表現出較差的效果。因為嚴重的 hash collision 與解析度不足。
 - 移除 perceptual loss 之後，LPIPS 分數明顯變差。
 
-![Figure 4. Comparison of convergence LPIPS* and time needed for convergence of different variants of the proposed pipeline.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/figure-4.png "Figure 4. Comparison of convergence LPIPS* and time needed for convergence of different variants of the proposed pipeline.")
+![Figure 4. Comparison of convergence LPIPS* and time needed for convergence of different variants of the proposed pipeline.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127039700_figure-4.png "Figure 4. Comparison of convergence LPIPS* and time needed for convergence of different variants of the proposed pipeline.")
 
 - 當沒有使用 UV coordinate 作為輸入，訓練時間顯著提升。
 
-![Figure 5. Ablation studies on the 377 sequence of ZJU-MoCap dataset.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/figure-5.png "Figure 5. Ablation studies on the 377 sequence of ZJU-MoCap dataset.")
+![Figure 5. Ablation studies on the 377 sequence of ZJU-MoCap dataset.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127043799_figure-5.png "Figure 5. Ablation studies on the 377 sequence of ZJU-MoCap dataset.")
 
 - 當沒有使用 part-based human representation，渲染結果明顯變差。
 
 #### Analysis of the part-based voxelized human representation
 
-![Table 2. (c) Ablation studies on the part parameters.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/table-2-c.png "Table 2. (c) Ablation studies on the part parameters.")
+![Table 2. (c) Ablation studies on the part parameters.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127068147_table-2-c.png "Table 2. (c) Ablation studies on the part parameters.")
 
 - 單純的增加 hash table 的大小並不能在同樣的時間下帶來更好的表現。因為更大的 hash table 會增加內存開銷與訓練迭代時間。
 - 本篇的方法可以基於人體不同部位的複雜度來調整 hash table 的大小，從而有效的表示人體。
 
 #### Analysis of the motion parameterization scheme
 
-![Table 2. (b) Ablation studies on variants of MLPres input.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/Humans-in-Minutes/table-2-b.png "Table 2. (b) Ablation studies on variants of MLPres input.")
+![Table 2. (b) Ablation studies on variants of MLPres input.](https://images.rxchi1d.me/file/inktrace/paper-survey/Humans-in-Minutes/1789127057032_table-2-b.png "Table 2. (b) Ablation studies on variants of MLPres input.")
 
 - 在 Tab.2 (a) 中展示過使用 $(x,y,z,t)$ 作為輸入效果並不會比較好，此外會增加記憶體開銷與運算時間。
 - 在 Tab.2 (b) 進一步測試不同的 input，仍然可以看到本篇使用的方法效果最好。

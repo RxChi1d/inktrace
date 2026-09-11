@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata Deep Dive (5): Rebuilding Taiwan's Administrative Divisions from Official Map Data"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-08-31T22:21:53+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 description: "Rebuilding Immich's Taiwanese administrative divisions from NLSC village boundary data: 7,986 representative points, coordinate system conversion, field mapping, and why this handler does almost no name processing at all."
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
@@ -38,7 +38,7 @@ The project uses the "Village Boundaries (TWD97 latitude/longitude)" open datase
 
 Village boundaries were chosen over township boundaries because Immich uses a nearest neighbor query: **the denser the points, the lower the chance of being tagged with the wrong administrative division**. Give a township a single point and photos near its edges are almost guaranteed to be wrong. Go down to the village level and dozens of points spread across the same township, so results converge naturally.
 
-![Point density comparison: with the sparse original GeoNames data, photos get tagged with the neighbouring township; after switching to the 7,986 representative points from the NLSC village boundaries, photos land in the correct township or district](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-05-taiwan/point-density-comparison.png "Point density decides which administrative division a nearest neighbor query lands in")
+![Point density comparison: with the sparse original GeoNames data, photos get tagged with the neighbouring township; after switching to the 7,986 representative points from the NLSC village boundaries, photos land in the correct township or district](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-05-taiwan/1789126774647_point-density-comparison.png "Point density decides which administrative division a nearest neighbor query lands in")
 {style="width:80%;"}
 
 The village boundary data also carries the full set of parent names (special municipality or county/city, township or district, village), so the administrative hierarchy does not need to be assembled from anywhere else.
@@ -62,7 +62,7 @@ A known limitation: the code takes the geometric centroid and applies no extra c
 
 Multipart features such as outlying islands and exclaves deserve a mention: **Taiwan uses a single area-weighted centroid of the merged geometry, so one village is always one row**. Splitting each part into its own row is currently enabled only for Indonesia. Indonesia is an archipelagic country where one administrative division may be scattered across several islands, and not splitting would throw off the location of some islands badly. Taiwan's outlying islands mostly form villages of their own, so the problem does not arise.
 
-![Representative point comparison: when an administrative division made up of three islands is merged into a single representative point, that point lands on open water between the islands and photos get tagged far from where they were taken; taking a separate representative point per part puts photos on the correct island](https://cdn.rxchi1d.me/inktrace-files/engineering/immich-geodata-tech-05-taiwan/centroid-multipart.png "In archipelagic terrain a merged representative point lands at sea, while splitting per part gives every island its own point")
+![Representative point comparison: when an administrative division made up of three islands is merged into a single representative point, that point lands on open water between the islands and photos get tagged far from where they were taken; taking a separate representative point per part puts photos on the correct island](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-05-taiwan/1789126770248_centroid-multipart.png "In archipelagic terrain a merged representative point lands at sea, while splitting per part gives every island its own point")
 {style="width:70%;"}
 
 ## Mapping NLSC Fields to GeoNames Administrative Levels

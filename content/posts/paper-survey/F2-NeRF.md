@@ -2,7 +2,7 @@
 title: "論文筆記 - F2-NeRF: Fast Neural Radiance Field Training with Free Camera Trajectories"
 slug: "f2-nerf"
 date: 2023-07-12T10:26:00+08:00
-lastmod: 2025-12-30T14:34:35+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["nerf"]
 categories: ["paper-survey"]
 params: 
@@ -22,7 +22,7 @@ params:
 - **Topic**: 允許使用任意相機軌跡進行訓練與推論。
 - **Previous works**:
     
-    ![Figure 1. Top.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-1-top.png)
+    ![Figure 1. Top.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126856503_figure-1-top.png)
     {style="width:65%;"}
     
     - 為了表示無界場景，常見的策略是使用將無界空間映射成有界空間的空間扭曲方法
@@ -46,7 +46,7 @@ params:
 
 #### 2D analysis
 
-![Figure 2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-2.png)
+![Figure 2.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126866049_figure-2.png)
 {style="width:70%;"}
 
 - 在考慮 2D 情況下，我們需要將 2D 平面上的點投影到兩個 2D cameras 的 1D 座標上。
@@ -86,7 +86,7 @@ params:
 
     - 扭曲函數是否為 proper 是一個區域性的性質，只與可見的相機有關
         
-        ![Figure 6. (a)](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-6-a.png)
+        ![Figure 6. (a)](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126896366_figure-6-a.png)
         {style="width:50%;"}
 
 #### 3D perspective warping
@@ -105,7 +105,7 @@ params:
     $$
     
 
-![Figure 3.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-3.png)
+![Figure 3.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126871133_figure-3.png)
 {style="width:80%;"}
 
 - 最終表示為
@@ -122,14 +122,14 @@ params:
 {{< gallery >}}
   <div class="grid-w50">
     {{< figure
-      src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-4.png"
+      src="https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126885828_figure-4.png"
       alt="Figure 4."
       caption="Figure 4. Visualization of the effect of perspective warping. (a) Points in the original Euclidean space. (b) Points in the warp space and the corresponding camera angles."
     >}}
   </div>
   <div class="grid-w50">
     {{< figure
-      src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-5.png"
+      src="https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126888889_figure-5.png"
       alt="Figure 5."
       caption="Figure 5. Inverse sphere warping."
     >}}
@@ -149,14 +149,14 @@ params:
     {{< gallery >}}
         <div class="grid-w50">
           {{< figure
-            src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-4-supply-1.png"
+            src="https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126874083_figure-4-supply-1.png"
             alt="Effect of warping (a)."
             caption="Effect of warping (a)."
           >}}
         </div>
         <div class="grid-w50">
           {{< figure
-            src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-4-supply-2.png"
+            src="https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126875021_figure-4-supply-2.png"
             alt="Effect of warping (b)."
             caption="Effect of warping (b)."
           >}}
@@ -168,14 +168,14 @@ params:
     {{< gallery >}}
         <div class="grid-w50">
           {{< figure
-            src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-4-supply-3.png"
+            src="https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126880856_figure-4-supply-3.png"
             alt="Effect of warping (c)."
             caption="Effect of warping (c)."
           >}}
         </div>
         <div class="grid-w50">
           {{< figure
-            src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-4-supply-3.png"
+            src="https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126880856_figure-4-supply-3.png"
             alt="Effect of warping (d)."
             caption="Effect of warping (d)."
           >}}
@@ -184,7 +184,7 @@ params:
 
 ### Space subdivision
 
-![Figure 6. (a)](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-6-a.png)
+![Figure 6. (a)](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126896366_figure-6-a.png)
 {style="width:50%;"}
 
 - 前面提到，由於 proper perspective warping 是否 proper 是 local property (區域的特性)，因此需要將整個場景分割成不同的區域，使同個區域可以使用相同的 $F(\mathbf{x})$。
@@ -206,7 +206,7 @@ params:
 
 #### Hash grid with multiple hash functions
 
-![Figure 6.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-6.png)
+![Figure 6.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126901922_figure-6.png)
 
 - 對不同的 leaf nodes 使用不同的 hash functions。
 1. 將 $i$-th leaf node 中的點 $\mathbf{x}$ 映射到 warp space (a to b)
@@ -290,7 +290,7 @@ $$
         - 包含 7 個場景
         - 路徑狹長，且有多個聚焦的前景對象  
 
-            ![Figure 7.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-7.png)
+            ![Figure 7.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126900524_figure-7.png)
             {style="width:80%;"}
         
 - **Metrics**
@@ -308,31 +308,31 @@ $$
 
 ### Free Dataset
 
-![Table 1.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/table-1.png)
+![Table 1.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126919034_table-1.png)
 {style="width:70%;"}
 
-![Figure 8.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-8.png)
+![Figure 8.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126913204_figure-8.png)
 
 - 發現在 Free 數據集上⻑時間訓練 mip-NeRF-360 也能夠渲染出清晰的圖像。原因是在訓練過程中，mip-NeRF-360 使⽤的⼤型 MLP 網絡能夠逐漸將注意⼒集中在前景物體上，並⾃適應地為這些前景物體分配更多的容量。
 
 ### NeRF-360-V2 Dataset
 
-![Table 2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/table-2.png)
+![Table 2.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126929905_table-2.png)
 {style="width:70%;"}
 
 ### LLFF Dataset
 
-![Table 3.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/table-3.png)
+![Table 3.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126929411_table-3.png)
 {style="width:70%;"}
 
 - 三種 datasets 的結果證明了 perspective warping 與不同軌跡的兼容。
 
 ### Ablation Study
 
-![Table 4.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/table-4.png)
+![Table 4.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126935918_table-4.png)
 {style="width:70%;"}
 
-![Figure 9.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/F2-NeRF/figure-9.png)
+![Figure 9.](https://images.rxchi1d.me/file/inktrace/paper-survey/F2-NeRF/1789126919814_figure-9.png)
 {style="width:70%;"}
 
 - 比較不同扭曲方式

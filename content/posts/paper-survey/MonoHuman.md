@@ -2,7 +2,7 @@
 title: "論文筆記 - MonoHuman: Animatable Human Neural Field from Monocular Video"
 slug: "monohuman"
 date: 2023-10-11T12:32:00+08:00
-lastmod: 2025-12-30T14:34:35+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["nerf", "human-reconstruction"]
 categories: ["paper-survey"]
 params: 
@@ -72,7 +72,7 @@ params:
 
 ## Methods
 
-![Figure 2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-2.png)
+![Figure 2.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127086795_figure-2.png)
 
 ### Preliminaries and Problem Setting
 
@@ -97,7 +97,7 @@ HumanNeRF 所提出的 single backward deformation **僅受到 image reconstruct
 
 然⽽，由於 deformation field 是兩個「不同」的 MLP 並且為 frame-dependent or pose-dependent，因此它們仍然存在 over-fitting 問題。
 
-![Figure 2-1.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-2-1.png)
+![Figure 2-1.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127071066_figure-2-1.png)
 {style="width:70%;"}
 
 在本篇中，作者設計了 **Shared Bidirectional Deformation** module，該模組利用在 canonical space 中定義的相同運動權重進行前向和反向變形。
@@ -175,12 +175,12 @@ $$
 
 首先，作者設計了一個 observation bank，包含了對應特徵以指導渲染過程。他們通過拓展時間，並在這些由輸入單眼視頻序列的關鍵幀圖像中搜索對應特徵，來構建一個 observation bank。
 
-![Figure 2-3.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-2-3.png)
+![Figure 2-3.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127080608_figure-2-3.png)
 {style="width:90%;"}
 
 1. 他會將影片中的 frame 按照 pose 的骨盆角度分成兩組，人體的正面與反面。
     
-    ![Figure 4.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-4.png)
+    ![Figure 4.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127094686_figure-4.png)
     {style="width:90%;"}
     
 2. 從兩組姿勢中，按照姿勢的相似程度，將最相近的兩個 frames 組成一對，總共 k 對。
@@ -218,7 +218,7 @@ $$
     
 8. $\mathbf{F}$ 會被送入 Rendering Network 中去 guide 顏色輸出。
     
-    ![Figure 2-2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-2-2.png)
+    ![Figure 2-2.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127070381_figure-2-2.png)
     {style="width:50%;"}
 
 > [!TIP] 疑問
@@ -231,7 +231,7 @@ $$
 
 #### Volume rendering with deformation
 
-![Figure 2-4.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-2-4.png)
+![Figure 2-4.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127085193_figure-2-4.png)
 {style="width:70%;"}
 
 Rendering Network 表示為一個映射 $F_r$：
@@ -292,12 +292,12 @@ $$
 
 - **Novel View**
 
-    ![Table 1.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/table-1.png)
+    ![Table 1.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127126219_table-1.png)
     {#tab:1 style="width:70%;"}
     
 - **Novel Pose**
     
-    ![Table 2.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/table-2.png)
+    ![Table 2.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127127844_table-2.png)
     {#tab:2 style="width:70%;"}
 
 - **在新視角和新姿勢設置中的性能指標**：
@@ -319,7 +319,7 @@ $$
 
 ### Qualitative Evaluation
 
-![Figure 3.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-3.png)
+![Figure 3.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127092384_figure-3.png)
 {#fig:3}
 
 - **視覺化新視角合成結果**：
@@ -328,11 +328,11 @@ $$
     - **HumanNeRF 和我們的方法**：合成了真實的圖像，但在某些細節區域有 artifacts。
     - 在網上收集的視頻中顯示新視角合成結果（Fig.[5](#fig:5)），在極端視角中，HumanNeRF 傾向於在衣物和臉部區域生成 artifacts，而我們的方法可以保留這些細節，因為它們具有正確的變形和指導特徵。
         
-        ![Figure 5.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-5.png)
+        ![Figure 5.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127099511_figure-5.png)
         {#fig:5}
                 
 
-![Figure A8.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-a8.png)
+![Figure A8.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127121715_figure-a8.png)
 {#fig:a8}
 
 - **在複雜動作中評估動畫能力**：
@@ -352,7 +352,7 @@ $$
   {{< gallery >}}
     <div id="tab:3" class="grid-w50">
       {{< figure
-        src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/table-3.png"
+        src="https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127129993_table-3.png"
         alt="Table 3."
         caption="Table 3."
       >}}
@@ -360,7 +360,7 @@ $$
 
     <div id="tab:4" class="grid-w50">
       {{< figure
-        src="https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/table-4.png"
+        src="https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127137163_table-4.png"
         alt="Table 4."
         caption="Table 4."
       >}}
@@ -374,12 +374,12 @@ $$
 
 #### Shared Bidirectional Deformation Module
 
-![Figure A3.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-a3.png)
+![Figure A3.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127104384_figure-a3.png)
 {#fig:a3 style="width:70%;"}
 
 具有 Consistency loss 的 Shared Bidirectional Deformation Module 有助於產生更準確的變形，如 Fig.[A3](#fig:a3) 中的手臂。如果沒有這種損失，⼿臂區域的變形往往會彎曲並產⽣明顯的 artifacts。
 
-![Figure A4.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-a4.png)
+![Figure A4.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127115348_figure-a4.png)
 {#fig:a4 style="width:70%;"}
 
 接著，作者將 SMPL vertex 作為輸入並優化。在 Fig.[A4](#fig:a4) 中，可以看到經過 100 iterations 後，Forward Deformed 的結果與輸入的 SMLP vertex 接近，並且 canonical pose (T-pose) 也比較正常。由此證明 consistency loss 校正並正則化了 shared deformation weight。
@@ -389,7 +389,7 @@ $$
 
 #### Forward Correspondence Search Module
 
-![Figure A5.](https://cdn.rxchi1d.me/inktrace-files/paper-survey/MonoHuman/figure-a5.png)
+![Figure A5.](https://images.rxchi1d.me/file/inktrace/paper-survey/MonoHuman/1789127119894_figure-a5.png)
 {#fig:a5 style="width:70%;"}
 
 Forward Correspondence Search Module 產⽣的對應特徵有助於在布料中產⽣更準確的顏⾊和紋理。

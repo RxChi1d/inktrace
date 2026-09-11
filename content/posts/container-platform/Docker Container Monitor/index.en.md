@@ -2,7 +2,7 @@
 title: "Docker Container Monitor - Monitoring Docker Container Status with Grafana"
 slug: "docker-container-monitor-deployment"
 date: 2025-11-23T14:00:00+08:00
-lastmod: 2025-12-26T17:22:36+08:00
+lastmod: 2026-09-11T21:50:12+08:00
 tags: ["docker", "grafana", "monitor"]
 categories: ["container-platform"]
 ---
@@ -183,26 +183,26 @@ docker network create grafana
     2. Choose `Prometheus`
     3. **Set the Name to `prometheus` and the Connection URL to** `http://prometheus:9090`. Click `Save & test`.
 
-        ![CleanShot 2025-02-26 at 22.30.07.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-01.png)
+        ![CleanShot 2025-02-26 at 22.30.07.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126580191_image-01.png)
 
 3. Import the dashboard:
     1. Go to `Dashboards`, click `New` → `Import`
 
-        ![CleanShot 2025-02-22 at 19.56.02@2x.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-02.png)
+        ![CleanShot 2025-02-22 at 19.56.02@2x.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126590714_image-02.png)
 
     2. Upload the NPM-Monitor JSON
 
         Use dashboard ID `15120` to create the dashboard.
 
-        ![CleanShot 2025-02-26 at 22.31.42.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-03.png)
+        ![CleanShot 2025-02-26 at 22.31.42.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126595786_image-03.png)
 
     3. Select the corresponding Prometheus data source:
 
-        ![CleanShot 2025-02-26 at 22.32.17.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-04.png)
+        ![CleanShot 2025-02-26 at 22.32.17.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126679086_image-04.png)
 
 
 > [!NOTE] Temperature Panel Shows "No data"
 >
 > By default, node-exporter retrieves CPU temperature from `thermal_zone*` files in `/sys/class/thermal`. However, some systems lack the necessary sensors, resulting in no temperature data files in `/sys/class/thermal`. Consequently, CPU temperature panels in the dashboard will display no data.
 >
-> ![CleanShot 2025-02-26 at 22.35.13.png](https://cdn.rxchi1d.me/inktrace-files/container-platform/docker-container-monitor-deployment/image-05.png)
+> ![CleanShot 2025-02-26 at 22.35.13.png](https://images.rxchi1d.me/file/inktrace/container-platform/docker-container-monitor-deployment/1789126679135_image-05.png)
