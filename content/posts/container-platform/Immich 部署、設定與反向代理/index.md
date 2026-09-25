@@ -2,7 +2,7 @@
 title: "Immich 部署、設定與反向代理 - Google 相簿的最佳開源替代方案"
 slug: "immich-deployment"
 date: 2025-04-26T00:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -130,7 +130,7 @@ services:
 
     # 其他配置省略
 
-    entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://raw.githubusercontent.com/RxChi1d/immich-geodata-zh-tw/refs/heads/main/update_data.sh) --install && exec /bin/bash start.sh" ]
+    entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install && exec start.sh" ]
 
     # 其他配置省略
 ```

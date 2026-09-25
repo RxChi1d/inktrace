@@ -2,7 +2,7 @@
 title: "Immich Deployment, Configuration, and Reverse Proxy - The Best Open-Source Alternative to Google Photos"
 slug: "immich-deployment"
 date: 2025-11-23T00:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 tags: ["docker", "immich", "nginx-proxy-manager"]
 categories: ["container-platform"]
 ---
@@ -130,7 +130,7 @@ services:
 
     # Other configurations omitted
 
-    entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://raw.githubusercontent.com/RxChi1d/immich-geodata-zh-tw/refs/heads/main/update_data.sh) --install && exec /bin/bash start.sh" ]
+    entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install && exec start.sh" ]
 
     # Other configurations omitted
 ```

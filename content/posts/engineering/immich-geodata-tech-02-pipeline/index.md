@@ -2,8 +2,8 @@
 title: "Immich 繁體中文地理資料技術解析（二）：資料處理流程"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
-description: "拆解 immich-geodata-zh-tw 的資料處理流程：extract 把各國官方圖資轉成中介 CSV，release 六階段併回 GeoNames 打包成 release.tar.gz，並用 dry-run 與 fixture 驗證。"
+lastmod: 2026-09-25T12:42:09+08:00
+description: "拆解 immich-geodata-zh-tw 的資料處理流程：extract 把各國官方圖資轉成中介 CSV，release 七階段併回 GeoNames、剪枝並打包成 release.tar.gz，並用 dry-run 與 fixture 驗證。"
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
@@ -21,7 +21,7 @@ series_order: 3
 整套流程分成兩條線，各自負責不同的事：
 
 - **`extract`**：把某一個國家的官方圖資轉成中介 CSV。每個有專屬處理邏輯的國家各跑一次，彼此獨立。
-- **`release`**：把所有中介 CSV 併回 GeoNames 的資料，翻譯、打包成 release。六個階段依序執行。
+- **`release`**：把所有中介 CSV 併回 GeoNames 的資料，翻譯、剪枝、打包成 release。七個階段依序執行。
 
 `extract` 只服務有專屬處理器（handler）的國家，而要成為這種國家得同時滿足兩個條件：該國有可用的官方行政區圖資，而且專案裡寫了對應的處理邏輯去讀它。
 
@@ -35,9 +35,15 @@ series_order: 3
 
 換句話說，**要更準的資料就得付出更多處理**：什麼都不做就是基準層；願意花 API 額度反查，可以修掉上游的行政區錯誤；要再往上，就得找到該國的官方圖資，並為它寫專屬的處理邏輯。
 
-`release` 執行時會檢查 `meta_data/` 底下有沒有該國的中介 CSV，據此決定它走哪一條路。`extract` 的產物直接進版控，而官方圖資不常更新，所以發布時只要讀現成的 CSV，不必每次重跑各國的圖資處理。
+`release` 執行時會檢查 `data/handler/` 底下有沒有該國的中介 CSV，據此決定它走哪一條路。`extract` 的產物直接進版控，而官方圖資不常更新，所以發布時只要讀現成的 CSV，不必每次重跑各國的圖資處理。
 
-![immich-geodata-zh-tw 的資料處理流程：extract 把五個地區的官方圖資轉成中介 CSV，release 的六個階段將其併回 GeoNames 並打包成 release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126754796_release-pipeline-stages.png "兩條線：extract 產生中介 CSV，release 六階段併回 GeoNames 並打包")
+> [!NOTE] 資料目錄結構劃分
+> 專案將中介產物依來源清楚分類，避免資料流向混淆：
+> - `data/handler/`：由各國官方圖資經 `extract` 萃取的中介 CSV。
+> - `data/locationiq/`：非 handler 國家的 LocationIQ API 查詢快取與取值設定。
+> - `data/vendor/`：外部靜態相依資料（如國家代碼與名稱對照庫）。
+
+![immich-geodata-zh-tw 的資料處理流程：extract 把五個地區的官方圖資轉成中介 CSV，release 階段將其併回 GeoNames、剪枝並打包成 release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790309029196_release-pipeline-stages.svg "兩條線：extract 產生中介 CSV，release 七階段併回 GeoNames、剪枝並打包")
 {style="width:90%;"}
 
 ## 第一條線：`extract`
@@ -72,23 +78,24 @@ cargo run --release -- extract --country TW \
 
 如果想要了解一個完整的 handler 長什麼樣子，可以參考[臺灣篇](/posts/engineering/immich-geodata-tech-05-taiwan/)從頭到尾走過一次。
 
-## 第二條線：`release` 的六個階段
+## 第二條線：`release` 的七個階段
 
 ```bash
 cargo run --release -- release \
   --locationiq-api-key "YOUR_API_KEY" \
-  --country-code "US"
+  --country-code "MY"
 ```
 
-這一條指令會依序跑完六個階段：
+這一條指令會依序跑完七個階段：
 
 | 階段 | 做的事 |
 | :--- | :--- |
 | `cleanup` | 清空並重建 `output/` 目錄 |
 | `prepare` | 從 GeoNames 下載 `cities500.txt`、`admin1CodesASCII.txt` 等原始檔 |
-| `enhance` | 把各國中介 CSV 併入原始檔，配發 `geoname_id`，輸出 `*_optimized.txt` |
-| `locationiq` | 為**沒有**專屬處理邏輯的國家補行政區 metadata |
+| `enhance` | 依地點類別白名單收錄，併入各國中介 CSV，配發 `geoname_id`，輸出 `*_optimized.txt` |
+| `locationiq` | 為指定國家擴充中文譯名，並透過反向地理編碼校正交界處標錯的行政區 |
 | `translate` | 套用官方譯名與中文別名，產出翻譯後的檔案 |
+| `prune` | 發布前剪除多餘地名點，透過幾何證明在保證查詢結果完全不變的前提下精簡點位 |
 | `pack` | 打包成 `release.tar.gz` 與 `release.zip` |
 
 每個階段都可以單獨執行，也可以用 `--pass-<stage>` 跳過。
@@ -99,39 +106,50 @@ cargo run --release -- release \
 
 ### `prepare`：下載原料
 
-從 [GeoNames](https://www.geonames.org/export/) 抓三份原始檔：`cities500.txt`（人口 500 以上的聚落與行政中心，約 20 萬筆）、`admin1CodesASCII.txt`（一級行政區代碼對照名稱），以及 `admin2Codes.txt`（二級行政區，本專案不處理，只是保持檔案結構完整）。
+從 [GeoNames](https://www.geonames.org/export/) 抓三份原始檔：`cities500.txt`（聚落與行政中心原始檔）、`admin1CodesASCII.txt`（一級行政區代碼對照名稱），以及 `admin2Codes.txt`（二級行政區，本專案不處理，只是保持檔案結構完整）。
 
 已存在的檔案預設跳過，不重複下載。`cities500.txt` 解壓後有數百 MB，重跑流程時這一步的快取相當有感。
+
+在收錄條件上，專案全面改依 **GeoNames feature class 白名單**（P 類聚落點、AU PPLX、A 類行政區）收錄，取代早期以人口門檻過濾的做法，避免許多人口欄位為 0 或空白的真實聚落被誤殺，同時將已廢棄、已毀與歷史地點（如 PPLH、PPLQ、PPLW）排除。
 
 ### `enhance`：核心階段
 
 這一步把兩件事併在一起：
 
-1. **併入各國資料**：讀取 `meta_data/` 底下的中介 CSV，把有專屬處理邏輯的國家（handler）資料寫進 `admin1CodesASCII.txt` 與 `cities500.txt`，取代 GeoNames 原本那些點位。
+1. **併入各國資料**：讀取 `data/handler/` 底下的中介 CSV，把有專屬處理邏輯的國家（handler）資料寫進 `admin1CodesASCII.txt` 與 `cities500.txt`，取代 GeoNames 原本那些點位。
 2. **配發 ID**：新增的資料列不能跟既有的 `geoname_id` 撞號。
 
-實際上， Immich 內部並不會驗證 `geoname_id` 的正確性亦不會記錄（只會記錄反解後的地名名稱），但是內部查詢時，城市需要與對應的 admin 1 配對，因次需要確保 ID 不會重複，並且配對。
+實際上，Immich 內部並不會驗證 `geoname_id` 的正確性亦不會記錄（只會記錄反解後的地名名稱），但是內部查詢時，城市需要與對應的 admin 1 配對，因此需要確保 ID 不會重複，並且正確配對。
 
 為了做到這點，程式先算出目前資料中的**全域最大 ID**，再從最大值加一往後配發，`admin1CodesASCII.txt` 先取一段，`cities500.txt` 接著往下取。不寫死號碼區段的好處是，GeoNames 之後擴充資料時，新增的列也不會覆蓋到官方既有的點位。
+
+此外，針對 GeoNames 既有多筆資料共用完全相同座標的情況，去重邏輯採用**單一 tie-break：固定保留最小 `geoname_id` 者**，徹底解決以往人口與 ID 雙條件同時落空導致「整組地名被丟棄」的缺陷，成功復原了 50 個原本消失的地名。
 
 ![geoname_id 配發示意：GeoNames 既有資料佔用到全域最大值，admin1CodesASCII 的新增列從最大值加一開始配發，cities500 的新增列接續其後，右側留白表示 GeoNames 之後擴充也不會撞號](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126745601_geoname-id-allocation.png "新增列從當下的全域最大值往後配發，不寫死號碼區段")
 {style="width:70%;"}
 
 輸出是 `cities500_optimized.txt` 與 `admin1CodesASCII_optimized.txt`。
 
-### `locationiq`：為指定的國家校正行政區
+### `locationiq`：擴充中文譯名與校正邊界行政區
 
-這一階段**只處理執行時明確指定的國家**，不是對全球資料通用。要納入的國家得在指令裡以 `--country-code` 列出（可以給多個），而且會自動排除掉已經有專屬處理器的那五個，因為它們的資料在 `extract` 就處理完了，沒必要再花 API 額度。
+這一階段**只處理執行時明確指定的國家**，不是對全球資料通用。要納入的國家得在指令裡以 `--country-code` 列出（可以給多個），而且會自動排除掉已經有專屬處理器的那五個，因為它們的資料在 `extract` 就處理完了，沒必要再花 API 額度。若指定的國家清單全部為 handler 國家，流程會自動跳過此階段。
 
-指定之後，該國每個地點的座標都會送去 LocationIQ 反查一次，回傳的行政區層級覆蓋原本 GeoNames 的欄位。這就是前面說的中間那層：座標不動，但修掉上游把點歸錯行政區、或名稱本身有誤的情況。沒被指定的國家完全不會經過這一步。
+指定之後，該國每個地點的座標都會送去 LocationIQ 進行逆地理編碼（Reverse Geocoding），回傳的資料會覆蓋原本 GeoNames 的欄位。表面上看這只是一次外部 API 查詢，但實際上它承擔了兩項最關鍵的任務：
+
+1. **大幅擴充中文地名來源（更多的中文化）**  
+   GeoNames 雖然收錄了龐大的全球點位，但其附帶的中文別名資料庫（`alternateNamesV2.txt`）其實非常有限，大量二、三級城鎮或景點只有英文或拼音。由於請求 LocationIQ 時會帶上 `accept-language: zh,en` 標頭，能直接借力 OpenStreetMap（OSM）背後龐大且持續維護的全球在地化社群資料，一口氣取得大量上游原本欠缺的高品質中文地名與行政區譯名，為後續的 `translate` 階段注入最優先採用的中文候選原料。
+
+2. **校正交界處的行政區歸屬（解決標記錯誤）**  
+   GeoNames 原生資料主要由離散的點狀聚落構成，**當點位座標剛好位於兩個行政區的交界或模糊地帶時，上游資料庫容易出現行政區標記錯誤**（例如將 A 縣市邊界的景點誤歸為鄰近的 B 縣市）。透過 LocationIQ 重新做反向地理編碼，能利用外部地理資料庫的空間解析能力重新判定該座標的歸屬：
+   - **自動修正邊界上的一級行政區（`admin1_correct`）**：當 GeoNames 記載的一級行政區與 Natural Earth、LocationIQ 兩者共識指向另一個行政區時，程式會自動更正，並於 `data/locationiq/{國碼}_admin1_fixes.csv` 留下審核紀錄。
+   - **城市名可依國家自訂取值層級**：透過 `data/locationiq/address_fields.json` 配置（亦可透過 `--locationiq-address-fields` 指定），各國能精準對應最適合顯示的層級。例如馬來西亞改為固定取 `district`（daerah 縣級），徹底解決原本同一區域內村莊、小鎮、英里樁或建案名稱混雜跳躍的問題。
 
 這裡是整條流程唯一會被外部服務卡住的地方。LocationIQ 有每日請求上限，而一個國家可能有上萬個地點要查，所以流程設計成可以中斷後續跑：
 
-- 查詢進度記錄在 `meta_data/<國碼>.csv`，已查過的座標會自動跳過。
+- 查詢進度記錄在 `data/locationiq/<國碼>.csv`，已查過的座標會自動跳過。
+- 查詢速率改以服務的每分鐘上限進行嚴格節流；若撞到每日上限，會保存已查結果並正常結束，容許後續步驟繼續打包。
 - 超過當日限制時，換 API key 或隔天重跑同一條指令即可。
 - 加上 `--pass-cleanup` 保留 `output/` 既有的中間產物，省去重新下載與前處理。
-
-前面說「階段可以單獨跳過」的設計，解決的就是這個問題。
 
 ### `translate`：決定每個地名最後顯示什麼
 
@@ -163,9 +181,58 @@ cargo run --release -- release \
 
 之所以要在轉換之前先進行檢查，是因為無條件套用簡轉繁會改壞本來就正確的字。由於有些簡體中文可以同字但表示不同的意思，但繁體中文會使用兩個不同的字來表示不同的意思，這就會導致當這個詞被判斷成簡體字，無條件轉換時，會誤改一些本來就正確譯名（「里」變「裏」、「占」變「佔」這類過度轉換）。
 
+### `prune`：發布前剪除多餘地名點
+
+這是發布管線中的關鍵階段，位於 `translate` 之後、`pack` 之前。
+
+#### 為什麼需要剪枝
+
+隨著專案引入各國高精度官方圖資，`cities500.txt` 迅速膨脹至將近 49 萬列（僅日本與印尼就佔了超過 23 萬列）。這帶來了三個沉重負擔：
+1. **資料庫體積**：PostgreSQL 的 `geodata_places` 表與空間索引膨脹至 220 MB 以上。
+2. **查詢延遲**：Immich 對每張照片都要查一次最近鄰。在日本等密集區，平均每次查詢都要在 25 公里半徑內掃描 242 列，而這些點大多是「同一個行政區內的不同代表點」——無論選到哪一個，回傳的縣市名稱完全一樣。
+3. **下載體積**：解壓縮後的純文字檔達 64 MB。
+
+**剪枝的目標就是在保證所有查詢結果 100% 不變的前提下，刪除多餘的重複點位。**
+
+#### 證明不了就保留
+
+Immich 的反向查詢底層使用的是 PostgreSQL 的 `earth_box(ll_to_earth_public(lat, lng), 25000)`。**`earth_box` 建立的是地心直角座標系下的軸對齊立方體，而不是球面圓盤！** 這意味著正北 25.5 公里的點在盒外，而切向對角線 28.3 公里的點反而仍在盒內。任何單純的「最近鄰替換」推論都無法保證 SQL 查詢行為不變。
+
+![立方體與圓盤的差異：切向 28.3 公里仍在盒內，軸向 25.5 公里的點在盒外](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789972120643_pruning-box-vs-disc.svg "earth_box 立方體與球面圓盤的差異")
+{style="width:60%;"}
+
+因此，剪枝器採用嚴格的「證明不了就保留」原則，對每個候選點 $p$ 證明：**刪掉 $p$ 後，所有可能受影響的查詢位置，回傳的行政區名稱均不變**：
+- **T0（局部同一性）**：候選點 $p$ 的所有 Delaunay 三角網格鄰居必須屬於同一行政區。
+- **T1（區域覆蓋性）**：受影響區域 $R_p$ 內的每一處，在刪除 $p$ 後仍被其他同名點的 25 公里範圍覆蓋。
+- **T2（邊界一致性）**：在超出 25 公里邊界而回退 Natural Earth 國名時，結果依然與原先完全一致。
+
+![T0、T1、T2 三個判準的分工](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789971954140_pruning-three-tiers.svg "T0、T1、T2 三層證明架構")
+{style="width:80%;"}
+
+為了驗證連續區域，程式採用**心射投影（gnomonic projection）**進行遞迴四分細分。心射投影能將大圓映射為直線，確保多邊形具備測地凸性，從而可以安全地用區域角點界定整體區間。
+
+![遞迴細分：整塊、切四塊、再切四塊，未解區域逐步縮小](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789972129175_pruning-subdivision.svg "心射投影下的遞迴四分細分")
+{style="width:75%;"}
+
+此外，T0 的論證需要鄰居存活，如果同時刪除相鄰點位論證就會失效。因此單趟只能刪除兩兩不相鄰的「最大獨立集」（Maximal Independent Set），每趟刪除後重新計算球面 Delaunay 鄰接並重新證明，實際經 **20 趟迭代收斂**才完成完整剪枝。
+
+![多趟獨立集刪除：每趟刪掉互不相鄰的一組點，重建圖後再刪一組](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789972134954_pruning-multipass.svg "多趟獨立集反覆迭代刪除")
+{style="width:72%;"}
+
+#### 剪枝成效
+
+實測結果（細分預算 2048、多趟迭代收斂）：
+- **列數減少 33.5%**：全球點位由 487,372 點降至 324,296 點（淨刪除 163,076 點）。
+- **體積與索引縮減**：解壓後 `cities500.txt` 減少 25.2%（47.8 MB），PostgreSQL `geodata_places` 表與索引減少 25.8%（164 MB），GiST 空間索引亦減少 46.1%（41 MB）。
+- **查詢速度提升 3 倍**：密集地區反向地理查詢平均延遲由 3.36 ms 降低至 1.15 ms（**降幅達 66%**，p50 降至 0.63 ms）。
+- **零差異驗證**：在真實 PostgreSQL 進行 635 萬個探測點的差分測試，比對 `(country, state, city)`，**標籤改變數為 0，新增空結果數為 0**。
+- **稀疏地區天然保護**：加拿大、俄羅斯等原本點位稀疏的國家，因無法滿足 T1 證明而全數保留（59 個產生候選的國家中，僅 6 個密集國家有刪除點），完全不需要維護人工國家白名單。
+
+剪枝為 release 流程預設步驟，亦可透過 `--pass-prune` 跳過，或以 `cargo run --release -- prune` 單獨執行。
+
 ### `pack`：打包
 
-把翻譯後的檔案、`i18n-iso-countries/`（國家名稱對照，見[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)）、`LICENSE`、`NOTICE.md` 整理成 release 目錄結構，寫入 `geodata-date.txt`，最後產出 `release.tar.gz` 與 `release.zip`。
+把剪枝與翻譯後的檔案、`data/vendor/i18n-iso-countries/`（國家名稱對照，見[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)）、`LICENSE`、`NOTICE.md` 整理成 release 目錄結構，寫入 `geodata-date.txt`，最後產出 `release.tar.gz` 與 `release.zip`。
 
 這包就是安裝腳本 `update_data.sh` 下載的東西，目錄結構直接對應安裝時要放進 Immich 的位置。
 
@@ -195,15 +262,17 @@ cargo run -- release --fixture-mode \
 正式發布與 nightly 的 workflow 都走真實流程，但會先跑 fixture release smoke 當前置檢查。
 
 > [!NOTE] 這套階段劃分不是 Rust 版才有的
-> 六階段從 v2 的 Python + Polars 時代就存在，v3.0.0 改寫為 Rust 之後階段名稱與職責大致沿用，主要差別在實作層。
+> 六階段從 v2 的 Python + Polars 時代就存在，v3 改寫為 Rust 之後階段名稱與職責大致沿用；後來為了解決圖資擴充帶來的資料庫膨脹與查詢延遲問題，正式加入了第七個階段 `prune`，在不影響輸出結果的前提下大幅精簡資料。
 > 其中比較有意思的一項是各國處理邏輯的註冊方式：Python 版用 registry 自動註冊，handler 類別定義好就會被掃到；Rust 版刻意改成 enum 與 static dispatch 的明確註冊，新增國家時必須同步修改 CLI 的國家解析與 dispatch。多寫那幾行，換掉的是「release 行為取決於 runtime 掃描到什麼」。發布流程產出的是所有使用者會下載的資料，這種地方的動態魔法出問題時很難查。
 
 ---
 
-[下一篇：五個地區，五種答案](/posts/engineering/immich-geodata-tech-03-strategies/)進入各國的處理邏輯：同一套流程之下，五個地區為什麼會得出五種不同的顯示策略。
+[下一篇：五個地區，五種方案](/posts/engineering/immich-geodata-tech-03-strategies/)進入各國的處理邏輯：同一套流程之下，五個地區為什麼會得出五種不同的顯示策略。
 
 ## 參考資源
 
 - [本地資料處理](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/development.md) - 各國 extract 指令與完整流程的操作說明
+- [地名點剪枝說明文件](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/point-pruning.md) - prune 階段的完整幾何證明與差分測試細節
+- [City 層級選擇條件](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/city-level-criteria.md) - 各國城市名層級的裁定判準
 - [GeoNames Documentation](https://www.geonames.org/export/) - 原始資料的檔案格式
 - [LocationIQ Documentation](https://locationiq.com/docs) - Reverse Geocoding API

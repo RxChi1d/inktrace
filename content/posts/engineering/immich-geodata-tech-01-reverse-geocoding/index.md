@@ -3,7 +3,7 @@ title: "Immich 繁體中文地理資料技術解析（一）：反向地理編�
 slug: "immich-geodata-tech-01-reverse-geocoding"
 aliases: ["/posts/engineering/immich-geodata-tech-01-pipeline/"]
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 description: "拆解 Immich 的離線反向地理編碼：容器啟動時匯入哪些 GeoNames 檔案、earthdistance 如何用最近鄰查詢從座標找出地名，以及為什麼替換這些檔案就能讓相簿顯示精準的繁體中文地名。"
 tags: ["immich", "geodata", "geonames", "reverse-geocoding"]
 categories: ["engineering"]
@@ -193,9 +193,9 @@ immich-geodata-zh-tw 利用這個特性，將 `en.json` 的內容替換為繁體
 這些內容出自一支 Rust CLI，處理流程分成兩條線：
 
 - **`extract`**：把某一個國家的官方圖資（Shapefile、GeoJSON 或官方 API 回應）轉成中介 CSV，內容是行政區名稱與計算好的代表座標。每個有專屬處理邏輯的國家各跑一次。
-- **`release`**：把中介 CSV 併回 GeoNames 的原始檔，處理 ID 配發與翻譯，最後打包成 `release.tar.gz`。這條線由六個階段組成：`cleanup`、`prepare`、`enhance`、`locationiq`、`translate`、`pack`。
+- **`release`**：把中介 CSV 併回 GeoNames 的原始檔，處理 ID 配發、翻譯與點位剪枝，最後打包成 `release.tar.gz`。這條線由七個階段組成：`cleanup`、`prepare`、`enhance`、`locationiq`、`translate`、`prune`、`pack`。
 
-[下一篇](/posts/engineering/immich-geodata-tech-02-pipeline/)會完整拆解這兩條線：六個階段各自做什麼、為什麼每個都要能單獨執行、ID 怎麼配發才不會撞號，以及一條依賴付費 API 的流程要怎麼驗證。
+[下一篇](/posts/engineering/immich-geodata-tech-02-pipeline/)會完整拆解這兩條線：七個階段各自做什麼、為什麼每個都要能單獨執行、ID 怎麼配發才不會撞號，以及一條依賴付費 API 的流程要怎麼驗證。
 
 ---
 

@@ -3,7 +3,7 @@ title: "Immich Traditional Chinese Geodata Deep Dive (1): How Reverse Geocoding 
 slug: "immich-geodata-tech-01-reverse-geocoding"
 aliases: ["/posts/engineering/immich-geodata-tech-01-pipeline/"]
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 description: "A breakdown of Immich's offline reverse geocoding: which GeoNames files get imported at container startup, how earthdistance turns coordinates into place names with a nearest neighbor query, and why swapping those files is enough to make your library show accurate Traditional Chinese place names."
 tags: ["immich", "geodata", "geonames", "reverse-geocoding"]
 categories: ["engineering"]
@@ -193,9 +193,9 @@ At this point the mechanism is fully covered: Immich reads those files, finds pl
 They are produced by a Rust CLI whose processing splits into two tracks:
 
 - **`extract`**: converts one country's official geodata (Shapefile, GeoJSON, or an official API response) into an intermediate CSV containing administrative division names and computed representative coordinates. It runs once per country that has dedicated processing logic.
-- **`release`**: merges the intermediate CSVs back into the original GeoNames files, handles ID allocation and translation, and finally packages everything into `release.tar.gz`. This track consists of six stages: `cleanup`, `prepare`, `enhance`, `locationiq`, `translate`, and `pack`.
+- **`release`**: merges intermediate CSVs back into the original GeoNames files, handles ID allocation, translation, and point pruning, and finally packages everything into `release.tar.gz`. This track consists of seven stages: `cleanup`, `prepare`, `enhance`, `locationiq`, `translate`, `prune`, and `pack`.
 
-[The next post](/en/posts/engineering/immich-geodata-tech-02-pipeline/) takes both tracks apart in full: what each of the six stages does, why every one of them has to be runnable on its own, how IDs are allocated so they never collide, and how to validate a pipeline that depends on a paid API.
+[The next post](/en/posts/engineering/immich-geodata-tech-02-pipeline/) takes both tracks apart in full: what each of the seven stages does, why every one of them has to be runnable on its own, how IDs are allocated so they never collide, and how to validate a pipeline that depends on a paid API.
 
 ---
 

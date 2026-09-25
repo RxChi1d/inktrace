@@ -2,8 +2,8 @@
 title: "Immich Traditional Chinese Geodata, Part 2: The Data Pipeline"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
-description: "A walkthrough of the immich-geodata-zh-tw pipeline: extract turns each country's official map data into an intermediate CSV, release merges it back into GeoNames across six stages and packs release.tar.gz, all verifiable with dry-run and fixture mode."
+lastmod: 2026-09-25T12:42:09+08:00
+description: "A walkthrough of the immich-geodata-zh-tw pipeline: extract turns each country's official map data into an intermediate CSV, release merges it back into GeoNames across seven stages and packs release.tar.gz, all verifiable with dry-run and fixture mode."
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
 series: ["immich-geodata-zh-tw"]
@@ -21,7 +21,7 @@ This post takes apart the immich-geodata-zh-tw pipeline, from each country's off
 The whole pipeline splits into two tracks, each with its own job:
 
 - **`extract`**: turns one country's official map data into an intermediate CSV. It runs once per country that has dedicated processing logic, and each run is independent.
-- **`release`**: merges every intermediate CSV back into the GeoNames data, translates it, and packs a release. Six stages run in order.
+- **`release`**: merges every intermediate CSV back into the GeoNames data, translates it, prunes redundant points, and packs a release. Seven stages run in order.
 
 `extract` only serves countries with a dedicated handler, and qualifying takes two things at once: usable official administrative-boundary data for that country, plus processing logic written in the project to read it.
 
@@ -35,9 +35,15 @@ Every other country skips `extract` entirely. But "no `extract`" does not mean "
 
 Put differently, **more accurate data costs more processing**. Do nothing and you get the baseline. Spend API quota on reverse lookups and you can correct upstream administrative errors. Go one level higher and you have to find that country's official map data and write dedicated processing logic for it.
 
-When `release` runs, it checks whether `meta_data/` holds an intermediate CSV for a given country and picks its path accordingly. The output of `extract` is committed to version control, and official map data rarely changes, so a release only needs to read the CSVs that are already there instead of reprocessing every country's map data each time.
+When `release` runs, it checks whether `data/handler/` holds an intermediate CSV for a given country and picks its path accordingly. The output of `extract` is committed to version control, and official map data rarely changes, so a release only needs to read the CSVs that are already there instead of reprocessing every country's map data each time.
 
-![The immich-geodata-zh-tw pipeline: extract turns official map data from five regions into intermediate CSVs, and the six stages of release merge them back into GeoNames and pack release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1789126754796_release-pipeline-stages.png "Two tracks: extract produces intermediate CSVs, and release merges them back into GeoNames across six stages before packing")
+> [!NOTE] Data Directory Structure
+> The project categorizes intermediate artifacts by source to keep data flows clear:
+> - `data/handler/`: Intermediate CSVs extracted from official national map data via `extract`.
+> - `data/locationiq/`: LocationIQ API query cache and extraction configs for non-handler countries.
+> - `data/vendor/`: External static dependencies (e.g. country codes and name mappings).
+
+![The immich-geodata-zh-tw pipeline: extract turns official map data from five regions into intermediate CSVs, and the release pipeline merges them back into GeoNames, prunes redundant points, and packs release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790309238615_release-pipeline-stages-en.svg "Two tracks: extract produces intermediate CSVs, and release merges them back into GeoNames across seven stages before packing")
 {style="width:90%;"}
 
 ## Track One: `extract`
@@ -163,9 +169,58 @@ The same rule applies when picking a candidate out of `alternatenames`: **a cand
 
 The check has to come before the conversion because applying s2t unconditionally corrupts characters that were already correct. Some Simplified characters cover several meanings with one glyph while Traditional Chinese uses different characters for each meaning, so a string wrongly judged as Simplified and converted anyway ends up damaging translations that were fine already: 「里」 becomes 「裏」, 「占」 becomes 「佔」, and so on.
 
+### `prune`: Pruning Redundant Place Points Before Release
+
+This is a critical stage in the release pipeline, located after `translate` and before `pack`.
+
+#### Why Pruning Is Necessary
+
+As the project integrated high-precision official map data from multiple countries, `cities500.txt` swelled rapidly to nearly 490,000 rows (Japan and Indonesia alone account for over 230,000 rows). This brought three heavy burdens:
+1. **Database Footprint**: PostgreSQL's `geodata_places` table and its spatial indexes expanded to over 220 MB.
+2. **Query Latency**: Immich triggers a nearest-neighbour query for every uploaded photo. In dense regions like Japan, each query scanned an average of 242 rows within a 25 km radius, yet many of those rows were merely "different representative points within the same administrative division" — regardless of which point won, the returned administrative name was completely identical.
+3. **Download Size**: The uncompressed plain-text file reached 64 MB.
+
+**The goal of pruning is to eliminate redundant place points while guaranteeing that 100% of reverse geocoding query results remain completely unchanged.**
+
+#### Keep It Unless Proven Otherwise
+
+Immich's reverse lookup relies under the hood on PostgreSQL's `earth_box(ll_to_earth_public(lat, lng), 25000)`. **`earth_box` creates an axis-aligned cube in geocentric Cartesian coordinates, not a spherical disc!** This means a point 25.5 km due north falls outside the box, while a point offset diagonally by 28.3 km still falls inside. Consequently, any simplistic reasoning based on "nearest-neighbour replacement" fails to guarantee identical SQL query behaviour.
+
+![The difference between cube and disc: a point offset tangentially by 20x20 km is 28.3 km away yet inside the box, while a point 25.5 km due north is outside](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790007301664_pruning-box-vs-disc-en.svg "Difference between earth_box cube and spherical disc")
+{style="width:60%;"}
+
+Therefore, the pruner adheres to a strict "keep it unless proven otherwise" principle, proving for each candidate point $p$ that: **after deleting $p$, every query location that could possibly be affected still receives the exact same administrative name**:
+- **T0 (Local Identity)**: All Delaunay triangulation neighbours of candidate point $p$ must belong to the exact same administrative division.
+- **T1 (Regional Coverage)**: Every location within the affected region $R_p$ remains covered within 25 km by other kept points sharing the same name.
+- **T2 (Boundary Consistency)**: When falling outside the 25 km threshold and triggering fallback to Natural Earth country names, the result remains completely identical to the original behavior.
+
+![How the three criteria T0, T1, and T2 divide the work](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790007299563_pruning-three-tiers-en.svg "Three-tier proof architecture of T0, T1, and T2")
+{style="width:80%;"}
+
+To verify continuous regions, the program uses **gnomonic projection** to perform recursive quadtree subdivision. Gnomonic projection maps great circles to straight lines, ensuring that spherical polygons possess geodesic convexity so that region corner vertices can safely bound the entire area.
+
+![Recursive subdivision: one cell, split into four, split again, with unresolved area shrinking](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790007307085_pruning-subdivision-en.svg "Recursive quadtree subdivision under gnomonic projection")
+{style="width:75%;"}
+
+Furthermore, the T0 argument requires that neighbours remain alive; deleting adjacent points simultaneously invalidates the proof. Thus, a single pass can only delete a "Maximal Independent Set" of mutually non-adjacent points. After each pass, the spherical Delaunay adjacency is rebuilt and re-evaluated, requiring **20 iterative passes to reach full convergence**.
+
+![Multi-pass independent set deletion: each pass deletes a set of mutually non-adjacent points, then the graph is rebuilt](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790007305117_pruning-multipass-en.svg "Iterative deletion via multi-pass independent sets")
+{style="width:72%;"}
+
+#### Pruning Results
+
+Benchmark results (subdivision budget 2048, multi-pass convergence):
+- **33.5% Row Reduction**: Global place points decreased from 487,372 to 324,296 (a net reduction of 163,076 points).
+- **Size and Index Savings**: Uncompressed `cities500.txt` shrank by 25.2% (down 47.8 MB), PostgreSQL's `geodata_places` table and indexes dropped by 25.8% (down 164 MB), and the GiST spatial index alone dropped by 46.1% (down 41 MB).
+- **3x Faster Queries**: Average reverse geocoding latency in dense regions dropped from 3.36 ms to 1.15 ms (**a 66% drop**, with p50 down to 0.63 ms).
+- **Zero-Diff Verification**: In differential testing across 6.35 million sample coordinates against a real PostgreSQL instance checking `(country, state, city)`, **label changes were 0, and newly introduced null results were 0**.
+- **Inherent Protection for Sparse Regions**: Sparsely populated countries like Canada and Russia were preserved entirely because they could not satisfy the T1 coverage proof (out of 59 countries generating candidate points, only 6 dense countries had points deleted), requiring zero manual country whitelists.
+
+Pruning is a default stage in the release workflow. It can be skipped with `--pass-prune` or run standalone via `cargo run --release -- prune`.
+
 ### `pack`: Packing
 
-This stage arranges the translated files, `i18n-iso-countries/` (the country name mapping, covered in [How Reverse Geocoding Works](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)), `LICENSE`, and `NOTICE.md` into the release directory structure, writes `geodata-date.txt`, and finally produces `release.tar.gz` and `release.zip`.
+This stage arranges the pruned and translated files, `data/vendor/i18n-iso-countries/` (the country name mapping, covered in [How Reverse Geocoding Works](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)), `LICENSE`, and `NOTICE.md` into the release directory structure, writes `geodata-date.txt`, and finally produces `release.tar.gz` and `release.zip`.
 
 That bundle is exactly what the `update_data.sh` install script downloads, and its directory structure maps directly onto where the files go inside Immich at install time.
 
@@ -195,7 +250,7 @@ cargo run -- release --fixture-mode \
 The official release and nightly workflows both run the real pipeline, but they run the fixture release smoke first as a preflight check.
 
 > [!NOTE] This stage layout is not new to the Rust version
-> The six stages date back to the v2 Python and Polars era. The v3.0.0 Rust rewrite largely kept the stage names and responsibilities, and the main differences are at the implementation level.
+> The six stages date back to the v2 Python and Polars era. The v3 rewrite into Rust largely kept the stage names and responsibilities; later, to solve the database bloat and query latency brought on by expanded map data, a seventh stage, `prune`, was officially introduced to significantly trim data without altering outputs.
 > The more interesting difference is how each country's processing logic is registered. The Python version used a registry with automatic registration, so defining a handler class was enough for it to be picked up. The Rust version deliberately switched to explicit registration with an enum and static dispatch, which means adding a country requires updating the CLI country parsing and the dispatch in the same change. Those few extra lines buy an escape from "release behavior depends on whatever runtime scanning happened to find". The release pipeline produces the data every user downloads, and dynamic magic in a place like that is painful to debug when it goes wrong.
 
 ---
@@ -205,5 +260,7 @@ The official release and nightly workflows both run the real pipeline, but they 
 ## References
 
 - [Local data processing](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/development.md) - extract commands per country and instructions for the full pipeline
+- [Point Pruning Documentation](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/en/point-pruning.md) - Full geometric proofs and differential testing details for the prune stage
+- [City-Level Selection Criteria](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/en/city-level-criteria.md) - Adjudication rules for city-level administrative names across regions
 - [GeoNames Documentation](https://www.geonames.org/export/) - file formats of the source data
 - [LocationIQ Documentation](https://locationiq.com/docs) - Reverse Geocoding API

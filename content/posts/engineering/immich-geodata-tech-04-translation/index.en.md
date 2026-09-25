@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata (4): Translating Place Names with Wikidata, and How It Fails Silently"
 slug: "immich-geodata-tech-04-translation"
 date: 2026-08-27T10:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 description: "Six known failure modes when translating place names with Wikidata: errors never break the pipeline, they quietly emit a valid Chinese name pointing at the wrong place. With a real case of a safeguard causing the bug."
 tags: ["immich", "wikidata", "sparql", "knowledge-graph", "data-quality"]
 categories: ["engineering"]
@@ -76,6 +76,8 @@ These are the forms the project has actually run into and recorded:
 
 The fifth one deserves particular attention, because it runs entirely against intuition. The `Kabupaten Ngawi` data was still sitting on Wikidata the whole time, just flagged as deprecated, and the `wdt:` prefix only ever follows best-rank statements. As far as the query is concerned, that statement does not exist.
 
+Furthermore, when integrating external crowdsourced geodata (such as OpenStreetMap's `name:zh`), one encounters even more bizarre "sourceless machine translation" contamination. For example, `Sidemen` in Bali was once mechanically translated into "伴奏者" (literally "accompanist", as translation engines translated the English musical term rather than the place name), while `Lubuk Pakam` was mistakenly mapped to "朗塞斯頓" (Launceston, Australia). This compelled the project to enforce strict "verbatim matching" when introducing multi-source cross-validation: an OSM string is accepted only if an exact Chinese label match exists in the Wikidata entity for that place; if any conflict remains after stripping suffixes, the candidate is discarded entirely in favor of the native original.
+
 ## The Most Ironic One: The Safeguard Manufactures the Error
 
 The sixth mode is entirely our own doing.
@@ -86,8 +88,8 @@ And then the correct `관악구` got discarded. Its `zh-hant` label had been imp
 
 **A blacklist of exclusion rules can never be completed**, and it will take out a correct candidate over a label in some entirely unrelated language. The South Korea handler was later switched to a whitelist test: the candidate's source-language label must be an **exact match** for the queried name. Government bodies, job titles, electoral districts and stations never carry exactly the same name as the administrative division, so they drop out on their own, and no keyword list needs maintaining.
 
-> [!WARNING]
-> The Indonesian processing path still retains a similar keyword-matching mechanism, covering both Chinese-family labels and wiki article titles, which is precisely the scope that killed `관악구` in the first place. No false positives have been observed for Indonesia so far, but the risk is known.
+> [!NOTE]
+> This lesson was directly applied to filtering translations for Indonesian subdistricts (kecamatan): the project no longer relies on fragile `P31` class whitelists (which would falsely discard places like Ubud where `P31=town`), but instead uses strict source-language label equality combined with transitive P131 verification. This naturally filters out government agencies, transit stations, and ethnolinguistic entities (such as `Banjar → 班查語`).
 
 ## Verification Methodology: Counts Are Not Enough
 
@@ -115,7 +117,7 @@ Which means that after fixing a P131 statement upstream, clearing only `cache.p1
 
 Last comes a principle about direction: **if a translation error originates in Wikidata itself, go and fix Wikidata rather than adding another mapping entry inside the project.**
 
-Fixing upstream benefits every user. A mapping table benefits only this project, and it has to be maintained indefinitely. The South Korea example came up in [the previous post](/en/posts/engineering/immich-geodata-tech-03-strategies/): the seven manual mapping entries originally planned to patch upstream errors dropped to zero once Korean Wikipedia's hanja notation was adopted as the name source.
+Fixing upstream benefits every user. A mapping table benefits only this project, and it has to be maintained indefinitely. The South Korea example came up in [the previous post](/en/posts/engineering/immich-geodata-tech-03-strategies/): the seven manual mapping entries originally planned to patch various silent errors in Wikidata's Traditional Chinese labels (such as selecting district offices, simplified/traditional typo drift, or obsolete designations) dropped to zero once Korean Wikipedia's hanja notation was adopted as the name source.
 
 The core lesson of the translation route is roughly this: **do not translate what you can avoid translating, make what you must translate verifiable, and fall back honestly to the original when verification fails.** A place name that visibly went untranslated is worth far more than a wrong one that looks entirely reasonable.
 

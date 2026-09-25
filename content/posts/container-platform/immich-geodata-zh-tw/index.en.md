@@ -2,22 +2,22 @@
 title: "Localized Place Names for Immich - immich-geodata-zh-tw Project Overview and Setup Guide"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
-description: "immich-geodata-zh-tw setup guide: add one entrypoint line to your Docker Compose file and Immich will show localized place names for Taiwan, Japan, South Korea, Thailand, and Indonesia. Manual and non-container deployment included."
+lastmod: 2026-09-25T12:42:09+08:00
+description: "immich-geodata-zh-tw setup guide: add one entrypoint line to your Docker Compose file and Immich will show localized place names for Taiwan, Japan, and other popular Asian destinations. Manual and non-container deployment included."
 tags: ["docker", "immich"]
 categories: ["container-platform"]
 series: ["immich-geodata-zh-tw"]
 series_order: 1
 ---
 
-This article introduces immich-geodata-zh-tw, a reverse geocoding optimization for Immich built for Traditional Chinese users. Besides deep localization for Taiwan (Chinese place names and complete administrative levels), coverage currently extends to Japan, South Korea, Thailand, and Indonesia. Every other region falls back to the Chinese names commonly used in Taiwan, and the whole dataset is kept current by an automated update mechanism.
+This article introduces immich-geodata-zh-tw, a reverse geocoding optimization for Immich built for Traditional Chinese users. Besides deep localization for Taiwan (Traditional Chinese place names and complete township/district levels), it also covers high-precision geodata and localized translations for popular Asian travel destinations such as Japan, South Korea, and Southeast Asia. Every other region falls back to the Chinese names commonly used in Taiwan, and the whole dataset is kept current by an automated update mechanism.
 
 <!--more-->
 
 In "[Immich Deployment, Configuration, and Reverse Proxy - The Best Open-Source Alternative to Google Photos](/en/posts/container-platform/immich-deployment/)" we finished a basic Immich deployment. You may have run into a few problems since then:
 - Photo location data is all in **English**. For example, Immich's raw output shows "Sanzhi, Taipei, Taiwan, Province of China".
 - **Administrative levels are incomplete**, so you cannot narrow a photo down to a township or district, and sometimes the location is simply wrong.
-- **Asian place names are unfriendly**. Locations in Japan, South Korea, Thailand, and Indonesia usually show up as romanized text only.
+- **Non-English place names are unfriendly**. Photos taken abroad often display only romanized script or imprecise English labels, lacking the kanji or Chinese translations that readers expect.
 
 To solve these problems I built **[immich-geodata-zh-tw](https://github.com/RxChi1d/immich-geodata-zh-tw)**, which replaces Immich's reverse geocoding database with one that matches what users in Taiwan actually expect to read.
 
@@ -39,14 +39,16 @@ If you want to know why swapping a few plain text files changes the place names 
 
 ## Which regions does immich-geodata-zh-tw support?
 
-| Region | Display language | Boundary data source |
+The project centers on deep processing of **official surveying and mapping agency geodata**, paired with reverse geocoding queries and a global gazetteer to deliver tiered localization:
+
+| Region | Display style & localization features | Data source & processing method |
 | :--- | :--- | :--- |
-| 🇹🇼 Taiwan | Official Traditional Chinese names | NLSC village and borough boundaries |
-| 🇯🇵 Japan | Native Japanese (kanji and kana) | National Land Numerical Information (KSJ) |
-| 🇰🇷 South Korea | Traditional Chinese for provinces, official Korean hanja for cities | admdongkor administrative dong boundaries |
-| 🇹🇭 Thailand | Traditional Chinese, with official English and Thai as fallback | COD-AB (OCHA) |
-| 🇮🇩 Indonesia | Traditional Chinese, with official BIG Indonesian as fallback | Indonesian Geospatial Information Agency (BIG) village-level data |
-| 🌏 Other regions | NAER official translation → GeoNames Chinese → original name | GeoNames |
+| **🇹🇼 Taiwan** | Completes full hierarchy from county/city down to township/district, fixes country name, and displays Traditional Chinese | National Land Surveying and Mapping Center (NLSC) official vector geodata |
+| **🇯🇵 Japan** | Preserves native kanji and kana familiar to readers (e.g., "横浜市", "中区") | National Land Numerical Information (KSJ) official vector geodata |
+| **🇰🇷 South Korea** | Displays official Korean hanja orthography (e.g., "淸州市"), synchronized with latest 2026 administrative divisions | admdongkor administrative dong official vector geodata |
+| **🇹🇭 Thailand** | Traditional Chinese translations, with official English and Thai as fallback | COD-AB (OCHA) official vector geodata |
+| **🇮🇩 Indonesia** | Traditional Chinese translations, with official BIG Indonesian as fallback | Indonesian Geospatial Information Agency (BIG) village-level official vector geodata |
+| **🌏 Other regions** | NAER official translation → GeoNames Chinese → original name | GeoNames global database |
 
 For Taiwan, on top of the Chinese names, the project also fixes the incorrect country name, fills in the many missing county and city names, and completes the full hierarchy from special municipality or county down to township and district.
 
@@ -199,7 +201,7 @@ Before installing, it is worth having the script print the locations it intends 
 bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --print-paths
 ```
 
-Once the paths look right, swap `--print-paths` for `--install` to perform the installation. If the paths are wrong, override them with `IMMICH_SERVER_ROOT` and `IMMICH_BUILD_DATA`. For details such as how to restart the macOS accelerator, and `sudo` considerations for LXC and bare metal, see the [Non-container deployment](https://github.com/RxChi1d/immich-geodata-zh-tw#非容器部署) section of the project README.
+Once the paths look right, swap `--print-paths` for `--install` to perform the installation. If the paths are wrong, override them with `IMMICH_SERVER_ROOT` and `IMMICH_BUILD_DATA`. For details such as how to restart the macOS accelerator, and `sudo` considerations for LXC and bare metal, see the [Non-container deployment](https://github.com/RxChi1d/immich-geodata-zh-tw#非容器部署) section of the project README and the [macOS accelerator configuration guide](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/deployment-macos-accelerator.md).
 
 ---
 
@@ -227,17 +229,17 @@ Location data on existing photos will now be updated to the localized place name
 
 ### Pinning a specific version
 
-If the latest release has a problem, or you want to stay on a specific version such as `v3.2.0`, use the `--tag` option. **The script itself is always fetched from the latest release; `--tag` only determines the data version.**
+If the latest release has a problem, or you want to stay on a specific version such as `v3.3.0`, use the `--tag` option. **The script itself is always fetched from the latest release; `--tag` only determines the data version.**
 
 **Integrated deployment:**
 Modify the command in `entrypoint`:
 ```yaml
-entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.2.0 && exec start.sh" ]
+entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.3.0 && exec start.sh" ]
 ```
 
 **Manual deployment:**
 ```bash
-bash update_data.sh --install --tag v3.2.0
+bash update_data.sh --install --tag v3.3.0
 ```
 
 > [!IMPORTANT]
@@ -274,7 +276,7 @@ A: For integrated deployment, delete the `entrypoint` line from `docker-compose.
 
 ## Summary
 
-Starting from v3, **immich-geodata-zh-tw** covers Thailand and Indonesia with official boundary data alongside Taiwan, Japan, and South Korea, and it applies the NAER official Taiwanese translations to place names worldwide. The result is a photo library where locations from trips around Asia read the way users in Taiwan expect.
+By integrating official survey geodata, reverse geocoding queries, and localized translation dictionaries, **immich-geodata-zh-tw** makes travel locations in photo libraries read naturally for Traditional Chinese users.
 
 If you want to know how this geodata is actually produced, including which files Immich reads, how each country's boundary data is processed, and how place names are translated and verified, the technical series walks through the entire pipeline. Start with [How Reverse Geocoding Works](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/).
 

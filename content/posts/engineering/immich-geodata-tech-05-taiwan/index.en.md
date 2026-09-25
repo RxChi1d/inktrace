@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata Deep Dive (5): Rebuilding Taiwan's Administrative Divisions from Official Map Data"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 description: "Rebuilding Immich's Taiwanese administrative divisions from NLSC village boundary data: 7,986 representative points, coordinate system conversion, field mapping, and why this handler does almost no name processing at all."
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
@@ -76,7 +76,7 @@ Multipart features such as outlying islands and exclaves deserve a mention: **Ta
 Only these three fields are read, and the assorted DBF types are all converted to strings on output.
 
 > [!NOTE]
-> `admin_3` (village) exists only in the project's intermediate CSV, where it serves traceability and debugging. It is **never written to the `cities500` file that Immich consumes**. The finest level Immich displays is `admin_2`. The value of the village data lies in the dense representative coordinates it provides, not in being displayed.
+> `admin_3` (village) exists only in the project's intermediate CSV (`data/handler/tw_geodata.csv`), where it serves traceability and debugging. It is **never written to the `cities500` file that Immich consumes**. The finest level Immich displays is `admin_2`. The value of the village data lies in the dense representative coordinates it provides, not in being displayed.
 
 The intermediate CSV also carries a `country` field hardcoded to "臺灣", again for human inspection only. **The country name Immich actually displays is determined by the country code `TW`**, which maps to a value in `i18n-iso-countries/langs/en.json` and has nothing to do with this field. This came up in the [first post of the series](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/).
 
@@ -102,9 +102,13 @@ The new rows get merged back into GeoNames' `cities500.txt`, so `geoname_id` val
 
 The approach is to compute the **global maximum ID** in the current data, then allocate upward from that maximum plus one, with `admin1CodesASCII.txt` and `cities500.txt` each receiving a contiguous ID range. The benefit of not hardcoding an ID block is that when GeoNames later expands its data, the newly added rows will not overwrite existing official points.
 
-## Location Accuracy in Taiwan After the Swap
+## Location Accuracy in Taiwan After the Swap and the Pruning Test
 
-Once the data is replaced, photos taken in Taiwan resolve reliably to the "county/city plus township/district" level instead of stopping at the county or the country. Two things produce that result. `admin_2` comes straight from NLSC's official `TOWNNAME` field with no inference involved, and representative point density goes from GeoNames' settlement points up to 7,986 village centroids, which makes it hard for a nearest neighbor query to fall into the wrong township. For the actual installation and verification steps, see the [illustrated setup guide](/en/posts/container-platform/immich-geodata-zh-tw/).
+Once the data is replaced, photos taken in Taiwan resolve reliably to the "county/city plus township/district" level instead of stopping at the county or the country. Two things produce that result: `admin_2` comes straight from NLSC's official `TOWNNAME` field with no inference involved, and representative point density goes from GeoNames' settlement points up to 7,986 village centroids, which makes it hard for a nearest neighbor query to fall into the wrong township.
+
+With the introduction of global point pruning (`prune`), these 7,986 points also passed a rigorous geometric examination: **every single representative point of Taiwan's village boundaries was preserved during pruning, with zero deletions**. Because each township or district's boundary is upheld by multiple villages, the centroids of neighbouring villages act as essential witness points on the Voronoi diagram; deleting any of them would shift classification near boundaries. This geometrically reinforces why subdividing down to the village level was necessary: maintaining sufficient point density is the only way to faithfully sustain the boundaries of all 368 townships and districts across Taiwan under strict zero-distortion conditions.
+
+For the actual installation and verification steps, see the [illustrated setup guide](/en/posts/container-platform/immich-geodata-zh-tw/).
 
 And the entire processing logic amounts to nothing more than reading a Shapefile, converting coordinate systems, computing centroids, and writing out three fields.
 
