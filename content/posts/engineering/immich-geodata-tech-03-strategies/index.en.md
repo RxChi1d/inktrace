@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata (3): Five Regions, Five Strategies"
 slug: "immich-geodata-tech-03-strategies"
 date: 2026-08-26T10:00:00+08:00
-lastmod: 2026-08-31T22:21:40+08:00
+lastmod: 2026-09-25T12:42:09+08:00
 description: "Japan keeps its native kanji names, South Korea uses official hanja, Thailand and Indonesia are translated with a fallback to the official original. Unpacking the single criterion behind all five place-name strategies in immich-geodata-zh-tw."
 tags: ["immich", "geodata", "localization", "gis"]
 categories: ["engineering"]
@@ -56,7 +56,14 @@ The current approach therefore works in two layers.
 
 **City and county level comes from the hanja notation in Korean Wikipedia articles.** There are more than 200 divisions at this level, so maintaining them one by one is not realistic, and the hanja notation is itself the official written form, so it can be adopted directly. Wikidata's role here is limited to identifying which entity a division is and validating its administrative parentage; the names themselves are not taken from it.
 
+In terms of character orthography, the project adheres strictly to official Korean hanja notation. Just as Japanese data preserves shinjitai forms (such as 「県」 and 「浜」), South Korea deliberately preserves the Kangxi dictionary forms officially used in Korea (such as 「淸州市」 rather than 「清」, and 「尙州市」 rather than 「尚」).
+
+At the same time, this mechanism permanently eliminated the long-standing errors previously caused by volatile Traditional Chinese labels in Wikidata.
+
 **First-level divisions use a lookup table built into the handler.** There are only 16 of them, the count is fixed, and hardcoding is more reliable than querying, which also keeps results from drifting between versions.
+
+> [!NOTE]
+> This lookup table directly incorporates South Korea's latest administrative reforms effective 2026-07-01: Jeollanam-do and Gwangju Metropolitan City merged into "Jeonnam-Gwangju Integrated Special City" (reducing first-level divisions from 17 to 16); while Jung-gu, Dong-gu, and Seo-gu in Incheon Metropolitan City were reorganized into Jemulpo-gu, Yeongjong-gu, Seohae-gu, and Geomdan-gu.
 
 The more interesting detail is that the table stores customary short forms rather than full official names:
 
@@ -73,21 +80,32 @@ The benefit of normalizing everything to "X市" and "X道" is consistency: all 1
 
 The rule also explains a few outputs that look like the project is holding on to pre-reform names. Stripping the modifier from `강원특별자치도` gives 江原道 and `제주특별자치도` gives 濟州道, which happen to match what both provinces were called before their reclassification. That is a coincidence, not a deliberate choice to keep the old names. The one case that needs extra handling is `전북특별자치도`, where the Korean name already uses the contraction 전북 (全北). Applying the rule mechanically would produce 全北道, which is not a real name, so the mapping expands it to the full 全羅北道.
 
-The reason Wikidata's Chinese labels are not used directly is that the quality of that layer is not dependable. Real cases encountered include: Seoul's `관악구` coming out as 新林洞, a neighborhood inside the district; `송파구` turning into 蠶室站, a subway station inside the district; the Traditional Chinese label for `함평군` converting 咸 into 鹹; and the label for `여주시` still stuck on 驪州郡, the pre-promotion name. Switching to hanja notation as the source of truth eliminated all of these at once, with no manual correction table to maintain.
+## Thailand and Indonesia: Translation Is the Only Option, and the "City" Level Dilemma
 
-> [!NOTE]
-> This is also why Immich shows 淸州市 rather than 清州市. That is the character form used officially in South Korea, not a typo.
-
-## Thailand and Indonesia: Translation Is the Only Option
-
-Neither Thai nor Indonesian uses Chinese characters, so `นครราชสีมา` and `Kabupaten Ngawi` have no "original Chinese-character form" to fall back on. These two countries therefore have to go the translation route, resolving the administrative entity through Wikidata and then taking its Traditional Chinese name.
+Neither Thai nor Indonesian uses Chinese characters, so `นครราชสีมา` (Nakhon Ratchasima) and `Kecamatan Ubud` (Ubud) have no "original Chinese-character form" to fall back on. These two countries therefore have to go the translation route, resolving the administrative entity through Wikidata and then taking its Traditional Chinese name.
 
 Once you are translating, you have to be ready for the cases where translation fails. Both countries use a layered fallback:
 
 - **Thailand**: Wikidata Traditional Chinese → COD-AB official English → official Thai.
-- **Indonesia**: Wikidata Traditional Chinese → BIG official Indonesian.
+- **Indonesia**: Mapping table Traditional Chinese (NAER → Wikidata → OSM) → BIG official Indonesian.
 
-Falling back to the original looks like a failure, but it is a deliberate choice. Showing `Kabupaten Ngawi` is at least a correct place name, whereas inventing a Chinese translation of unknown provenance means an error can slip through with nobody able to spot it. [The next post, on the six failure modes of Wikidata translations](/en/posts/engineering/immich-geodata-tech-04-translation/), covers this trade-off in detail.
+### Indonesia's Level Dilemma: Why "District" (Kecamatan)?
+
+In Immich's three-part `Country · State · City` interface, mapping Indonesia to level 2 (Kabupaten, regency) yields higher Chinese translation coverage, but regency jurisdictions are so large that album localization loses meaning. For example, photos taken in the popular destination Ubud would merely display `Indonesia · Bali · Gianyar Regency` (吉亞尼亞爾縣), which prevents most users from identifying where the photo was actually taken.
+
+To ensure locations remain genuinely recognizable, the project subdivides Indonesia to the more granular level 3 administrative unit: **Kecamatan (district)**. However, finer granularity introduces a critical trade-off: **the finer the administrative level, the sharper the drop in authoritative Chinese translation coverage**.
+
+The project's design philosophy places **recognizability as top priority**:
+- Popular tourist destinations and major urban centers are supplemented with Chinese district names via official translation datasets and open map data.
+- Uncataloged areas fall back directly to native BIG Indonesian names (e.g., `Indonesia · Bali · Ubud`).
+
+Falling back to native names might look like a compromise, but it is a deliberate choice: displaying the native name `Ubud` is both accurate and immediately clear, whereas forcing an obscure or unverified Chinese translation risks obscuring errors. This trade-off is explored in detail in [Part 4: Six Failure Modes of Wikidata Translations](/en/posts/engineering/immich-geodata-tech-04-translation/).
+
+### Extending to Malaysia: Normalizing Messy Hierarchy to Districts (Daerah)
+
+The same principle of level consistency extends to regions processed by LocationIQ. Taking Malaysia as an example:
+Directly applying standard reverse geocoding often elevates miscellaneous address attributes to city names, mixing housing developments, mile markers, or street numbers into the same area.
+The project normalizes Malaysia to the **daerah (district)** level, where the vast majority of locations have official Traditional Chinese district names, completely resolving level skipping and fragmented naming.
 
 ## Everywhere Else: A Three-Layer Fallback
 
@@ -101,7 +119,7 @@ So obscure locations may still show up in English inside Immich. That is intenti
 
 ## One Criterion, Five Outcomes
 
-Looking back, the differences between the five regions all trace to the same question: what reads most naturally to a Taiwanese user.
+Looking back, the differences across regions all trace to the same question: what reads most naturally to a Taiwanese user:
 
 - Place names in Taiwan, Japan, and South Korea are written in Chinese characters, so readers understand them without translation, and the official written form is used as-is. The only difference is that Taiwan's is Chinese while Japan's and South Korea's are their respective official kanji and hanja.
 - Thai and Indonesian scripts are not readable for a Taiwanese audience, so those names are translated, with a fallback to the official original ready.

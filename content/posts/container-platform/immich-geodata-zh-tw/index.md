@@ -2,22 +2,22 @@
 title: "Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2026-09-11T21:50:12+08:00
-description: "immich-geodata-zh-tw 安裝教學：在 Docker Compose 加一行 entrypoint，讓 Immich 的相片地點顯示臺灣、日本、南韓、泰國、印尼的在地化中文地名。含手動與非容器部署。"
+lastmod: 2026-09-25T12:42:09+08:00
+description: "immich-geodata-zh-tw 安裝教學：在 Docker Compose 加一行 entrypoint，讓 Immich 相片地點顯示臺灣、日本等亞洲熱門地區的在地化中文地名。含手動與非容器部署。"
 tags: ["docker", "immich"]
 categories: ["container-platform"]
 series: ["immich-geodata-zh-tw"]
 series_order: 1
 ---
 
-本文介紹 immich-geodata-zh-tw 專案，這是一個專為繁體中文使用者打造的 Immich 反向地理編碼優化方案。除了針對臺灣進行深度的在地化處理（中文化、行政區層級補齊），支援範圍目前也涵蓋日本、南韓、泰國與印尼，其餘地區則補上臺灣慣用的中文譯名，並提供穩定的自動化更新機制。
+本文介紹 immich-geodata-zh-tw 專案，這是一個專為繁體中文使用者打造的 Immich 反向地理編碼優化方案。除了針對臺灣進行深度的在地化處理（繁體中文、補齊鄉鎮市區層級），也涵蓋日本、南韓、東南亞等熱門旅遊地區的在地化圖資與譯名優化，全球其餘地區則補上臺灣慣用的中文譯名，並提供穩定的自動化更新機制。
 
 <!--more-->
 
 在「[Immich 部署、設定與反向代理 - Google 相簿的最佳開源替代方案](/posts/container-platform/immich-deployment/)」中，我們完成了 Immich 的基本部署。但你可能會發現幾個問題：  
 - 照片的地理資訊都是 **英文**，例如 Immich 的原始輸出會顯示 "Sanzhi, Taipei, Taiwan, Province of China"。
 - **行政區顯示不完整**，無法定位到鄉鎮市區，甚至顯示錯誤的地點。
-- **亞洲地名顯示不友善**，日本、南韓、泰國與印尼的地名往往只顯示羅馬拼音。
+- **非英語系地名顯示不友善**：出國旅遊拍的照片往往只顯示羅馬拼音或不精準的英文標籤，缺乏讀者習慣的漢字或中文譯名。
 
 為了解決這些問題，我開發了 **[immich-geodata-zh-tw](https://github.com/RxChi1d/immich-geodata-zh-tw)** 專案，透過優化 Immich 的反向地理編碼資料庫，提供符合臺灣使用者習慣的地理資訊體驗。
 
@@ -39,28 +39,27 @@ Immich 原生的反向地理編碼主要依賴 GeoNames 全球資料庫，這對
 
 ## immich-geodata-zh-tw 支援哪些地區
 
-| 地區 | 顯示語言 | 圖資來源 |
+專案以各國**官方測繪機構圖資**為核心深度處理，並搭配逆地理查詢與全球地名庫，提供不同層度的在地化支援：
+
+| 地區 | 顯示樣式與在地化特色 | 資料來源與處理方式 |
 | :--- | :--- | :--- |
-| 🇹🇼 臺灣 | 繁體中文官方名稱 | 國土測繪中心（NLSC）村里界 |
-| 🇯🇵 日本 | 日文原名（漢字與假名） | 国土数値情報（KSJ） |
-| 🇰🇷 南韓 | 一級行政區繁體中文，縣市為韓國官方漢字 | admdongkor 行政洞界 |
-| 🇹🇭 泰國 | 繁體中文，官方英文與泰文備用 | COD-AB（OCHA） |
-| 🇮🇩 印尼 | 繁體中文，BIG 官方印尼文備用 | 印尼地理空間資訊局（BIG）村級圖資 |
-| 🌏 其他地區 | 國教院官方譯名 → GeoNames 中文 → 保留原文 | GeoNames |
+| **🇹🇼 臺灣** | 完整補齊直轄市/縣市 → 鄉鎮市區層級，修正國名並顯示繁體中文 | 國土測繪中心（NLSC）官方向量圖資 |
+| **🇯🇵 日本** | 保留讀者習慣的日文漢字與假名原名（如「横浜市」、「中区」） | 国土数値情報（KSJ）官方向量圖資 |
+| **🇰🇷 南韓** | 顯示官方漢字表記（如「淸州市」），已同步 2026 最新行政區劃 | admdongkor 行政洞界官方向量圖資 |
+| **🇹🇭 泰國** | 繁體中文譯名，官方英文與泰文備用 | COD-AB（OCHA）官方向量圖資 |
+| **🇮🇩 印尼** | 精細至「郡」（kecamatan）層級繁體中文，如熱門的峇里島、雅加達 | 印尼地理空間資訊局（BIG）官方向量圖資 |
+| **🇲🇾 馬來西亞** | 固定顯示「縣」（daerah）層級，補齊絕大多數中文縣名 | LocationIQ 逆地理查詢優化 |
+| **🌏 其餘地區** | 依序套用國家教育研究院官方譯名、GeoNames 中文別名與繁體轉換 | GeoNames 全球地名庫（地點白名單收錄） |
 
-臺灣的部分除了中文化，還修正了國家名稱顯示不正確、多數縣市名稱從缺的問題，並補齊直轄市/縣市 → 鄉鎮市區的完整層級。
-
-> [!NOTE]
-> 南韓的縣市會顯示韓國官方漢字，例如「淸州市」而不是「清州市」。韓國地名本來就是漢字詞，漢字是原名而非翻譯，這點與日本保留日文漢字同理，字形與臺灣慣用寫法略有出入是正常的。
->
-> 各地區為什麼採用不同策略，詳見系列技術篇的[五個地區，五種答案](/posts/engineering/immich-geodata-tech-03-strategies/)。
+> [!NOTE] 為什麼各地區顯示策略不同？
+> 本專案的在地化原則是**「臺灣使用者看到哪種寫法最自然」**：日本與南韓保留讀者熟悉的漢字原名；非漢字文化圈則補齊中文翻譯與在地化行政層級。想深入了解五大圖資處理背後的設計考量，可參考系列技術篇的[五個地區，五種方案](/posts/engineering/immich-geodata-tech-03-strategies/)。
 
 ## 使用前後對比
 
 ![使用前後對比](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126699756_comparison.png)
 {style="width:80%;"}
 
-不僅地名更精確，中文搜尋體驗也大幅提升！
+不僅地名更精確，中文搜尋體驗也大幅提升！此外，專案具備「地名點剪枝」機制，在保證查詢結果完全一致的前提下，刪除了全球 33.5% 的冗餘點位，縮減儲存空間並讓密集地區的查詢速度提升達 3 倍。
 
 ---
 
@@ -131,10 +130,10 @@ docker logs immich_server
 <a id="fix-import-failed"></a>
 > [!QUESTION] 沒看到導入訊息？
 > Immich 會比對 `geodata/geodata-date.txt` 的內容與資料庫中的紀錄，兩者**內容不同**時才會重新匯入，比的是內容而不是日期新舊。  
-> 整合式部署每次啟動都會重新安裝資料，因此日期沒變就代表已經匯入過同一份資料，這時請改為確認「提取元數據」是否選擇「全部」，以及照片本身是否含有 GPS 資訊。  
+> 整合式部署每次啟動都會重新安裝資料，因此日期沒變就代表已經匯入過同一份資料，這時請改為確認「擷取詮釋資料」是否選擇「全部」，以及照片本身是否含有 GPS 資訊。  
 > 手動部署與其他部署方式則可以把 `geodata/geodata-date.txt` 改成與現值**不同**的內容（例如今天的日期），再重啟 Immich 強制重新匯入。
 
-到這裡整合式部署就完成了。**如果你的 Immich 裡已經有照片，還需要執行最後一步**：「[重新提取照片元數據](#extract-metadata)」，舊照片才會套用新的地理資訊。
+到這裡整合式部署就完成了。**如果你的 Immich 裡已經有照片，還需要執行最後一步**：「[重新擷取照片詮釋資料](#extract-metadata)」，舊照片才會套用新的地理資訊。
 
 ---
 
@@ -199,13 +198,13 @@ Immich 沒有跑在 Docker 容器裡時也能安裝，例如 [immich-apple-silic
 bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --print-paths
 ```
 
-確認無誤後把 `--print-paths` 換成 `--install` 即可安裝；路徑不正確時可用 `IMMICH_SERVER_ROOT` 與 `IMMICH_BUILD_DATA` 指定。macOS 加速器的重啟方式、LXC 與裸機的 `sudo` 注意事項等細節，請參考專案的 [README「非容器部署」](https://github.com/RxChi1d/immich-geodata-zh-tw#非容器部署) 章節。
+確認無誤後把 `--print-paths` 換成 `--install` 即可安裝；路徑不正確時可用 `IMMICH_SERVER_ROOT` 與 `IMMICH_BUILD_DATA` 指定。macOS 加速器的重啟方式、LXC 與裸機的 `sudo` 注意事項等細節，請參考專案的 [README「非容器部署」](https://github.com/RxChi1d/immich-geodata-zh-tw#非容器部署) 與 [macOS 加速器設定指南](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/deployment-macos-accelerator.md)。
 
 ---
 
-## 最後一步（所有部署方式共通）：重新提取照片元數據 📸 {#extract-metadata}
+## 最後一步（所有部署方式共通）：重新擷取照片詮釋資料 📸 {#extract-metadata}
 
-資料導入後，必須**重新提取元數據**，舊照片才會套用新的地理資訊（新上傳照片會自動套用）。
+資料導入後，必須**重新擷取詮釋資料**，舊照片才會套用新的地理資訊（新上傳照片會自動套用）。
 
 > [!TIP]
 > 如果你的 Immich 中還沒有任何的照片，例如剛部署完，這個步驟可以跳過。
@@ -214,12 +213,12 @@ bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest
   ![登入 Immich 後台](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126701756_extract-metadata-step-1.png "登入 Immich 後台")
 2. 進入 **系統管理 (Administration)** → **任務 (Jobs)**
   ![進入系統管理的任務頁面](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126706582_extract-metadata-step-2.png "進入系統管理的任務頁面")
-3. 找到 **提取元數據 (Extract Metadata)**，點擊 **全部 (All)**
-  ![選擇提取元數據並點擊全部](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126711655_extract-metadata-step-3.png "選擇提取元數據並點擊全部")
+3. 找到 **擷取詮釋資料 (Extract Metadata)**，點擊 **全部 (All)**
+  ![選擇擷取詮釋資料並點擊全部](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126711655_extract-metadata-step-3.png "選擇擷取詮釋資料並點擊全部")
 
 這時，舊照片的地理資訊就會被更新成中文地名，而新上傳的照片則會直接套用！
 
-> [!QUESTION] 提取元數據後，名稱卻沒有更新？
+> [!QUESTION] 擷取詮釋資料後，名稱卻沒有更新？
 > 請參考「[沒看到導入訊息？](#fix-import-failed)」確認 Immich 是否真的重新匯入了地理資料。
 ---
 
@@ -227,17 +226,17 @@ bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest
 
 ### 指定特定版本
 
-若最新的 Release 有問題，或想固定使用特定版本（例如 `v3.2.0`），可以使用 `--tag` 參數。**腳本本身一律從最新版本取得，只有資料版本由 `--tag` 決定。**
+若最新的 Release 有問題，或想固定使用特定版本（例如 `v3.3.0`），可以使用 `--tag` 參數。**腳本本身一律從最新版本取得，只有資料版本由 `--tag` 決定。**
 
 **整合式部署：**
 修改 `entrypoint` 中的指令：
 ```yaml
-entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.2.0 && exec start.sh" ]
+entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.3.0 && exec start.sh" ]
 ```
 
 **手動部署：**
 ```bash
-bash update_data.sh --install --tag v3.2.0
+bash update_data.sh --install --tag v3.3.0
 ```
 
 > [!IMPORTANT]
@@ -250,10 +249,10 @@ bash update_data.sh --install --tag v3.2.0
 ## 常見問題 🔧
 
 **Q: 如何更新資料？**  
-A: 整合式部署直接重啟 docker compose 即可自動更新；手動部署重新執行一次 `bash update_data.sh` 後重啟容器；其他部署方式則重新執行同一條 `--install` 指令後重啟 Immich 服務。更新後別忘了視情況重新提取元數據。
+A: 整合式部署直接重啟 docker compose 即可自動更新；手動部署重新執行一次 `bash update_data.sh` 後重啟容器；其他部署方式則重新執行同一條 `--install` 指令後重啟 Immich 服務。更新後別忘了視情況重新擷取詮釋資料。
 
 **Q: 導入訊息看不到，中文沒套用？**  
-A: 檢查日誌是否有 `geodata records imported`；若沒有，請參考「[沒看到導入訊息？](#fix-import-failed)」確認匯入條件。別忘了重新提取元數據。
+A: 檢查日誌是否有 `geodata records imported`；若沒有，請參考「[沒看到導入訊息？](#fix-import-failed)」確認匯入條件。別忘了重新擷取詮釋資料。
 
 **Q: 縣市名稱已經更新為繁體中文了，但國家名稱卻還是英文？**  
 A: 可能原因為您使用的 Immich 版本為 1.136.0 以後的新版本，但使用的 immich-geodata-zh-tw 版本小於 v1.2.0。只要使用最新發布（預設）或 v1.2.0 以上版本即可解決此問題。  
@@ -268,13 +267,13 @@ A: 這通常發生在 Immich v1.142.0+ 版本。因為 Immich 更改了啟動檔
 A: Immich 依照最近距離原則比對地名，靠近行政區邊界的座標可能被歸到鄰近的行政區，小型島嶼或特殊地形也可能無法精確對應。這是 Immich 的解析方式所致，並非資料錯誤。這套最近鄰查詢的運作方式詳見[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)。
 
 **Q: 如何移除或還原成原本的地名？**  
-A: 整合式部署刪掉 `docker-compose.yml` 裡的 `entrypoint` 那一行；手動部署則移除兩條 volume 掛載。重啟容器後 Immich 會改用官方預設的 GeoNames 資料（若沒有立即生效，同樣是 `geodata/geodata-date.txt` 的比對問題），最後再重新提取一次元數據即可。
+A: 整合式部署刪掉 `docker-compose.yml` 裡的 `entrypoint` 那一行；手動部署則移除兩條 volume 掛載。重啟容器後 Immich 會改用官方預設的 GeoNames 資料（若沒有立即生效，同樣是 `geodata/geodata-date.txt` 的比對問題），最後再重新擷取一次詮釋資料即可。
 
 ---
 
 ## 總結
 
-**immich-geodata-zh-tw** 從 v3 開始，除了臺灣、日本與南韓，也加入了泰國與印尼的官方圖資，並導入國教院的官方臺灣譯名優化全球地名，讓亞洲旅遊照片的地點整理更貼近臺灣使用者的閱讀習慣。
+**immich-geodata-zh-tw** 透過整合官方測繪圖資、逆地理查詢與在地化譯名庫，讓相簿中的旅遊地點整理更貼近臺灣使用者的閱讀習慣。
 
 如果你想知道這些地理資料是怎麼做出來的，包括 Immich 到底讀哪幾個檔案、各國圖資怎麼處理、地名怎麼翻譯與驗證，系列技術篇拆解了完整流程，可以從[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)開始。
 
