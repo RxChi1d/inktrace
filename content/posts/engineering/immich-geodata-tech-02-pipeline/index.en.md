@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata, Part 2: The Data Pipeline"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "A walkthrough of the immich-geodata-zh-tw pipeline: extract turns each country's official map data into an intermediate CSV, release merges it back into GeoNames across seven stages and packs release.tar.gz, all verifiable with dry-run and fixture mode."
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
@@ -41,7 +41,7 @@ When `release` runs, it checks whether `data/handler/` holds an intermediate CSV
 > The project categorizes intermediate artifacts by source to keep data flows clear:
 > - `data/handler/`: Intermediate CSVs extracted from official national map data via `extract`.
 > - `data/locationiq/`: LocationIQ API query cache and extraction configs for non-handler countries.
-> - `data/vendor/`: External static dependencies (e.g. country codes and name mappings).
+> - `data/vendor/`: External static dependencies, such as the `i18n-iso-countries` locale files and the GeoNames `countryInfo.txt` base file.
 
 ![The immich-geodata-zh-tw pipeline: extract turns official map data from five regions into intermediate CSVs, and the release pipeline merges them back into GeoNames, prunes redundant points, and packs release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790309238615_release-pipeline-stages-en.svg "Two tracks: extract produces intermediate CSVs, and release merges them back into GeoNames across seven stages before packing")
 {style="width:90%;"}
@@ -220,9 +220,13 @@ Pruning is a default stage in the release workflow. It can be skipped with `--pa
 
 ### `pack`: Packing
 
-This stage arranges the pruned and translated files, `data/vendor/i18n-iso-countries/` (the country name mapping, covered in [How Reverse Geocoding Works](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)), `LICENSE`, and `NOTICE.md` into the release directory structure, writes `geodata-date.txt`, and finally produces `release.tar.gz` and `release.zip`.
+This stage arranges the pruned and translated files, `data/vendor/i18n-iso-countries/` (the country name mapping), `LICENSE`, and `NOTICE.md` into the release directory structure, writes `geodata-date.txt`, and finally produces `release.tar.gz` and `release.zip`.
 
-That bundle is exactly what the `update_data.sh` install script downloads, and its directory structure maps directly onto where the files go inside Immich at install time.
+The `geodata/countryInfo.txt` that Immich reads for country names is also produced in this stage (see [How Reverse Geocoding Works](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/) for the background). `pack` takes the original GeoNames file under `data/vendor/geonames/`, pairs it with the Traditional Chinese names from `en.json`, replaces the country name in column 5, and places the result in the release's `geodata/`. Every other column and the header comments are preserved byte for byte. This base file is committed to version control rather than downloaded in the `prepare` stage, because it rarely changes and only needs updating when a country is added, removed, or renamed.
+
+This stage treats a missing translation the opposite way `translate` does. `translate` keeps the original text when it finds no Chinese name, and a rare place showing English is intentional. `pack` instead fails outright, listing the missing codes, when the base file contains a current country code that `en.json` lacks. Only the dissolved legacy codes `AN` and `CS` are exempt. The reason is that if GeoNames added a country and nobody noticed, that country would quietly fall back to English, and users would see mixed languages instead of a clear error.
+
+That bundle is exactly what the `update_data.sh` install script downloads, and its directory structure maps directly onto where the files go inside Immich at install time. The release ships both `countryInfo.txt` and `i18n-iso-countries`: the former for Immich v3.3.0 and later, the latter for earlier versions. The script decides which one to install by checking which files actually exist in the target environment, not by looking at the version number. In testing, the v3.2.4 image already contained `countryInfo.txt`; it just was not read yet.
 
 ## Verifying Without Calling External Services
 

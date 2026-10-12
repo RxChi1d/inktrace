@@ -2,7 +2,7 @@
 title: "Localized Place Names for Immich - immich-geodata-zh-tw Project Overview and Setup Guide"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "immich-geodata-zh-tw setup guide: add one entrypoint line to your Docker Compose file and Immich will show localized place names for Taiwan, Japan, and other popular Asian destinations. Manual and non-container deployment included."
 tags: ["docker", "immich"]
 categories: ["container-platform"]
@@ -43,7 +43,7 @@ The project centers on deep processing of **official surveying and mapping agenc
 
 | Region | Display style & localization features | Data source & processing method |
 | :--- | :--- | :--- |
-| **🇹🇼 Taiwan** | Completes full hierarchy from county/city down to township/district, fixes country name, and displays Traditional Chinese | National Land Surveying and Mapping Center (NLSC) official vector geodata |
+| **🇹🇼 Taiwan** | Completes full hierarchy from county/city down to township/district, and displays country and place names in Traditional Chinese | National Land Surveying and Mapping Center (NLSC) official vector geodata |
 | **🇯🇵 Japan** | Preserves native kanji and kana familiar to readers (e.g., "横浜市", "中区") | National Land Numerical Information (KSJ) official vector geodata |
 | **🇰🇷 South Korea** | Displays official Korean hanja orthography (e.g., "淸州市"), synchronized with latest 2026 administrative divisions | admdongkor administrative dong official vector geodata |
 | **🇹🇭 Thailand** | Traditional Chinese translations, with official English and Thai as fallback | COD-AB (OCHA) official vector geodata |
@@ -75,7 +75,7 @@ Check the following prerequisites:
 - **Immich is already deployed and starts normally** (if not, start with "[Immich Deployment, Configuration, and Reverse Proxy](/en/posts/container-platform/immich-deployment/)")
 - You can modify `docker-compose.yml` and restart containers
 - **Integrated deployment requires the container to reach `github.com` at startup**. If your environment has no outbound access, use manual deployment instead
-- You know your Immich version (this project supports v2 and v3; only environments still on old v1 releases need to watch for the path differences noted below)
+- You know your Immich version (this project supports v2 and v3. For manual deployment, the mount paths differ slightly between versions)
 - Your photos contain GPS data, otherwise Immich has no way to determine a location
 
 Method A fits most people: if you deploy with Docker Compose and the container can reach GitHub, one added line in `docker-compose.yml` is all it takes, and the data stays updated automatically afterwards. If you have special mount requirements, or your environment has no outbound access to begin with, use method B and download the data yourself. If Immich is not running in a container at all (native macOS installs, LXC, or bare metal), go straight to "[Other deployment methods](#other-deployment-methods)".
@@ -126,7 +126,7 @@ What to look for:
 1. Whether the `immich-geodata-zh-tw` execution and download messages appear.
   Output similar to the following means the script ran successfully:
   ![Checking the immich-geodata-zh-tw script output](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126689332_check-geodata-script.png "Checking the immich-geodata-zh-tw script output")
-  If the script ends by printing `驗證通過` (verification passed), the data really was written to the locations Immich reads from, including the `en.json` file that determines how country names are displayed. This is a more reliable signal than searching the log for keywords.
+  If the script ends by printing `驗證通過` (verification passed), the data really was written to the locations Immich reads from, including the file that determines how country names are displayed. This is a more reliable signal than searching the log for keywords.
 2. Whether Immich prints `10000 geodata records imported` after it starts, which means the data loaded successfully.
   ![Checking the Immich geodata import result](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126693336_check-geodata-import.png "Checking the Immich geodata import result")
 
@@ -149,11 +149,18 @@ For environments with special mount requirements or no outbound network access.
 ```yaml
 volumes:
   - /path/to/your/immich/geodata:/build/geodata:ro
-  - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/server/node_modules/i18n-iso-countries/langs:ro
 ```
 
 > [!IMPORTANT]
-> On Immich versions before v1.136.0 the container's internal layout differs, so the second line must be changed to `/path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/node_modules/i18n-iso-countries/langs:ro`.
+> The example above applies to **Immich v3.3.0 and later**, where country names are already included in `geodata`. Immich versions before v3.3.0 do not read `countryInfo.txt`; they get country names from the `i18n-iso-countries` locale file instead, so you need to mount that file as well (`geodata` is still mounted as usual). The path depends on the version:
+> - **v1.136.0 to v3.2.x**:
+>   ```yaml
+>   - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/server/node_modules/i18n-iso-countries/langs:ro
+>   ```
+> - **Before v1.136.0** (the container's internal layout differs):
+>   ```yaml
+>   - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/node_modules/i18n-iso-countries/langs:ro
+>   ```
 
 #### 2. Download the data
 
@@ -163,7 +170,7 @@ First fetch the download script:
 curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh -o update_data.sh
 ```
 
-Then edit the `DOWNLOAD_DIR` variable near the top of the script (it lives in the configuration block in the first part of the file, so searching for `DOWNLOAD_DIR=` will find it) and set it to the **common parent directory** of the two mount paths above, which in this example is `/path/to/your/immich`. Then run:
+Then edit the `DOWNLOAD_DIR` variable near the top of the script (it lives in the configuration block in the first part of the file, so searching for `DOWNLOAD_DIR=` will find it) and set it to the **parent directory** of the mount path above, which in this example is `/path/to/your/immich`. Then run:
 
 ```bash
 bash update_data.sh
@@ -176,7 +183,9 @@ The result is the following structure, with no files to move by hand:
 /path/to/your/immich/i18n-iso-countries/langs/
 ```
 
-You can also download `release.tar.gz` or `release.zip` directly from the [GitHub Releases](https://github.com/RxChi1d/immich-geodata-zh-tw/releases) page, extract it, and place the `geodata` and `i18n-iso-countries` folders in the same locations.
+`i18n-iso-countries` is used only by Immich versions before v3.3.0; on v3.3.0 and later you can ignore it.
+
+You can also download `release.tar.gz` or `release.zip` directly from the [GitHub Releases](https://github.com/RxChi1d/immich-geodata-zh-tw/releases) page, extract it, and place the `geodata` folder in the mounted location.
 
 > [!NOTE]
 > UnRAID users can run the script through the User Scripts plugin.
@@ -188,6 +197,9 @@ docker compose down && docker compose up -d
 ```
 
 Once that is done, follow "[3. Verify the installation](#check-install-status)" to confirm the import succeeded.
+
+> [!WARNING] When upgrading Immich, manual deployments must re-download the data
+> In a manual deployment, `geodata` is mounted into the container by you and does not update with the Immich image. When you upgrade to v3.3.0 or later, run `bash update_data.sh` once more to get v3.3.1 or later data, otherwise Immich cannot read `geodata/countryInfo.txt`. Integrated deployment is unaffected because it reinstalls on every start.
 
 ---
 
@@ -229,21 +241,24 @@ Location data on existing photos will now be updated to the localized place name
 
 ### Pinning a specific version
 
-If the latest release has a problem, or you want to stay on a specific version such as `v3.3.0`, use the `--tag` option. **The script itself is always fetched from the latest release; `--tag` only determines the data version.**
+If the latest release has a problem, or you want to stay on a specific version such as `v3.3.1`, use the `--tag` option. **The script itself is always fetched from the latest release; `--tag` only determines the data version.**
 
 **Integrated deployment:**
 Modify the command in `entrypoint`:
 ```yaml
-entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.3.0 && exec start.sh" ]
+entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.3.1 && exec start.sh" ]
 ```
 
 **Manual deployment:**
 ```bash
-bash update_data.sh --install --tag v3.3.0
+bash update_data.sh --install --tag v3.3.1
 ```
 
 > [!IMPORTANT]
 > Do not change the script URL to `releases/download/<tag_name>/update_data.sh`. Automatically published releases such as `nightly` do not contain `update_data.sh`, so that URL returns a 404 and integrated deployment fails to start.
+
+> [!WARNING] On Immich v3.3.0 and later, choose v3.3.1 or later
+> Earlier data does not contain `countryInfo.txt`. The script aborts before modifying any file, and the integrated deployment container fails to start as a result.
 
 For the available versions, see the [Releases page](https://github.com/RxChi1d/immich-geodata-zh-tw/releases). If your environment has no outbound access, you can download `release.tar.gz` first and install it with `--archive`. Full option documentation is in the project's [update_data.sh usage guide](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/update-script.md).
 
@@ -266,11 +281,15 @@ A: This typically happens on Immich v1.142.0 and later, because Immich changed t
 
 > Related link: [Issue #13](https://github.com/RxChi1d/immich-geodata-zh-tw/issues/13)
 
+**Q: After upgrading to Immich v3.3.0 the container keeps restarting, and the log says the `i18n-iso-countries` package cannot be found.**
+A: Immich v3.3.0 removed that package, and the older script exits when it cannot find it. Restart the container and it recovers: integrated deployment fetches the latest `update_data.sh` on every start, and your photos do not need their metadata re-extracted. If the `--tag` in your `entrypoint` is pinned to a version before v3.3.1, change it to v3.3.1 or later, or remove it. See "[Pinning a specific version](#pinning-a-specific-version)".
+> Related link: [Issue #90](https://github.com/RxChi1d/immich-geodata-zh-tw/issues/90)
+
 **Q: Some photos show a location that differs from where they were actually taken.**
 A: Immich matches place names by nearest distance, so coordinates near an administrative boundary can be assigned to the neighbouring district, and small islands or unusual terrain may not map precisely either. This is a consequence of how Immich resolves locations, not an error in the data. For how this nearest-neighbour lookup works, see [How Reverse Geocoding Works](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/).
 
 **Q: How do I remove this and restore the original place names?**
-A: For integrated deployment, delete the `entrypoint` line from `docker-compose.yml`. For manual deployment, remove the two volume mounts. After restarting the container Immich falls back to the official GeoNames data (if the change does not take effect immediately, it is the same `geodata/geodata-date.txt` comparison issue), and a final metadata re-extraction finishes the job.
+A: For integrated deployment, delete the `entrypoint` line from `docker-compose.yml`. For manual deployment, remove the volume mounts you added. After restarting the container Immich falls back to the official GeoNames data (if the change does not take effect immediately, it is the same `geodata/geodata-date.txt` comparison issue), and a final metadata re-extraction finishes the job.
 
 ---
 

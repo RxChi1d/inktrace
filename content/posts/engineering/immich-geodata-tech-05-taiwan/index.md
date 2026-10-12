@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析（五）：用官方圖資重建臺灣的行政區"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "用國土測繪中心村里界圖資重建 Immich 的臺灣行政區：7,986 個代表點、座標系轉換與欄位對應，以及為什麼這個 handler 幾乎不做名稱加工。"
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
@@ -20,11 +20,11 @@ series_order: 6
 
 Immich 預設的 GeoNames 資料用在臺灣，會遇到三個問題：
 
-1. **國家名稱顯示不正確**：GeoNames 依 ISO 3166 標準，原始輸出是 "Taiwan, Province of China"。
+1. **國家名稱顯示不正確**：Immich 原本採用 ISO 3166 的官方名稱，原始輸出是 "Taiwan, Province of China"。
 2. **行政區層級缺失**：多數縣市名稱從缺，鄉鎮市區層級更是幾乎沒有。在板橋拍的照片只會顯示到「新北市」，甚至只顯示國家。
 3. **點位密度不足**：GeoNames 的 `cities500` 只收錄人口超過 500 人的聚落點，臺灣的收錄密度不足以支撐「找最近點」的解析方式，照片常被標到隔壁鄉鎮。
 
-第一個問題單獨處理（見[系列首篇技術文](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)的 `en.json` 一節）。後兩個問題的根源是**資料本身不夠細**，所以解法只有一個：換一份夠細的資料。
+第一個問題單獨處理（見[系列首篇技術文](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)的國家名稱一節）。後兩個問題的根源是**資料本身不夠細**，所以解法只有一個：換一份夠細的資料。
 
 ## 資料來源：NLSC 村里界
 
@@ -78,7 +78,7 @@ Immich 預設的 GeoNames 資料用在臺灣，會遇到三個問題：
 > [!NOTE]
 > `admin_3`（村里）只存在於專案的中介 CSV（`data/handler/tw_geodata.csv`），用於追溯與除錯，**不會輸出到 Immich 使用的 `cities500`**。Immich 顯示的最細層級是 `admin_2`。村里資料的價值在於它提供了密集的代表座標，而不在於顯示。
 
-中介 CSV 另有一個 `country` 欄位固定填「臺灣」，同樣僅供人工檢視。**Immich 實際顯示的國家名稱由國碼 `TW` 決定**，對應到 `i18n-iso-countries/langs/en.json` 裡的值，與這個欄位無關。這點在[系列第一篇](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)談過。
+中介 CSV 另有一個 `country` 欄位固定填「臺灣」，同樣僅供人工檢視。**Immich 實際顯示的國家名稱由國碼 `TW` 決定**，對應到國名檔裡的值，與這個欄位無關。這點在[系列第一篇](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)談過。
 
 來源 `VILLNAME` 為空的情形（多為離島未編組村里的圖幅）會寫入字串 `None`。注意這是四個字元的字串，不是空值，這是中介 CSV 沿用的既有寫法，用來區分「來源就是空的」與「欄位不存在」。現行資料共 206 列，其中連江縣佔 134 列。因為這欄不輸出，不影響顯示。
 

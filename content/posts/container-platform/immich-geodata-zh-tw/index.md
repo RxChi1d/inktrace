@@ -2,7 +2,7 @@
 title: "Immich 地理編碼臺灣特化 - immich-geodata-zh-tw 專案介紹與使用教學"
 slug: "immich-geodata-zh-tw"
 date: 2025-10-05T13:35:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "immich-geodata-zh-tw 安裝教學：在 Docker Compose 加一行 entrypoint，讓 Immich 相片地點顯示臺灣、日本等亞洲熱門地區的在地化中文地名。含手動與非容器部署。"
 tags: ["docker", "immich"]
 categories: ["container-platform"]
@@ -43,7 +43,7 @@ Immich 原生的反向地理編碼主要依賴 GeoNames 全球資料庫，這對
 
 | 地區 | 顯示樣式與在地化特色 | 資料來源與處理方式 |
 | :--- | :--- | :--- |
-| **🇹🇼 臺灣** | 完整補齊直轄市/縣市 → 鄉鎮市區層級，修正國名並顯示繁體中文 | 國土測繪中心（NLSC）官方向量圖資 |
+| **🇹🇼 臺灣** | 完整補齊直轄市/縣市 → 鄉鎮市區層級，並以繁體中文顯示國名與地名 | 國土測繪中心（NLSC）官方向量圖資 |
 | **🇯🇵 日本** | 保留讀者習慣的日文漢字與假名原名（如「横浜市」、「中区」） | 国土数値情報（KSJ）官方向量圖資 |
 | **🇰🇷 南韓** | 顯示官方漢字表記（如「淸州市」），已同步 2026 最新行政區劃 | admdongkor 行政洞界官方向量圖資 |
 | **🇹🇭 泰國** | 繁體中文譯名，官方英文與泰文備用 | COD-AB（OCHA）官方向量圖資 |
@@ -72,7 +72,7 @@ Immich 原生的反向地理編碼主要依賴 GeoNames 全球資料庫，這對
 - **Immich 已經部署完成且可正常啟動**（尚未部署請先參考「[Immich 部署、設定與反向代理](/posts/container-platform/immich-deployment/)」）
 - 你有權限修改 `docker-compose.yml` 並重啟容器
 - **整合式部署需要容器啟動時能連到 `github.com`**；環境無法對外連線請改用手動部署
-- 知道自己的 Immich 版本（本專案支援 v2 與 v3。只有停留在 v1 舊版的環境才需要留意文中標註的路徑差異）
+- 知道自己的 Immich 版本（本專案支援 v2 與 v3。手動部署時，不同版本的掛載路徑略有差異）
 - 照片本身含有 GPS 資訊，否則 Immich 無從判斷地點
 
 多數人適用方法 A：用 Docker Compose 部署、容器啟動時連得到 GitHub，在 `docker-compose.yml` 加一行就結束，之後也會自動保持更新。如果有特殊的掛載需求，或環境本來就連不到外網，就走方法 B 自己下載資料。Immich 沒有跑在容器裡的話（例如 macOS 原生安裝、LXC 或裸機），直接看「[其他部署方式](#其他部署方式macos-原生-workerlxc-與裸機-)」那一節。
@@ -123,7 +123,7 @@ docker logs immich_server
 1. 是否有看到 `immich-geodata-zh-tw` 的執行與下載訊息。  
   若看到類似以下訊息，表示腳本執行成功：  
   ![檢查 immich-geodata-zh-tw 腳本執行結果](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126689332_check-geodata-script.png "檢查 immich-geodata-zh-tw 腳本執行結果")
-  腳本最後若輸出 `驗證通過`，代表資料確實寫入 Immich 會讀取的位置（含決定國家名稱顯示的 `en.json`），這是比日誌關鍵字更可靠的判斷依據。
+  腳本最後若輸出 `驗證通過`，代表資料確實寫入 Immich 會讀取的位置（含決定國家名稱顯示的檔案），這是比日誌關鍵字更可靠的判斷依據。
 2. Immich 啟動後是否顯示 `10000 geodata records imported`（表示成功載入資料）。  
   ![檢查 Immich 載入地理資料結果](https://images.rxchi1d.me/file/inktrace/container-platform/immich-geodata-zh-tw/1789126693336_check-geodata-import.png "檢查 Immich 載入地理資料結果")
 
@@ -146,11 +146,18 @@ docker logs immich_server
 ```yaml
 volumes:
   - /path/to/your/immich/geodata:/build/geodata:ro
-  - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/server/node_modules/i18n-iso-countries/langs:ro
 ```
 
 > [!IMPORTANT]
-> Immich v1.136.0 以前的版本，因為 Immich 容器內部結構不同，第二行的路徑請改為 `/path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/node_modules/i18n-iso-countries/langs:ro`。
+> 上面的範例適用於 **Immich v3.3.0 以上**，這些版本的國名已經包含在 `geodata` 裡。v3.3.0 以前的 Immich 不讀 `countryInfo.txt`，國名改由 `i18n-iso-countries` 的語系檔提供，所以要掛載這份語系檔（`geodata` 一樣照常掛載），路徑依版本而不同：
+> - **v1.136.0 到 v3.2.x**：
+>   ```yaml
+>   - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/server/node_modules/i18n-iso-countries/langs:ro
+>   ```
+> - **v1.136.0 以前**（容器內部結構不同）：
+>   ```yaml
+>   - /path/to/your/immich/i18n-iso-countries/langs:/usr/src/app/node_modules/i18n-iso-countries/langs:ro
+>   ```
 
 #### 2. 下載資料
 
@@ -160,7 +167,7 @@ volumes:
 curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh -o update_data.sh
 ```
 
-接著編輯腳本開頭的 `DOWNLOAD_DIR` 變數（在檔案前段的設定區，搜尋 `DOWNLOAD_DIR=` 即可找到），填入上方兩個掛載路徑的**共同上層目錄**（以上面的範例來說就是 `/path/to/your/immich`），然後執行：
+接著編輯腳本開頭的 `DOWNLOAD_DIR` 變數（在檔案前段的設定區，搜尋 `DOWNLOAD_DIR=` 即可找到），填入掛載路徑的**上層目錄**（以上面的範例來說就是 `/path/to/your/immich`），然後執行：
 
 ```bash
 bash update_data.sh
@@ -173,7 +180,9 @@ bash update_data.sh
 /path/to/your/immich/i18n-iso-countries/langs/
 ```
 
-也可以直接到 [GitHub Releases](https://github.com/RxChi1d/immich-geodata-zh-tw/releases) 頁面下載 `release.tar.gz` 或 `release.zip`，解壓縮後把 `geodata` 與 `i18n-iso-countries` 兩個資料夾放到相同位置。
+其中 `i18n-iso-countries` 只有 v3.3.0 以前的 Immich 會用到，v3.3.0 以上可以忽略。
+
+也可以直接到 [GitHub Releases](https://github.com/RxChi1d/immich-geodata-zh-tw/releases) 頁面下載 `release.tar.gz` 或 `release.zip`，解壓縮後把 `geodata` 資料夾放到掛載的位置。
 
 > [!NOTE]
 > UnRAID 使用者可以透過 User Scripts 外掛執行腳本。
@@ -185,6 +194,9 @@ docker compose down && docker compose up -d
 ```
 
 完成後，參考「[3. 確認安裝成功](#check-install-status)」驗證是否導入成功。
+
+> [!WARNING] 升級 Immich 時，手動部署要重新下載資料
+> 手動部署的 `geodata` 是你自己掛載進容器的，不會跟著 Immich 映像更新。升級到 v3.3.0 以上時，請重新執行一次 `bash update_data.sh`，取得 v3.3.1 以上的資料，否則 Immich 會讀不到 `geodata/countryInfo.txt`。整合式部署每次啟動都會重新安裝，不受影響。
 
 ---
 
@@ -226,21 +238,24 @@ bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest
 
 ### 指定特定版本
 
-若最新的 Release 有問題，或想固定使用特定版本（例如 `v3.3.0`），可以使用 `--tag` 參數。**腳本本身一律從最新版本取得，只有資料版本由 `--tag` 決定。**
+若最新的 Release 有問題，或想固定使用特定版本（例如 `v3.3.1`），可以使用 `--tag` 參數。**腳本本身一律從最新版本取得，只有資料版本由 `--tag` 決定。**
 
 **整合式部署：**
 修改 `entrypoint` 中的指令：
 ```yaml
-entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.3.0 && exec start.sh" ]
+entrypoint: [ "tini", "--", "/bin/bash", "-c", "bash <(curl -sSL https://github.com/RxChi1d/immich-geodata-zh-tw/releases/latest/download/update_data.sh) --install --tag v3.3.1 && exec start.sh" ]
 ```
 
 **手動部署：**
 ```bash
-bash update_data.sh --install --tag v3.3.0
+bash update_data.sh --install --tag v3.3.1
 ```
 
 > [!IMPORTANT]
 > 不要把腳本網址改成 `releases/download/<tag_name>/update_data.sh`。`nightly` 這類自動發布的版本不包含 `update_data.sh`，該網址會回傳 404，整合式部署會因此無法啟動。
+
+> [!WARNING] Immich v3.3.0 以上請選 v3.3.1 以上的版本
+> 更早的資料不含 `countryInfo.txt`，腳本會在修改任何檔案前中止，整合式部署的容器也會因此無法啟動。
 
 可用版本請查看 [Releases 頁面](https://github.com/RxChi1d/immich-geodata-zh-tw/releases)。若環境無法連外網，也可以先下載 `release.tar.gz`，再用 `--archive` 安裝，詳細參數說明見專案的 [update_data.sh 使用說明](https://github.com/RxChi1d/immich-geodata-zh-tw/blob/main/docs/zh-tw/update-script.md)。
 
@@ -263,11 +278,15 @@ A: 這通常發生在 Immich v1.142.0+ 版本。因為 Immich 更改了啟動檔
 
 > 相關連結：[Issue #13](https://github.com/RxChi1d/immich-geodata-zh-tw/issues/13)
 
+**Q: 升級到 Immich v3.3.0 後容器一直重啟，日誌寫「找不到已安裝的 i18n-iso-countries 套件」？**  
+A: Immich v3.3.0 移除了這個套件，舊版腳本找不到它就會退出。整合式部署每次啟動都會抓最新的 `update_data.sh`，所以重啟容器就會恢復，照片也不需要重新擷取詮釋資料。如果 `entrypoint` 裡的 `--tag` 鎖在 v3.3.1 以前，請改成 v3.3.1 以上或拿掉，細節見「[指定特定版本](#指定特定版本)」。
+> 相關連結：[Issue #90](https://github.com/RxChi1d/immich-geodata-zh-tw/issues/90)
+
 **Q: 有些照片的地點跟實際位置有落差？**  
 A: Immich 依照最近距離原則比對地名，靠近行政區邊界的座標可能被歸到鄰近的行政區，小型島嶼或特殊地形也可能無法精確對應。這是 Immich 的解析方式所致，並非資料錯誤。這套最近鄰查詢的運作方式詳見[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)。
 
 **Q: 如何移除或還原成原本的地名？**  
-A: 整合式部署刪掉 `docker-compose.yml` 裡的 `entrypoint` 那一行；手動部署則移除兩條 volume 掛載。重啟容器後 Immich 會改用官方預設的 GeoNames 資料（若沒有立即生效，同樣是 `geodata/geodata-date.txt` 的比對問題），最後再重新擷取一次詮釋資料即可。
+A: 整合式部署刪掉 `docker-compose.yml` 裡的 `entrypoint` 那一行；手動部署則移除先前加入的 volume 掛載。重啟容器後 Immich 會改用官方預設的 GeoNames 資料（若沒有立即生效，同樣是 `geodata/geodata-date.txt` 的比對問題），最後再重新擷取一次詮釋資料即可。
 
 ---
 

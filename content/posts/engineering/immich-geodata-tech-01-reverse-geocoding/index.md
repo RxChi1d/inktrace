@@ -3,7 +3,7 @@ title: "Immich 繁體中文地理資料技術解析（一）：反向地理編�
 slug: "immich-geodata-tech-01-reverse-geocoding"
 aliases: ["/posts/engineering/immich-geodata-tech-01-pipeline/"]
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "拆解 Immich 的離線反向地理編碼：容器啟動時匯入哪些 GeoNames 檔案、earthdistance 如何用最近鄰查詢從座標找出地名，以及為什麼替換這些檔案就能讓相簿顯示精準的繁體中文地名。"
 tags: ["immich", "geodata", "geonames", "reverse-geocoding"]
 categories: ["engineering"]
@@ -92,7 +92,7 @@ this.db
 | :--- | :--- | :--- |
 | `cities500.txt` | 地點座標與名稱的主資料 | 併入各國官方圖資產生的點位，並改寫地名 |
 | `admin1CodesASCII.txt` | 一級行政區代碼對照名稱 | 同步替換為在地化名稱 |
-| `i18n-iso-countries/langs/en.json` | 國碼對照國家名稱 | 內容整份換成繁體中文（見後文） |
+| `i18n-iso-countries/langs/en.json`（v3.3.0 以前）<br>`countryInfo.txt`（v3.3.0 起） | 國碼對照國家名稱 | 國名換成繁體中文（見後文） |
 | `geodata-date.txt` | 判斷要不要重新匯入 | 每次發布更新內容 |
 
 以下逐一說明。
@@ -118,11 +118,11 @@ geoname_id  name  asciiname  alternatenames  latitude  longitude  feature_class 
 
 Immich 會將這些資料匯入 PostgreSQL 的 `geodata_places` 表格。查詢時，系統依賴 `latitude`、`longitude` 定位最近的地點，然後從 `name`、`country_code`、`admin1_code` 等欄位組合出完整的地址。
 
-### i18n-iso-countries/langs/en.json：國家名稱對照
+### 國家名稱對照
 
-Immich 使用這個檔案將國家代碼（如 `TW`）轉換為國家名稱。此外，Immich **固定讀取 `en.json`**，因此國家名稱的語言不會受介面語言的影響。
+Immich 使用這份對照將國家代碼（如 `TW`）轉換為國家名稱，而且**只讀固定的那一份檔案**，因此國家名稱的語言不會受介面語言的影響。
 
-immich-geodata-zh-tw 利用這個特性，將 `en.json` 的內容替換為繁體中文（但 locale 仍保持 "en"），這樣 Immich 讀取時就會顯示「臺灣」而非「Taiwan」。詳細處理方式請見後文「國家名稱：一個繞過 Immich 限制的做法」章節。
+immich-geodata-zh-tw 利用這個特性，把檔案裡的國名換成繁體中文，這樣 Immich 讀取時就會顯示「臺灣」而非「Taiwan」。詳細處理方式請見後文「國家名稱：一個繞過 Immich 限制的做法」章節。
 
 ### geodata-date.txt：判斷要不要重新匯入
 
@@ -133,22 +133,30 @@ immich-geodata-zh-tw 利用這個特性，將 `en.json` 的內容替換為繁體
 > [!NOTE] 關於 `admin2Codes.txt`
 > `admin2Codes.txt` 是二級行政區資料。本專案不對它做任何處理，只保留原檔以維持相同的檔案結構。實務上這樣就足夠，因為 Immich 顯示的地名欄位來自 `cities500.txt` 本身，並不使用 `admin2Codes.txt` 這份檔案。
 
-![GeoNames 資料檔案關係圖](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-01-reverse-geocoding/1789126738565_geonames-file-relationships.png "GeoNames 核心檔案之間的關係：cities500.txt 透過 admin1_code 參照一級行政區對照表，國碼另外對應 en.json")
+![GeoNames 資料檔案關係圖](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-01-reverse-geocoding/1789126738565_geonames-file-relationships.png "GeoNames 核心檔案之間的關係：cities500.txt 透過 admin1_code 參照一級行政區對照表，國碼另外對應國名檔（en.json 或 countryInfo.txt）")
 {style="width:80%;"}
 
 ## 國家名稱：一個繞過 Immich 限制的做法
 
-地名（城市、行政區）的來源已經講完了，剩下國家名稱（`TW` → 「臺灣」）還沒交代。它完全不經過地理資料的處理流程，而是一個獨立的靜態檔案替換。
+地名（城市、行政區）的來源已經講完了，剩下國家名稱（`TW` → 「臺灣」）還沒交代。國名不經過 `cities500.txt` 的處理流程，Immich 是另外從一份獨立的檔案查表。所以這裡的做法也不同：不動點位，只把查表用的那份檔案換掉。
 
 ### Immich 的限制
 
-前面介紹檔案清單時提過，Immich **固定讀取 `i18n-iso-countries/langs/en.json`** 來顯示國家名稱，即使使用者介面語言設為繁體中文也一樣。這是 Immich 的架構設計，我們無法從外部改變這個行為。
+前面介紹檔案清單時提過，國家名稱的對照只有一份固定的來源，即使使用者介面語言設為繁體中文也一樣。這是 Immich 的架構設計，我們無法從外部改變這個行為。
 
 理論上，這意味著國家名稱永遠只會顯示英文：`Taiwan`、`Japan`、`South Korea`。
 
-### 繞過的做法：改寫 en.json
+這份固定的來源在 v3.3.0 換過一次。在那之前，Immich 讀的是 `i18n-iso-countries` 套件，而 ISO 的官方名稱會讓臺灣顯示成 "Taiwan, Province of China"。上游在 [immich-app/immich#30199](https://github.com/immich-app/immich/pull/30199) 改成讀 GeoNames 的 `countryInfo.txt`，同一個國家就變成較中性的 "Taiwan"。
 
-但我們可以「騙過」Immich：**將 `en.json` 的內容替換為繁體中文**。
+不過換了來源，限制本身沒有變：Immich 還是只會顯示那份檔案裡寫的字。
+
+### 繞過的做法：換掉檔案裡的國名
+
+既然 Immich 讀到什麼就顯示什麼，那麼把檔案裡的國名換成繁體中文就好。v3.3.0 以前改的是 `en.json`，之後改的是 `countryInfo.txt`，兩種做法略有不同。
+
+#### 改寫 en.json
+
+這個做法需要「騙過」Immich：**將 `en.json` 的內容替換為繁體中文**。
 
 ```json {title="i18n-iso-countries/langs/en.json"}
 {
@@ -165,7 +173,22 @@ immich-geodata-zh-tw 利用這個特性，將 `en.json` 的內容替換為繁體
 }
 ```
 
-這樣一來，Immich 讀取 `en.json` 時，實際上會得到繁體中文的國家名稱。使用者在相簿介面看到的位置資訊就會是「臺灣 · 臺北市 · 信義區」而非「Taiwan · Taipei City · Xinyi District」。
+這樣一來，Immich 讀取 `en.json` 時，實際上會得到繁體中文的國家名稱。
+
+#### 改寫 countryInfo.txt 的國名欄
+
+這個做法就不需要「locale 標 en、內容是中文」的偽裝了。`countryInfo.txt` 是 GeoNames 的國家資料表，一個國家一行，國名只是其中一欄，直接換掉即可。Immich 只讀三個欄位：第 1 欄的 alpha-2 國碼、第 2 欄的 alpha-3 國碼，以及第 5 欄的國名。
+
+```text {title="geodata/countryInfo.txt"}
+# 原始內容
+TW	TWN	158	TW	Taiwan	Taipei	35980	...
+# 改寫後
+TW	TWN	158	TW	臺灣	Taipei	35980	...
+```
+
+專案只換第 5 欄，其他欄位與檔頭註解都逐位元組保留。這樣即使上游之後多讀別的欄位，也不會因為我們動過檔案而出問題。
+
+不論 Immich 讀的是哪一份檔案，使用者在相簿介面看到的位置資訊都會是「臺灣 · 臺北市 · 信義區」，而非「Taiwan · Taipei City · Xinyi District」。專案的 release 同時附上這兩份檔案，兩種版本的 Immich 都能使用。
 
 ### 翻譯來源的權威性
 
