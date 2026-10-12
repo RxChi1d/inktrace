@@ -13,7 +13,8 @@ TODO.md
 
 # AI tool files
 .codex/
-.claude/
+.claude/*
+!.claude/skills/
 .gemini/
 .opencode/
 .shared/
