@@ -3,7 +3,7 @@ title: "Immich Traditional Chinese Geodata Deep Dive (1): How Reverse Geocoding 
 slug: "immich-geodata-tech-01-reverse-geocoding"
 aliases: ["/posts/engineering/immich-geodata-tech-01-pipeline/"]
 date: 2025-12-11T12:00:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "A breakdown of Immich's offline reverse geocoding: which GeoNames files get imported at container startup, how earthdistance turns coordinates into place names with a nearest neighbor query, and why swapping those files is enough to make your library show accurate Traditional Chinese place names."
 tags: ["immich", "geodata", "geonames", "reverse-geocoding"]
 categories: ["engineering"]
@@ -92,7 +92,7 @@ As mentioned above, geodata gets imported at startup. There are four files in to
 | :--- | :--- | :--- |
 | `cities500.txt` | Primary data of location coordinates and names | Merges in points generated from each country's official geodata and rewrites the names |
 | `admin1CodesASCII.txt` | Maps first-level administrative division codes to names | Replaced with localized names to stay in sync |
-| `i18n-iso-countries/langs/en.json` | Maps country codes to country names | Entire contents swapped for Traditional Chinese (see below) |
+| `i18n-iso-countries/langs/en.json` (before v3.3.0)<br>`countryInfo.txt` (v3.3.0 onwards) | Maps country codes to country names | Country names swapped for Traditional Chinese (see below) |
 | `geodata-date.txt` | Decides whether to reimport | Content updated with every release |
 
 Here is each one in turn.
@@ -118,11 +118,11 @@ geoname_id  name  asciiname  alternatenames  latitude  longitude  feature_class 
 
 Immich imports this data into the PostgreSQL `geodata_places` table. At query time the system relies on `latitude` and `longitude` to locate the nearest place, then assembles a full address from the `name`, `country_code`, `admin1_code`, and related fields.
 
-### i18n-iso-countries/langs/en.json: Country Name Mapping
+### Country Name Mapping
 
-Immich uses this file to convert a country code such as `TW` into a country name. On top of that, Immich **always reads `en.json`**, so the language of country names is unaffected by the interface language.
+Immich uses this mapping to convert a country code such as `TW` into a country name, and it **reads only one fixed file**, so the language of country names is unaffected by the interface language.
 
-immich-geodata-zh-tw takes advantage of this by replacing the contents of `en.json` with Traditional Chinese while keeping the locale as "en", so Immich displays 臺灣 rather than "Taiwan". The details are covered later in the section "Country Names: Working Around an Immich Limitation".
+immich-geodata-zh-tw takes advantage of this by replacing the country names in that file with Traditional Chinese, so Immich displays 臺灣 rather than "Taiwan". The details are covered later in the section "Country Names: Working Around an Immich Limitation".
 
 ### geodata-date.txt: Deciding Whether to Reimport
 
@@ -133,22 +133,30 @@ Note that the comparison is on content equality, not on the file's modification 
 > [!NOTE] About `admin2Codes.txt`
 > `admin2Codes.txt` holds second-level administrative division data. This project does nothing to it and keeps the original file only to preserve the same file structure. That is sufficient in practice, because the place name fields Immich displays come from `cities500.txt` itself and never touch `admin2Codes.txt`.
 
-![GeoNames data file relationship diagram](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-01-reverse-geocoding/1789126738565_geonames-file-relationships.png "Relationships among the core GeoNames files: cities500.txt references the admin1 lookup table through admin1_code, while the country code maps to en.json")
+![GeoNames data file relationship diagram](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-01-reverse-geocoding/1789126738565_geonames-file-relationships.png "Relationships among the core GeoNames files: cities500.txt references the admin1 lookup table through admin1_code, while the country code maps to the country-name file (en.json or countryInfo.txt)")
 {style="width:80%;"}
 
 ## Country Names: Working Around an Immich Limitation
 
-That covers where place names (cities and administrative divisions) come from. What remains is country names (`TW` → 臺灣). Those bypass the geodata processing flow entirely and come down to swapping one static file.
+That covers where place names (cities and administrative divisions) come from. What remains is country names (`TW` → 臺灣). They do not go through the `cities500.txt` processing flow; Immich looks them up in a separate file. So the approach differs too: we leave the points alone and simply swap the file used for that lookup.
 
 ### The Immich Limitation
 
-As noted in the file list above, Immich **always reads `i18n-iso-countries/langs/en.json`** to display country names, even when the user interface language is set to Traditional Chinese. That is a design decision inside Immich, and we cannot change the behavior from the outside.
+As noted in the file list above, the country name mapping comes from a single fixed source, even when the user interface language is set to Traditional Chinese. That is a design decision inside Immich, and we cannot change the behavior from the outside.
 
 In theory that means country names will forever display in English: `Taiwan`, `Japan`, `South Korea`.
 
-### The Workaround: Rewrite en.json
+That fixed source changed once, in v3.3.0. Before that, Immich read the `i18n-iso-countries` package, whose ISO official names make Taiwan display as "Taiwan, Province of China". Upstream switched to GeoNames' `countryInfo.txt` in [immich-app/immich#30199](https://github.com/immich-app/immich/pull/30199), and the same country became the more neutral "Taiwan".
 
-But we can fool Immich by **replacing the contents of `en.json` with Traditional Chinese**.
+Changing the source did not change the limitation, though: Immich still displays only what that file says.
+
+### The Workaround: Swap the Country Names in the File
+
+Since Immich displays whatever it reads, we can simply replace the country names in the file with Traditional Chinese. Before v3.3.0 the file to change is `en.json`; from v3.3.0 onwards it is `countryInfo.txt`. The two approaches differ slightly.
+
+#### Rewriting en.json
+
+This approach has to fool Immich: **replace the contents of `en.json` with Traditional Chinese**.
 
 ```json {title="i18n-iso-countries/langs/en.json"}
 {
@@ -165,7 +173,22 @@ But we can fool Immich by **replacing the contents of `en.json` with Traditional
 }
 ```
 
-With that in place, Immich reads `en.json` and gets Traditional Chinese country names. The location line users see in their library becomes 臺灣 · 臺北市 · 信義區 instead of "Taiwan · Taipei City · Xinyi District".
+With that in place, Immich reads `en.json` and gets Traditional Chinese country names.
+
+#### Rewriting the country name column of countryInfo.txt
+
+This approach does not need the disguise of a locale marked "en" with Chinese content. `countryInfo.txt` is GeoNames' country table, one country per line, and the country name is just one column, so we replace it directly. Immich reads only three columns: the alpha-2 country code in column 1, the alpha-3 country code in column 2, and the country name in column 5.
+
+```text {title="geodata/countryInfo.txt"}
+# Original
+TW	TWN	158	TW	Taiwan	Taipei	35980	...
+# Rewritten
+TW	TWN	158	TW	臺灣	Taipei	35980	...
+```
+
+The project replaces only column 5 and preserves every other column and the header comments byte for byte. That way, even if upstream starts reading another column later, our edits will not break anything.
+
+Whichever file Immich reads, the location line users see in their library becomes 臺灣 · 臺北市 · 信義區 instead of "Taiwan · Taipei City · Xinyi District". The project's release ships both files, so both versions of Immich work.
 
 ### Authoritative Translation Sources
 

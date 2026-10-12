@@ -2,7 +2,7 @@
 title: "Immich Traditional Chinese Geodata Deep Dive (5): Rebuilding Taiwan's Administrative Divisions from Official Map Data"
 slug: "immich-geodata-tech-05-taiwan"
 date: 2026-08-28T10:00:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "Rebuilding Immich's Taiwanese administrative divisions from NLSC village boundary data: 7,986 representative points, coordinate system conversion, field mapping, and why this handler does almost no name processing at all."
 tags: ["immich", "gis", "taiwan", "open-data"]
 categories: ["engineering"]
@@ -20,11 +20,11 @@ This post doubles as a full walkthrough of one handler. The [pipeline post](/en/
 
 Immich's default GeoNames data runs into three problems in Taiwan:
 
-1. **The country name displays incorrectly**: GeoNames follows ISO 3166, so the raw output is "Taiwan, Province of China".
+1. **The country name displays incorrectly**: Immich originally used the ISO 3166 official name, so the raw output is "Taiwan, Province of China".
 2. **Administrative levels are missing**: most special municipality and county/city names are absent, and the township/district level is almost entirely missing. A photo taken in Banqiao shows only "New Taipei City", sometimes only the country.
 3. **Point density is too low**: GeoNames' `cities500` only includes settlement points with populations above 500. Coverage in Taiwan is too sparse to support a nearest neighbor lookup, so photos frequently get tagged with the neighbouring township.
 
-The first problem is handled separately (see the `en.json` section in the [first technical post of the series](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)). The other two share one root cause: **the data itself is not granular enough**. That leaves exactly one fix, which is to swap in data that is granular enough.
+The first problem is handled separately (see the country names section in the [first technical post of the series](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)). The other two share one root cause: **the data itself is not granular enough**. That leaves exactly one fix, which is to swap in data that is granular enough.
 
 ## Data Source: NLSC Village Boundaries
 
@@ -78,7 +78,7 @@ Only these three fields are read, and the assorted DBF types are all converted t
 > [!NOTE]
 > `admin_3` (village) exists only in the project's intermediate CSV (`data/handler/tw_geodata.csv`), where it serves traceability and debugging. It is **never written to the `cities500` file that Immich consumes**. The finest level Immich displays is `admin_2`. The value of the village data lies in the dense representative coordinates it provides, not in being displayed.
 
-The intermediate CSV also carries a `country` field hardcoded to "臺灣", again for human inspection only. **The country name Immich actually displays is determined by the country code `TW`**, which maps to a value in `i18n-iso-countries/langs/en.json` and has nothing to do with this field. This came up in the [first post of the series](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/).
+The intermediate CSV also carries a `country` field hardcoded to "臺灣", again for human inspection only. **The country name Immich actually displays is determined by the country code `TW`**, which maps to a value in the country name file and has nothing to do with this field. This came up in the [first post of the series](/en/posts/engineering/immich-geodata-tech-01-reverse-geocoding/).
 
 Where the source `VILLNAME` is empty, mostly map sheets for outlying islands with no village subdivision, the string `None` is written. Note that this is a four character string, not a null value. It is an existing convention carried over in the intermediate CSV, used to distinguish "the source was empty" from "the field does not exist". The current data has 206 such rows, 134 of them in Lienchiang County. Since this column is not part of the output, it does not affect what gets displayed.
 

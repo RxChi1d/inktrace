@@ -2,7 +2,7 @@
 title: "Immich 繁體中文地理資料技術解析（二）：資料處理流程"
 slug: "immich-geodata-tech-02-pipeline"
 date: 2026-08-25T10:00:00+08:00
-lastmod: 2026-09-25T12:42:09+08:00
+lastmod: 2026-10-12T15:17:34+08:00
 description: "拆解 immich-geodata-zh-tw 的資料處理流程：extract 把各國官方圖資轉成中介 CSV，release 七階段併回 GeoNames、剪枝並打包成 release.tar.gz，並用 dry-run 與 fixture 驗證。"
 tags: ["immich", "geodata", "geonames", "etl", "rust"]
 categories: ["engineering"]
@@ -41,7 +41,7 @@ series_order: 3
 > 專案將中介產物依來源清楚分類，避免資料流向混淆：
 > - `data/handler/`：由各國官方圖資經 `extract` 萃取的中介 CSV。
 > - `data/locationiq/`：非 handler 國家的 LocationIQ API 查詢快取與取值設定。
-> - `data/vendor/`：外部靜態相依資料（如國家代碼與名稱對照庫）。
+> - `data/vendor/`：外部靜態相依資料，例如 `i18n-iso-countries` 的語系檔，以及 GeoNames 的 `countryInfo.txt` 底檔。
 
 ![immich-geodata-zh-tw 的資料處理流程：extract 把五個地區的官方圖資轉成中介 CSV，release 階段將其併回 GeoNames、剪枝並打包成 release.tar.gz](https://images.rxchi1d.me/file/inktrace/engineering/immich-geodata-tech-02-pipeline/1790309029196_release-pipeline-stages.svg "兩條線：extract 產生中介 CSV，release 七階段併回 GeoNames、剪枝並打包")
 {style="width:90%;"}
@@ -232,9 +232,13 @@ Immich 的反向查詢底層使用的是 PostgreSQL 的 `earth_box(ll_to_earth_p
 
 ### `pack`：打包
 
-把剪枝與翻譯後的檔案、`data/vendor/i18n-iso-countries/`（國家名稱對照，見[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)）、`LICENSE`、`NOTICE.md` 整理成 release 目錄結構，寫入 `geodata-date.txt`，最後產出 `release.tar.gz` 與 `release.zip`。
+把剪枝與翻譯後的檔案、`data/vendor/i18n-iso-countries/`（國家名稱對照）、`LICENSE`、`NOTICE.md` 整理成 release 目錄結構，寫入 `geodata-date.txt`，最後產出 `release.tar.gz` 與 `release.zip`。
 
-這包就是安裝腳本 `update_data.sh` 下載的東西，目錄結構直接對應安裝時要放進 Immich 的位置。
+Immich 讀取國名用的 `geodata/countryInfo.txt` 也在這一步產生（背景見[反向地理編碼是怎麼運作的](/posts/engineering/immich-geodata-tech-01-reverse-geocoding/)）。`pack` 會拿 `data/vendor/geonames/` 底下的 GeoNames 原始檔，搭配 `en.json` 的繁體中文譯名，把第 5 欄的國名換掉，再放進 release 的 `geodata/`。其他欄位與檔頭註解逐位元組保留。這份底檔直接放在版控裡，不在 `prepare` 階段下載，因為它很少變動，只有國家新增、移除或更名時才需要更新。
+
+這一步對缺譯名的態度，和 `translate` 相反。`translate` 找不到中文就保留原文，冷門地點顯示英文是刻意的。`pack` 則是在底檔出現 `en.json` 沒有的現行國碼時直接失敗，並列出缺少的代碼，只有已經解散的舊代碼 `AN` 與 `CS` 例外。原因是如果 GeoNames 新增了國家而沒人發現，該國會悄悄退回英文，使用者看到的會是混雜的語言，而不是一個明確的錯誤。
+
+這包就是安裝腳本 `update_data.sh` 下載的東西，目錄結構直接對應安裝時要放進 Immich 的位置。release 同時附上 `countryInfo.txt` 與 `i18n-iso-countries`，前者給 Immich v3.3.0 以上，後者給 v3.3.0 以前。腳本會看目標環境實際有哪些檔案，來決定要安裝哪一份，而不是看版本號。實測 v3.2.4 的映像其實已經附有 `countryInfo.txt`，只是還沒被讀取。
 
 ## 不呼叫外部服務的驗證方式
 
